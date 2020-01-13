@@ -18,8 +18,13 @@ package frc.robot;
 public final class Constants {
   public static final class DriveConstants {
 
-    public static final int CAN_ID_LEFT_DRIVE = 22;
-    public static final int CAN_ID_RIGHT_DRIVE = 20;
+    public static final int CAN_ID_LEFT_DRIVE = 2;
+    public static final int CAN_ID_RIGHT_DRIVE = 0;
+    public static final int CAN_ID_LEFT_DRIVE_2 = 3;
+    public static final int CAN_ID_RIGHT_DRIVE_2 = 1;
+
+    public static final int CAN_ID_BALL_LAUNCH_LEFT = 6;
+    public static final int CAN_ID_BALL_LAUNCH_RIGHT = 20;
 
     public static final int[] kLeftEncoderPorts = new int[]{0, 1};
     public static final int[] kRightEncoderPorts = new int[]{2, 3};
@@ -34,6 +39,6 @@ public final class Constants {
   }
 
   public static final class OIConstants {
-    public static final int kDriverControllerPort = 1;
+    public static final int kDriverControllerPort = 0;
   }
 }

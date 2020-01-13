@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -25,14 +27,20 @@ import static frc.robot.Constants.DriveConstants.kRightEncoderReversed;
 
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE;
+import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE_2;
+import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
 
 public class DriveSubsystem extends SubsystemBase {
 
   WPI_TalonSRX _leftTal = new WPI_TalonSRX(CAN_ID_LEFT_DRIVE);
-  WPI_VictorSPX _rightVic = new WPI_VictorSPX(CAN_ID_RIGHT_DRIVE);
+  WPI_TalonSRX _rightTal = new WPI_TalonSRX(CAN_ID_RIGHT_DRIVE);
+  WPI_VictorSPX _leftVic = new WPI_VictorSPX(CAN_ID_LEFT_DRIVE_2);
+  WPI_VictorSPX _rightVic = new WPI_VictorSPX(CAN_ID_RIGHT_DRIVE_2);
+  SpeedControllerGroup m_right = new SpeedControllerGroup(_rightTal, _rightVic);
+  SpeedControllerGroup m_left = new SpeedControllerGroup(_leftTal, _leftVic);
 
   // The robot's drive
-  private final DifferentialDrive m_drive = new DifferentialDrive(_leftTal, _rightVic);
+  private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
 
   // The left-side drive encoder
   private final Encoder m_leftEncoder =
