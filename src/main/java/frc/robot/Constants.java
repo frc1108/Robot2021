@@ -38,6 +38,12 @@ public final class Constants {
         (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
   }
 
+  public static final class BallLauncherConstants {
+    public static final double kLaunchspeed = 4000; //in rpm
+    
+  }
+
+
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
   }
