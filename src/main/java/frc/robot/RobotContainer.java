@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 //import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import frc.robot.commands.DefaultDrive;
 import frc.robot.subsystems.DriveSubsystem;
@@ -67,11 +68,11 @@ public class RobotContainer {
     m_robotDrive.setDefaultCommand(
         // A split-stick arcade command, with forward/backward controlled by the left
         // hand, and turning controlled by the right.
-        new DefaultDrive(
-            m_robotDrive,
-            () -> m_driverController.getY(GenericHID.Hand.kLeft),
-            () -> m_driverController.getX(GenericHID.Hand.kRight))
-    );
+        new RunCommand(()->m_robotDrive
+            .curvatureDrive(m_driverController.getY(GenericHID.Hand.kLeft),
+                            m_driverController.getX(GenericHID.Hand.kLeft),
+                            m_driverController.getBumper(GenericHID.Hand.kRight)), m_robotDrive));
+ 
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);

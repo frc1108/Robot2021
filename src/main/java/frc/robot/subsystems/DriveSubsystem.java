@@ -15,12 +15,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANEncoder;
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 
 import static frc.robot.Constants.DriveConstants.kEncoderDistancePerPulse;
 import static frc.robot.Constants.DriveConstants.kLeftEncoderPorts;
 import static frc.robot.Constants.DriveConstants.kLeftEncoderReversed;
+import static frc.robot.Constants.DriveConstants.kSlewSpeed;
+import static frc.robot.Constants.DriveConstants.kSlewTurn;
 
 import static frc.robot.Constants.DriveConstants.kRightEncoderPorts;
 import static frc.robot.Constants.DriveConstants.kRightEncoderReversed;
@@ -32,18 +37,24 @@ import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  WPI_TalonSRX _leftTal = new WPI_TalonSRX(CAN_ID_LEFT_DRIVE);
-  WPI_TalonSRX _rightTal = new WPI_TalonSRX(CAN_ID_RIGHT_DRIVE);
-  WPI_VictorSPX _leftVic = new WPI_VictorSPX(CAN_ID_LEFT_DRIVE_2);
-  WPI_VictorSPX _rightVic = new WPI_VictorSPX(CAN_ID_RIGHT_DRIVE_2);
-  SpeedControllerGroup m_right = new SpeedControllerGroup(_rightTal, _rightVic);
-  SpeedControllerGroup m_left = new SpeedControllerGroup(_leftTal, _leftVic);
+  
+  CANSparkMax _left1 = new CANSparkMax(CAN_ID_LEFT_DRIVE,MotorType.kBrushless);
+  CANSparkMax _right1 = new CANSparkMax(CAN_ID_RIGHT_DRIVE,MotorType.kBrushless);
+  CANSparkMax _left2 = new CANSparkMax(CAN_ID_LEFT_DRIVE_2,MotorType.kBrushless);
+  CANSparkMax _right2 = new CANSparkMax(CAN_ID_RIGHT_DRIVE_2,MotorType.kBrushless);
+  SpeedControllerGroup m_right = new SpeedControllerGroup(_right1, _right2);
+  SpeedControllerGroup m_left = new SpeedControllerGroup(_left1, _left2);
 
   // The robot's drive
-  private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
-
-  // The left-side drive encoder
-  private final Encoder m_leftEncoder =
+  //private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
+ // The robot's drive
+ private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
+  
+  // slew limniter for speed
+  SlewRateLimiter m_speedSlew = new SlewRateLimiter(kSlewSpeed);
+  SlewRateLimiter m_turnSlew = new SlewRateLimiter(kSlewTurn);
+ // The left-side drive encoder
+    private final Encoder m_leftEncoder =
       new Encoder(kLeftEncoderPorts[0], kLeftEncoderPorts[1], kLeftEncoderReversed);
 
   // The right-side drive encoder
@@ -66,7 +77,18 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(fwd, rot);
+    m_drive.arcadeDrive(m_speedSlew.calculate(fwd), m_turnSlew.calculate(rot));
+  }
+
+    /**
+   * Drives the robot using arcade controls.
+   *
+   * @param fwd the commanded forward movement
+   * @param rot the commanded rotation
+   * @param quickTurn button to quickTurn
+   */
+  public void curvatureDrive(double fwd, double rot, boolean quickTurn) {
+    m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), rot, quickTurn);
   }
 
   /**
