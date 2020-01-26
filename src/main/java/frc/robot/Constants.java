@@ -18,10 +18,10 @@ package frc.robot;
 public final class Constants {
   public static final class DriveConstants {
 
-    public static final int CAN_ID_LEFT_DRIVE = 2;
-    public static final int CAN_ID_RIGHT_DRIVE = 0;
+    public static final int CAN_ID_LEFT_DRIVE = 1;
+    public static final int CAN_ID_RIGHT_DRIVE = 2;
     public static final int CAN_ID_LEFT_DRIVE_2 = 3;
-    public static final int CAN_ID_RIGHT_DRIVE_2 = 1;
+    public static final int CAN_ID_RIGHT_DRIVE_2 = 4;
 
     public static final int CAN_ID_BALL_LAUNCH_LEFT = 6;
     public static final int CAN_ID_BALL_LAUNCH_RIGHT = 20;
@@ -36,6 +36,8 @@ public final class Constants {
     public static final double kEncoderDistancePerPulse =
         // Assumes the encoders are directly mounted on the wheel shafts
         (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
+    public static final double kSlewSpeed = 36;
+    public static final double kSlewTurn = 48;
   }
 
   public static final class BallLauncherConstants {

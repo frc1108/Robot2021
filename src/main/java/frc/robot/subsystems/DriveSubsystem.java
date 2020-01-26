@@ -20,10 +20,13 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANEncoder;
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 
 import static frc.robot.Constants.DriveConstants.kEncoderDistancePerPulse;
 import static frc.robot.Constants.DriveConstants.kLeftEncoderPorts;
 import static frc.robot.Constants.DriveConstants.kLeftEncoderReversed;
+import static frc.robot.Constants.DriveConstants.kSlewSpeed;
+import static frc.robot.Constants.DriveConstants.kSlewTurn;
 
 import static frc.robot.Constants.DriveConstants.kRightEncoderPorts;
 import static frc.robot.Constants.DriveConstants.kRightEncoderReversed;
@@ -44,10 +47,15 @@ public class DriveSubsystem extends SubsystemBase {
   SpeedControllerGroup m_left = new SpeedControllerGroup(_left1, _left2);
 
   // The robot's drive
-  private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
-
-  // The left-side drive encoder
-  private final Encoder m_leftEncoder =
+  //private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
+ // The robot's drive
+ private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
+  
+  // slew limniter for speed
+  SlewRateLimiter m_speedSlew = new SlewRateLimiter(kSlewSpeed);
+  SlewRateLimiter m_turnSlew = new SlewRateLimiter(kSlewTurn);
+ // The left-side drive encoder
+    private final Encoder m_leftEncoder =
       new Encoder(kLeftEncoderPorts[0], kLeftEncoderPorts[1], kLeftEncoderReversed);
 
   // The right-side drive encoder
@@ -70,7 +78,18 @@ public class DriveSubsystem extends SubsystemBase {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(fwd, rot);
+    m_drive.arcadeDrive(m_speedSlew.calculate(fwd), m_turnSlew.calculate(rot));
+  }
+
+    /**
+   * Drives the robot using arcade controls.
+   *
+   * @param fwd the commanded forward movement
+   * @param rot the commanded rotation
+   * @param quickTurn button to quickTurn
+   */
+  public void curvatureDrive(double fwd, double rot, boolean quickTurn) {
+    m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), rot, quickTurn);
   }
 
   /**
