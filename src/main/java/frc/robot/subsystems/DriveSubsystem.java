@@ -7,9 +7,7 @@
 
 package frc.robot.subsystems;
 
-import com.analog.adis16470.frc.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.Encoder;
-//import edu.wpi.first.wpilibj.PWMVictorSPX;
 //import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
