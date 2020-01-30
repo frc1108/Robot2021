@@ -87,7 +87,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param quickTurn button to quickTurn
    */
   public void curvatureDrive(double fwd, double rot, boolean quickTurn) {
-    m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), rot, quickTurn);
+    m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot), quickTurn);
   }
 
   /**
