@@ -50,38 +50,27 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
-m_intakesystem.setDefaultCommand(
-  
-new DefaultIntake(
-  m_intakesystem,
-  () -> intakespeed
-)
-
-);
-    m_robotLaunch.setDefaultCommand(
-      
-      new DefaultLauncher(
-        m_robotLaunch,
-        () -> ballSpeed,
-        () -> ballSpeed
-      )
-     
-       // () -> m_driverController.getX(GenericHID.Hand.kRight),
-      //  () -> m_driverController.getX(GenericHID.Hand.kRight)
-    );
-
-
+    
     // Configure default commands
-    // Set the default drive command to split-stick arcade drive
+    // Default robot Drive is single-stick curvature drive
     m_robotDrive.setDefaultCommand(
-        // A split-stick arcade command, with forward/backward controlled by the left
-        // hand, and turning controlled by the right.
+        // A split-stick curvature command, with forward/backward controlled by the left Y
+        // hand, and turning controlled by the left X axis, and quick turn on right hand bumper.
         new RunCommand(()->m_robotDrive
             .curvatureDrive(m_driverController.getY(GenericHID.Hand.kLeft),
                             m_driverController.getX(GenericHID.Hand.kLeft),
                             m_driverController.getBumper(GenericHID.Hand.kRight)), m_robotDrive));
- 
+
+    // Default robot Intake is off
+    m_intakesystem.setDefaultCommand(
+      new DefaultIntake(m_intakesystem,() -> intakespeed));
+    
+    // Default robot Launcher is off
+    m_robotLaunch.setDefaultCommand(
+      new DefaultLauncher(
+        m_robotLaunch,
+        () -> ballSpeed,
+        () -> ballSpeed));
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);

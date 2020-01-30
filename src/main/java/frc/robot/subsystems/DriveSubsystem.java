@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANEncoder;
+//import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 
 import static frc.robot.Constants.DriveConstants.kEncoderDistancePerPulse;

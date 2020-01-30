@@ -7,9 +7,6 @@ import edu.wpi.first.wpilibj.Counter;
 //import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
-import static frc.robot.Constants.DriveConstants.CAN_ID_BALL_LAUNCH_LEFT;
-import static frc.robot.Constants.DriveConstants.CAN_ID_BALL_LAUNCH_RIGHT;
-
 import static frc.robot.Constants.HopperConstants.KEL_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.GUS_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.CAN_ID_Hopper_Axle;
