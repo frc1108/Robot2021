@@ -44,6 +44,13 @@ public final class Constants {
     public static final double kLaunchspeed = 4000; //in rpm
     
   }
+  public static final class HopperConstants {
+    public static final int KEL_LIMIT_SWITCH = 1; //upper limit switch
+    public static final int GUS_LIMIT_SWITCH = 2; //lower limit switch
+    public static final double intakespeed = 0.2; //speed
+    public static final int CAN_ID_Hopper_Axle = 21; //Axle
+    public static final int CAN_ID_Hopper_Intake = 22; //Intake
+  }
 
 
   public static final class OIConstants {

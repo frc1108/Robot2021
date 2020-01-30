@@ -17,10 +17,13 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import frc.robot.commands.DefaultDrive;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.commands.DefaultLauncher;
+import frc.robot.commands.DefaultIntake;
 
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
+import static frc.robot.Constants.HopperConstants.intakespeed;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -34,7 +37,7 @@ public class RobotContainer {
   private final BallLauncher m_robotLaunch = new BallLauncher();
   private final double ballSpeed = 0.5;
   // The autonomous routines
-
+  private final HopperSubsystem m_intakesystem = new HopperSubsystem();
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -49,7 +52,14 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+m_intakesystem.setDefaultCommand(
+  
+new DefaultIntake(
+  m_intakesystem,
+  () -> intakespeed
+)
 
+);
     m_robotLaunch.setDefaultCommand(
       
       new DefaultLauncher(
