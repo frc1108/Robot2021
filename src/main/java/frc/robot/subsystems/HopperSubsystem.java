@@ -13,12 +13,10 @@ import static frc.robot.Constants.DriveConstants.CAN_ID_BALL_LAUNCH_RIGHT;
 import static frc.robot.Constants.HopperConstants.KEL_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.GUS_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.CAN_ID_Hopper_Axle;
-import static frc.robot.Constants.HopperConstants.CAN_ID_Hopper_Intake;
 
 public class HopperSubsystem extends SubsystemBase {
 
     WPI_VictorSPX _HopperAxle = new WPI_VictorSPX(CAN_ID_Hopper_Axle);
-    WPI_VictorSPX _HopperIntake = new WPI_VictorSPX(CAN_ID_Hopper_Intake);
 
      DigitalInput _HighSwitch=new DigitalInput(KEL_LIMIT_SWITCH); 
      DigitalInput _LowSwitch=new DigitalInput(GUS_LIMIT_SWITCH); 
@@ -47,7 +45,5 @@ public class HopperSubsystem extends SubsystemBase {
         _HopperAxle.set(hopper_spd);
     }
 
-    public void IntakeMotor(double intake_spd){
-        _HopperIntake.set(intake_spd);
-    }
+
 }
