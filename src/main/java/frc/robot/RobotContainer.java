@@ -9,10 +9,11 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-//import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import frc.robot.subsystems.DriveSubsystem;
@@ -21,9 +22,13 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.DefaultIntake;
+import frc.robot.commands.LowerWhopper;
+import frc.robot.commands.RaiseHopper;
+import frc.robot.commands.ManualHopper;
 
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
 import static frc.robot.Constants.IntakeConstants.intakespeed;
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -35,10 +40,11 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final BallLauncher m_robotLaunch = new BallLauncher();
+
   private final double ballSpeed = 0.5;
   // The autonomous routines
   private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
-
+  private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -52,14 +58,20 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-m_intakesystem.setDefaultCommand(
-  
-new DefaultIntake(
-  m_intakesystem,
-  () -> intakespeed
-)
+    m_intakesystem.setDefaultCommand(
+      new DefaultIntake(
+        m_intakesystem,
+        () -> intakespeed
+      )
+    );
 
-);
+    m_hoppersystem.setDefaultCommand(
+      new ManualHopper(
+        m_hoppersystem,
+        () -> m_driverController.getY(GenericHID.Hand.kRight)
+      )
+    );
+    
     m_robotLaunch.setDefaultCommand(
       
       new DefaultLauncher(
@@ -96,11 +108,11 @@ new DefaultIntake(
    */
   private void configureButtonBindings() {
     // Grab the hatch when the 'A' button is pressed.
-    //new JoystickButton(m_driverController, Button.kA.value)
-    //    .whenPressed(new GrabHatch(m_hatchSubsystem));
+    new JoystickButton(m_driverController, 1)
+        .whenPressed(new LowerWhopper(m_hoppersystem));
     // Release the hatch when the 'B' button is pressed.
-    //new JoystickButton(m_driverController, Button.kB.value)
-    //    .whenPressed(new ReleaseHatch(m_hatchSubsystem));
+    new JoystickButton(m_driverController, 2)
+        .whenPressed(new RaiseHopper(m_hoppersystem));
     // While holding the shoulder button, drive at half speed
     //new JoystickButton(m_driverController, Button.kBumperRight.value)
     //    .whenHeld(new HalveDriveSpeed(m_robotDrive));

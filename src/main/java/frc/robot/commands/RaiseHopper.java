@@ -23,13 +23,18 @@ public class RaiseHopper extends CommandBase {
    */
   public RaiseHopper(HopperSubsystem subsystem) {
     m_hopper = subsystem;
+    addRequirements(m_hopper);
   }
 
   @Override
   public void initialize() {
-   m_hopper.HopperMotor(0.1);
+
   }
 
+  @Override
+  public void execute() {
+    m_hopper.HopperMotor(0.5);
+  }
   @Override
   public void end(boolean interrupted) {
     m_hopper.HopperMotor(0);

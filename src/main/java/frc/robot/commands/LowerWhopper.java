@@ -23,11 +23,16 @@ public class LowerWhopper extends CommandBase {
    */
   public LowerWhopper(HopperSubsystem subsystem) {
     m_hopper = subsystem;
+    addRequirements(m_hopper);
   }
 
   @Override
   public void initialize() {
-   m_hopper.HopperMotor(-0.1);
+  }
+
+  @Override
+  public void execute() {
+    m_hopper.HopperMotor(-0.5);
   }
 
   @Override
