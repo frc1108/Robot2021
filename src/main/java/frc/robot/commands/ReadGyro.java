@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.HopperSubsystem;
 
-public class RaiseHopper extends CommandBase {
-  private final HopperSubsystem m_hopper;
+public class ReadGyro extends CommandBase {
+  
 
   /**
+
    */
-  public RaiseHopper(HopperSubsystem subsystem) {
-    m_hopper = subsystem;
-    addRequirements(m_hopper);
+  public ReadGyro() {
+
   }
 
   @Override
@@ -28,15 +28,15 @@ public class RaiseHopper extends CommandBase {
 
   @Override
   public void execute() {
-    m_hopper.HopperMotor(0.5);
+   
   }
   @Override
   public void end(boolean interrupted) {
-    m_hopper.HopperMotor(0);
+   
   }
 
   @Override
   public boolean isFinished() {
-    return m_hopper.isHighSwitchSet();
+    return false;
   }
 }

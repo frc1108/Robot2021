@@ -15,11 +15,7 @@ public class LowerWhopper extends CommandBase {
   private final HopperSubsystem m_hopper;
 
   /**
-   * Creates a new DriveDistance.
-   *
-   * @param inches The number of inches the robot will drive
-   * @param speed The speed at which the robot will drive
-   * @param drive The drive subsystem on which this command will run
+
    */
   public LowerWhopper(HopperSubsystem subsystem) {
     m_hopper = subsystem;

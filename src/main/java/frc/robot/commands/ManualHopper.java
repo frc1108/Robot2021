@@ -15,11 +15,6 @@ public class ManualHopper extends CommandBase {
   private final HopperSubsystem m_hopper;
   private final DoubleSupplier hopper_spd;
   /**
-   * Creates a new DriveDistance.
-   *
-   * @param inches The number of inches the robot will drive
-   * @param speed The speed at which the robot will drive
-   * @param drive The drive subsystem on which this command will run
    */
   public ManualHopper(HopperSubsystem subsystem, DoubleSupplier speed) {
     m_hopper = subsystem;
@@ -43,6 +38,6 @@ public class ManualHopper extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return m_hopper.isHighSwitchSet();
+   return false;
   }
 }

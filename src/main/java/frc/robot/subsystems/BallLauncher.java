@@ -15,7 +15,7 @@ public class BallLauncher extends SubsystemBase {
     WPI_TalonSRX _rightBallThrow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_RIGHT);
 
     public void throwBall(double left_spd, double right_spd){
-        _leftBallThrow.set(-left_spd);
-        _rightBallThrow.set(right_spd);
+        _leftBallThrow.set(left_spd);
+        _rightBallThrow.set(-right_spd);
     }
 }

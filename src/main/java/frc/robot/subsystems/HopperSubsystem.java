@@ -41,6 +41,11 @@ public class HopperSubsystem extends SubsystemBase {
     }
 
     public void HopperMotor(double hopper_spd){
-        _HopperAxle.set(hopper_spd);
+        if ((!_LowSwitch.get() && hopper_spd < 0) || !_HighSwitch.get() && hopper_spd > 0 ) {
+            _HopperAxle.set(-hopper_spd);
+        } else {
+            _HopperAxle.set(0);
+        }
+
     }
 }
