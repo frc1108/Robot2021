@@ -42,19 +42,27 @@ public class HopperSubsystem extends SubsystemBase {
 
     public void HopperMotor(double hopper_spd){
         // temporary max speed
-        if (hopper_spd > 0.2){
-            _HopperAxle.set(-0.2); 
-        } else {
-            _HopperAxle.set(-hopper_spd*0.2); 
+        double spd = -hopper_spd;
+
+        if (Math.abs(spd) > 0.2){
+            spd = 0.2*Math.signum(spd);  
+        } 
+
+        // temporary deadband
+        if (Math.abs(spd) < 0.1){
+            spd = 0;
         }
+   
+        _HopperAxle.set(spd); 
         
-        /* Logic needs to be tested to verify polarity is correct
-        if ((!_LowSwitch.get() && hopper_spd < 0) || !_HighSwitch.get() && hopper_spd > 0 ) {
-            _HopperAxle.set(-hopper_spd);
+        //Logic needs to be tested to verify polarity is correct
+        
+        if ((!_LowSwitch.get() && spd < 0) || !_HighSwitch.get() && spd > 0 ) {
+            _HopperAxle.set(spd);
         } else {
             _HopperAxle.set(0);
         }
-        */
+        
 
     }
 }

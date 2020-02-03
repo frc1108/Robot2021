@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -62,14 +61,16 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
+    
     m_intakesystem.setDefaultCommand(
       new DefaultIntake(
         m_intakesystem,
         () -> intakespeed
       )
     );
+    
 
-    gyro.setDefaultCommand(new ReadGyro(gyro));
+    //gyro.setDefaultCommand(new ReadGyro(gyro));
 
     m_hoppersystem.setDefaultCommand(
       new ManualHopper(
@@ -78,6 +79,9 @@ public class RobotContainer {
       )
     );
     
+  
+
+   
     m_robotLaunch.setDefaultCommand(
       
       new DefaultLauncher(
@@ -85,10 +89,8 @@ public class RobotContainer {
         () -> ballSpeed,
         () -> ballSpeed
       )
-     
-       // () -> m_driverController.getX(GenericHID.Hand.kRight),
-      //  () -> m_driverController.getX(GenericHID.Hand.kRight)
     );
+   
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
@@ -103,6 +105,7 @@ public class RobotContainer {
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
+    Shuffleboard.getTab("Testing").add(m_hoppersystem);
   }
 
   /**

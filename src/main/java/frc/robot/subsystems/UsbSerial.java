@@ -7,7 +7,7 @@ import frc.robot.lib.CR16;
 
 public class UsbSerial extends SubsystemBase {
 
-    private final SerialPort ArduinoSerial = new SerialPort(115200, SerialPort.Port.kUSB);
+    //private final SerialPort ArduinoSerial = new SerialPort(115200, SerialPort.Port.kUSB);
     byte[] buffer = new byte[7];
     int crc;
 
