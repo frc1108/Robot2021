@@ -24,8 +24,8 @@ public class DefaultLauncher extends CommandBase {
    * Creates a new DefaultDrive.
    *
    * @param subsystem The drive subsystem this command wil run on.
-   * @param forward The control input for driving forwards/backwards
-   * @param rotation The control input for turning
+   * @param leftMotor Speed for the left motor
+   * @param rightMotor Speed for the right motor
    */
   public DefaultLauncher(BallLauncher subsystem, DoubleSupplier leftMotor, DoubleSupplier rightMotor) {
     m_throw = subsystem;

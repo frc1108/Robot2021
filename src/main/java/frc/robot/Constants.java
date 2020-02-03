@@ -23,9 +23,6 @@ public final class Constants {
     public static final int CAN_ID_LEFT_DRIVE_2 = 3;
     public static final int CAN_ID_RIGHT_DRIVE_2 = 4;
 
-    public static final int CAN_ID_BALL_LAUNCH_LEFT = 6;
-    public static final int CAN_ID_BALL_LAUNCH_RIGHT = 20;
-
     public static final int[] kLeftEncoderPorts = new int[]{0, 1};
     public static final int[] kRightEncoderPorts = new int[]{2, 3};
     public static final boolean kLeftEncoderReversed = false;
@@ -41,15 +38,25 @@ public final class Constants {
   }
 
   public static final class BallLauncherConstants {
+    public static final int CAN_ID_BALL_LAUNCH_LEFT = 7;
+    public static final int CAN_ID_BALL_LAUNCH_RIGHT = 8;
     public static final double kLaunchspeed = 4000; //in rpm
     
   }
   public static final class HopperConstants {
     public static final int KEL_LIMIT_SWITCH = 1; //upper limit switch
     public static final int GUS_LIMIT_SWITCH = 2; //lower limit switch
+    public static final int CAN_ID_Hopper_Axle = 5; //Axle
+  }
+
+  public static final class IntakeConstants {
     public static final double intakespeed = 0.2; //speed
-    public static final int CAN_ID_Hopper_Axle = 21; //Axle
-    public static final int CAN_ID_Hopper_Intake = 22; //Intake
+    public static final int CAN_ID_Hopper_Intake = 6; //Intake
+    public static final int CAN_ID_Launcher_Intake = 9; // launcher intake
+  }
+
+  public static final class ClimberConstants {
+    public static final int CAN_ID_WINCH = 10; //Intake
   }
 
 

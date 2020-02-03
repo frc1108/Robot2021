@@ -26,8 +26,8 @@ import static frc.robot.Constants.DriveConstants.kLeftEncoderReversed;
 import static frc.robot.Constants.DriveConstants.kSlewSpeed;
 import static frc.robot.Constants.DriveConstants.kSlewTurn;
 
-import static frc.robot.Constants.DriveConstants.kRightEncoderPorts;
-import static frc.robot.Constants.DriveConstants.kRightEncoderReversed;
+//import static frc.robot.Constants.DriveConstants.kRightEncoderPorts;
+//import static frc.robot.Constants.DriveConstants.kRightEncoderReversed;
 
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE;
@@ -53,20 +53,20 @@ public class DriveSubsystem extends SubsystemBase {
   SlewRateLimiter m_speedSlew = new SlewRateLimiter(kSlewSpeed);
   SlewRateLimiter m_turnSlew = new SlewRateLimiter(kSlewTurn);
  // The left-side drive encoder
-    private final Encoder m_leftEncoder =
-      new Encoder(kLeftEncoderPorts[0], kLeftEncoderPorts[1], kLeftEncoderReversed);
+   // private final Encoder m_leftEncoder =
+     // new Encoder(kLeftEncoderPorts[0], kLeftEncoderPorts[1], kLeftEncoderReversed);
 
   // The right-side drive encoder
-  private final Encoder m_rightEncoder =
-      new Encoder(kRightEncoderPorts[0], kRightEncoderPorts[1], kRightEncoderReversed);
+ // private final Encoder m_rightEncoder =
+     // new Encoder(kRightEncoderPorts[0], kRightEncoderPorts[1], kRightEncoderReversed);
 
   /**
    * Creates a new DriveSubsystem.
    */
   public DriveSubsystem() {
     // Sets the distance per pulse for the encoders
-    m_leftEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
-    m_rightEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
+   // m_leftEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
+   // m_rightEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
   }
 
   /**
@@ -93,37 +93,38 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Resets the drive encoders to currently read a position of 0.
    */
-  public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
-  }
+//  public void resetEncoders() {
+   // m_leftEncoder.reset();
+  //  m_rightEncoder.reset();
+  //}
 
   /**
    * Gets the average distance of the TWO encoders.
    *
    * @return the average of the TWO encoder readings
    */
-  public double getAverageEncoderDistance() {
-    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
-  }
+ // public double getAverageEncoderDistance() {
+   // return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+//  }
 
   /**
    * Gets the left drive encoder.
    *
    * @return the left drive encoder
    */
-  public Encoder getLeftEncoder() {
-    return m_leftEncoder;
-  }
+ // public Encoder getLeftEncoder() {
+   // return m_leftEncoder;
+ // }
 
   /**
    * Gets the right drive encoder.
    *
    * @return the right drive encoder
    */
-  public Encoder getRightEncoder() {
-    return m_rightEncoder;
-  }
+ // public Encoder getRightEncoder() {
+   // return m_rightEncoder;
+ // }
+  
 
   /**
    * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.

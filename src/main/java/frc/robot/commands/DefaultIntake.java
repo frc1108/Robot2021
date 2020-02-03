@@ -10,13 +10,13 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.subsystems.HopperSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * A command to drive the robot with joystick input
  */
 public class DefaultIntake extends CommandBase {
-  private final HopperSubsystem m_ballcatcher;
+  private final IntakeSubsystem m_ballcatcher;
   private final DoubleSupplier m_intakespeed;
 
   /**
@@ -26,7 +26,7 @@ public class DefaultIntake extends CommandBase {
    * @param forward The control input for driving forwards/backwards
    * @param rotation The control input for turning
    */
-  public DefaultIntake(HopperSubsystem subsystem, DoubleSupplier intakemotor) {
+  public DefaultIntake(IntakeSubsystem subsystem, DoubleSupplier intakemotor) {
     m_ballcatcher = subsystem;
     m_intakespeed = intakemotor;
     addRequirements(m_ballcatcher);

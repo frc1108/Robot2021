@@ -8,37 +8,33 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
-import frc.robot.subsystems.DriveSubsystem;
-
-public class DriveDistance extends CommandBase {
-  private final DriveSubsystem m_drive;
-  private final double m_distance;
-  private final double m_speed;
-
+import frc.robot.subsystems.UsbSerial;
+ 
+public class ReadGyro extends CommandBase {
+   private UsbSerial arduino = new UsbSerial();
   /**
 
    */
-  public DriveDistance(double inches, double speed, DriveSubsystem drive) {
-    m_distance = inches;
-    m_speed = speed;
-    m_drive = drive;
+  public ReadGyro(UsbSerial subsystem) {
+    addRequirements(subsystem);
   }
 
   @Override
   public void initialize() {
-   // m_drive.resetEncoders();
-    m_drive.arcadeDrive(m_speed, 0);
+    
   }
 
   @Override
+  public void execute() {
+    arduino.getArduino();
+  }
+  @Override
   public void end(boolean interrupted) {
-    m_drive.arcadeDrive(0, 0);
+   
   }
 
   @Override
   public boolean isFinished() {
-   // return Math.abs(m_drive.getAverageEncoderDistance()) >= m_distance;
-   return true;
+    return false;
   }
 }

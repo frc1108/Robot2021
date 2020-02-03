@@ -4,47 +4,67 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Counter;
-//import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import static frc.robot.Constants.HopperConstants.KEL_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.GUS_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.CAN_ID_Hopper_Axle;
-import static frc.robot.Constants.HopperConstants.CAN_ID_Hopper_Intake;
 
 public class HopperSubsystem extends SubsystemBase {
 
-    WPI_VictorSPX _HopperAxle = new WPI_VictorSPX(CAN_ID_Hopper_Axle);
-    WPI_VictorSPX _HopperIntake = new WPI_VictorSPX(CAN_ID_Hopper_Intake);
+    WPI_TalonSRX _HopperAxle = new WPI_TalonSRX(CAN_ID_Hopper_Axle);
 
      DigitalInput _HighSwitch=new DigitalInput(KEL_LIMIT_SWITCH); 
      DigitalInput _LowSwitch=new DigitalInput(GUS_LIMIT_SWITCH); 
 
-     Counter UpperCounter = new Counter(_HighSwitch);
-     Counter LowerCounter = new Counter(_LowSwitch);
-
+     //Counter UpperCounter = new Counter(_HighSwitch);
+     //Counter LowerCounter = new Counter(_LowSwitch);
+    
      
     public boolean isHighSwitchSet() {
-        return UpperCounter.get() > 0;
+        return _HighSwitch.get();
+        //return UpperCounter.get() > 0;
     }
 
     public void initializeHighCounter() {
-        UpperCounter.reset();
+      //  UpperCounter.reset();
     }
    
     public boolean isLowSwitchSet() {
-        return LowerCounter.get() > 0;
+        return _LowSwitch.get();
+        //return LowerCounter.get() > 0;
     }
 
     public void initializeLowCounter() {
-        LowerCounter.reset();
+        //LowerCounter.reset();
     }
 
     public void HopperMotor(double hopper_spd){
-        _HopperAxle.set(hopper_spd);
-    }
+       
+        // temporary max speed
+        double spd = -hopper_spd;
 
-    public void IntakeMotor(double intake_spd){
-        _HopperIntake.set(intake_spd);
+        if (Math.abs(spd) > 0.2){
+            spd = 0.2*Math.signum(spd);  
+        } 
+
+        // temporary deadband
+        if (Math.abs(spd) < 0.1){
+            spd = 0;
+        }
+   
+        _HopperAxle.set(spd); 
+        
+        //Logic needs to be tested to verify polarity is correct
+        
+        if ((!_LowSwitch.get() && spd < 0) || !_HighSwitch.get() && spd > 0 ) {
+            _HopperAxle.set(spd);
+        } else {
+            _HopperAxle.set(0);
+        }
+        
+
     }
 }
