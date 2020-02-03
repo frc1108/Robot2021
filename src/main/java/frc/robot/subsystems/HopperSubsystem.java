@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Counter;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import static frc.robot.Constants.HopperConstants.KEL_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.GUS_LIMIT_SWITCH; 
@@ -20,7 +21,7 @@ public class HopperSubsystem extends SubsystemBase {
 
      //Counter UpperCounter = new Counter(_HighSwitch);
      //Counter LowerCounter = new Counter(_LowSwitch);
-
+    
      
     public boolean isHighSwitchSet() {
         return _HighSwitch.get();
@@ -41,6 +42,7 @@ public class HopperSubsystem extends SubsystemBase {
     }
 
     public void HopperMotor(double hopper_spd){
+       
         // temporary max speed
         double spd = -hopper_spd;
 
