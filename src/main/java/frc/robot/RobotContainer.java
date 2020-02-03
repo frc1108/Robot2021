@@ -20,11 +20,14 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
+import frc.robot.subsystems.UsbSerial;
+
 import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.DefaultIntake;
 import frc.robot.commands.LowerWhopper;
 import frc.robot.commands.RaiseHopper;
 import frc.robot.commands.ManualHopper;
+import frc.robot.commands.ReadGyro;
 
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
 import static frc.robot.Constants.IntakeConstants.intakespeed;
@@ -40,8 +43,9 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final BallLauncher m_robotLaunch = new BallLauncher();
+  private final UsbSerial gyro = new UsbSerial();
 
-  private final double ballSpeed = 0.5;
+  private final double ballSpeed = 0.43;
   // The autonomous routines
   private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
   private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
@@ -65,6 +69,8 @@ public class RobotContainer {
       )
     );
 
+    gyro.setDefaultCommand(new ReadGyro(gyro));
+
     m_hoppersystem.setDefaultCommand(
       new ManualHopper(
         m_hoppersystem,
@@ -83,7 +89,6 @@ public class RobotContainer {
        // () -> m_driverController.getX(GenericHID.Hand.kRight),
       //  () -> m_driverController.getX(GenericHID.Hand.kRight)
     );
-
 
     // Configure default commands
     // Set the default drive command to split-stick arcade drive
