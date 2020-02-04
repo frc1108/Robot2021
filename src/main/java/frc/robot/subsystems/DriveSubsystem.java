@@ -35,7 +35,9 @@ import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE_2;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
 
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+import io.github.oblarg.oblog.annotations.Config.Configs;
 
 public class DriveSubsystem extends SubsystemBase implements Loggable {
 
@@ -53,9 +55,9 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   // The robot's drive
   //private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
- // The robot's drive
- @Log.DifferentialDrive(name = "Drive")
- private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
+  // The robot's drive
+  @Log.DifferentialDrive(name = "Main Drive")
+  private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
   
   // slew limniter for speed
   SlewRateLimiter m_speedSlew = new SlewRateLimiter(kSlewSpeed);
@@ -133,7 +135,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    // return m_rightEncoder;
  // }
   
-
+  @Config(name="Max Drive Output", defaultValueNumeric = 1)
   /**
    * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
    *
