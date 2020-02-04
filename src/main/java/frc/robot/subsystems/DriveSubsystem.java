@@ -34,19 +34,24 @@ import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE_2;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
 
-public class DriveSubsystem extends SubsystemBase {
+public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   
   CANSparkMax _left1 = new CANSparkMax(CAN_ID_LEFT_DRIVE,MotorType.kBrushless);
   CANSparkMax _right1 = new CANSparkMax(CAN_ID_RIGHT_DRIVE,MotorType.kBrushless);
   CANSparkMax _left2 = new CANSparkMax(CAN_ID_LEFT_DRIVE_2,MotorType.kBrushless);
   CANSparkMax _right2 = new CANSparkMax(CAN_ID_RIGHT_DRIVE_2,MotorType.kBrushless);
+
+  @Log.SpeedController(name = "Right Motors")
   SpeedControllerGroup m_right = new SpeedControllerGroup(_right1, _right2);
+
+  @Log.SpeedController(name = "Left Motors")
   SpeedControllerGroup m_left = new SpeedControllerGroup(_left1, _left2);
 
   // The robot's drive
   //private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
  // The robot's drive
+ @Log.DifferentialDrive(name = "Drive")
  private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
   
   // slew limniter for speed
