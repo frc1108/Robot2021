@@ -22,9 +22,7 @@ import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE_2;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
-
-    
-
+  
 public class DriveSubsystem extends SubsystemBase {
   
   CANSparkMax _left1 = new CANSparkMax(CAN_ID_LEFT_DRIVE,MotorType.kBrushless);
