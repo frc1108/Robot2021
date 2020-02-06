@@ -8,65 +8,66 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
-//import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 
-import static frc.robot.Constants.DriveConstants.kEncoderDistancePerPulse;
-import static frc.robot.Constants.DriveConstants.kLeftEncoderPorts;
-import static frc.robot.Constants.DriveConstants.kLeftEncoderReversed;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANEncoder;
+
 import static frc.robot.Constants.DriveConstants.kSlewSpeed;
 import static frc.robot.Constants.DriveConstants.kSlewTurn;
-
-//import static frc.robot.Constants.DriveConstants.kRightEncoderPorts;
-//import static frc.robot.Constants.DriveConstants.kRightEncoderReversed;
-
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE_2;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
 
 public class DriveSubsystem extends SubsystemBase {
-
   
   CANSparkMax _left1 = new CANSparkMax(CAN_ID_LEFT_DRIVE,MotorType.kBrushless);
   CANSparkMax _right1 = new CANSparkMax(CAN_ID_RIGHT_DRIVE,MotorType.kBrushless);
   CANSparkMax _left2 = new CANSparkMax(CAN_ID_LEFT_DRIVE_2,MotorType.kBrushless);
   CANSparkMax _right2 = new CANSparkMax(CAN_ID_RIGHT_DRIVE_2,MotorType.kBrushless);
-  SpeedControllerGroup m_right = new SpeedControllerGroup(_right1, _right2);
-  SpeedControllerGroup m_left = new SpeedControllerGroup(_left1, _left2);
+  private SpeedControllerGroup m_right = new SpeedControllerGroup(_right1, _right2);
+  private SpeedControllerGroup m_left = new SpeedControllerGroup(_left1, _left2);
 
   // The robot's drive
-  //private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
- // The robot's drive
- private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
+  private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
   
   // slew limniter for speed
-  SlewRateLimiter m_speedSlew = new SlewRateLimiter(kSlewSpeed);
-  SlewRateLimiter m_turnSlew = new SlewRateLimiter(kSlewTurn);
- // The left-side drive encoder
-   // private final Encoder m_leftEncoder =
-     // new Encoder(kLeftEncoderPorts[0], kLeftEncoderPorts[1], kLeftEncoderReversed);
-
-  // The right-side drive encoder
- // private final Encoder m_rightEncoder =
-     // new Encoder(kRightEncoderPorts[0], kRightEncoderPorts[1], kRightEncoderReversed);
-
+  private SlewRateLimiter m_speedSlew = new SlewRateLimiter(kSlewSpeed);
+  private SlewRateLimiter m_turnSlew = new SlewRateLimiter(kSlewTurn);
+ 
   /**
    * Creates a new DriveSubsystem.
    */
   public DriveSubsystem() {
-    // Sets the distance per pulse for the encoders
-   // m_leftEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
-   // m_rightEncoder.setDistancePerPulse(kEncoderDistancePerPulse);
+   // Zeroes drive motor output
+   _left1.set(0);
+   _left2.set(0);
+   _right1.set(0);
+   _right2.set(0);
+
+   // Restores default CANSparkMax settings
+   _left1.restoreFactoryDefaults();
+   _left2.restoreFactoryDefaults();
+   _right1.restoreFactoryDefaults();
+   _right2.restoreFactoryDefaults();
+
+   // Set Idle mode for CANSparkMax (brake)
+   _left1.setIdleMode(IdleMode.kBrake);
+   _left2.setIdleMode(IdleMode.kBrake);
+   _right1.setIdleMode(IdleMode.kBrake);
+   _right2.setIdleMode(IdleMode.kBrake);
+
+   // Set Smart Current Limit for CAN SparkMax
+   _left1.setSmartCurrentLimit(40, 60);
+   _left2.setSmartCurrentLimit(40, 60);
+   _right1.setSmartCurrentLimit(40, 60);
+   _right2.setSmartCurrentLimit(40, 60);
   }
 
   /**
