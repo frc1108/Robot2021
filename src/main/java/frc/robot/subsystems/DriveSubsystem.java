@@ -18,12 +18,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANEncoder;
 
-import static frc.robot.Constants.DriveConstants.kSlewSpeed;
-import static frc.robot.Constants.DriveConstants.kSlewTurn;
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE_2;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
+
+    
 
 public class DriveSubsystem extends SubsystemBase {
   
@@ -38,9 +38,11 @@ public class DriveSubsystem extends SubsystemBase {
   private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
   
   // slew limniter for speed
-  private SlewRateLimiter m_speedSlew = new SlewRateLimiter(kSlewSpeed);
-  private SlewRateLimiter m_turnSlew = new SlewRateLimiter(kSlewTurn);
- 
+  public double slewSpeed = 36;
+  public double slewTurn = 48;
+  private SlewRateLimiter m_speedSlew = new SlewRateLimiter(slewSpeed);
+  private SlewRateLimiter m_turnSlew = new SlewRateLimiter(slewTurn);
+
   /**
    * Creates a new DriveSubsystem.
    */
@@ -68,6 +70,10 @@ public class DriveSubsystem extends SubsystemBase {
    _left2.setSmartCurrentLimit(40, 60);
    _right1.setSmartCurrentLimit(40, 60);
    _right2.setSmartCurrentLimit(40, 60);
+
+   // Set drive deadband and safety 
+   m_drive.setDeadband(0.05);
+   m_drive.setSafetyEnabled(false);
   }
 
   /**
@@ -90,42 +96,6 @@ public class DriveSubsystem extends SubsystemBase {
   public void curvatureDrive(double fwd, double rot, boolean quickTurn) {
     m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), rot, quickTurn);
   }
-
-  /**
-   * Resets the drive encoders to currently read a position of 0.
-   */
-//  public void resetEncoders() {
-   // m_leftEncoder.reset();
-  //  m_rightEncoder.reset();
-  //}
-
-  /**
-   * Gets the average distance of the TWO encoders.
-   *
-   * @return the average of the TWO encoder readings
-   */
- // public double getAverageEncoderDistance() {
-   // return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
-//  }
-
-  /**
-   * Gets the left drive encoder.
-   *
-   * @return the left drive encoder
-   */
- // public Encoder getLeftEncoder() {
-   // return m_leftEncoder;
- // }
-
-  /**
-   * Gets the right drive encoder.
-   *
-   * @return the right drive encoder
-   */
- // public Encoder getRightEncoder() {
-   // return m_rightEncoder;
- // }
-  
 
   /**
    * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.

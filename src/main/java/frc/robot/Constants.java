@@ -27,10 +27,6 @@ public final class Constants {
     // Encoder in NEO motors calculation
     public static final double kGearRatio = 8.45;
     public static final double kWheelDiameterMeters = 0.1525;
-    
-    // Slew limiter constants for Drive 
-    public static final double kSlewSpeed = 36;
-    public static final double kSlewTurn = 48;
   }
 
   public static final class BallLauncherConstants {
