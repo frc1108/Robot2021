@@ -33,7 +33,8 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
-import static frc.robot.Constants.IntakeConstants.intakespeed;
+import static frc.robot.Constants.IntakeConstants.hopperIntakeSpeed;
+import static frc.robot.Constants.IntakeConstants.launcherIntakeSpeed;
 
 
 /**
@@ -89,7 +90,8 @@ public class RobotContainer {
     m_intakesystem.setDefaultCommand(
       new DefaultIntake(
         m_intakesystem,
-        () -> intakespeed
+        () -> hopperIntakeSpeed,
+        () -> launcherIntakeSpeed
       )
     );
     
@@ -128,7 +130,9 @@ public class RobotContainer {
 
     // Default robot Intake is off
     m_intakesystem.setDefaultCommand(
-      new DefaultIntake(m_intakesystem,() -> intakespeed));
+      new DefaultIntake(m_intakesystem,
+      () -> hopperIntakeSpeed,
+      () -> launcherIntakeSpeed));
     
     // Default robot Launcher is off
     m_robotLaunch.setDefaultCommand(

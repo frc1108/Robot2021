@@ -18,9 +18,11 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
 
     @Config.NumberSlider(name="Hopper Intake Speed", defaultValue = 1, tabName = "Other",
                          width = 5, height = 5, columnIndex = 2, rowIndex = 2, min = 0)
-    public void IntakeMotor(double intake_spd){
-        _HopperIntake.set(intake_spd);
-        _LauncherIntake.set(-1);
+    public void IntakeMotor(double hopper_intake_spd){
+        _HopperIntake.set(hopper_intake_spd);
+    }
+    public void LauncherIntakeMotor(double launcher_intake_spd){
+        _LauncherIntake.set(launcher_intake_spd);
     }
 
 }

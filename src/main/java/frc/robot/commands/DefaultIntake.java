@@ -18,6 +18,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class DefaultIntake extends CommandBase {
   private final IntakeSubsystem m_ballcatcher;
   private final DoubleSupplier m_intakespeed;
+  private final DoubleSupplier m_launcherintakespeed;
 
   /**
    * Creates a new DefaultDrive.
@@ -26,14 +27,16 @@ public class DefaultIntake extends CommandBase {
    * @param forward The control input for driving forwards/backwards
    * @param rotation The control input for turning
    */
-  public DefaultIntake(IntakeSubsystem subsystem, DoubleSupplier intakemotor) {
+  public DefaultIntake(IntakeSubsystem subsystem, DoubleSupplier intakemotor, DoubleSupplier launcherintakemotor) {
     m_ballcatcher = subsystem;
     m_intakespeed = intakemotor;
+    m_launcherintakespeed = launcherintakemotor;
     addRequirements(m_ballcatcher);
   }
 
   @Override
   public void execute() {
     m_ballcatcher.IntakeMotor(m_intakespeed.getAsDouble());
+    m_ballcatcher.LauncherIntakeMotor(m_launcherintakespeed.getAsDouble());
   }
 }
