@@ -4,8 +4,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.lib.CR16;
+import io.github.oblarg.oblog.Loggable;
 
-public class UsbSerial extends SubsystemBase {
+public class UsbSerial extends SubsystemBase implements Loggable {
 
     //private final SerialPort ArduinoSerial = new SerialPort(115200, SerialPort.Port.kUSB);
     byte[] buffer = new byte[7];
