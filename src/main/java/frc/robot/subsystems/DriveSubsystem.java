@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.CANEncoder;
+//import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 
 import static frc.robot.Constants.DriveConstants.kEncoderDistancePerPulse;
@@ -34,20 +34,30 @@ import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE_2;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
 
-public class DriveSubsystem extends SubsystemBase {
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
+import io.github.oblarg.oblog.annotations.Config.Configs;
+
+public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   
   CANSparkMax _left1 = new CANSparkMax(CAN_ID_LEFT_DRIVE,MotorType.kBrushless);
   CANSparkMax _right1 = new CANSparkMax(CAN_ID_RIGHT_DRIVE,MotorType.kBrushless);
   CANSparkMax _left2 = new CANSparkMax(CAN_ID_LEFT_DRIVE_2,MotorType.kBrushless);
   CANSparkMax _right2 = new CANSparkMax(CAN_ID_RIGHT_DRIVE_2,MotorType.kBrushless);
+
+  @Log.SpeedController(name = "Right Motors")
   SpeedControllerGroup m_right = new SpeedControllerGroup(_right1, _right2);
+
+  @Log.SpeedController(name = "Left Motors")
   SpeedControllerGroup m_left = new SpeedControllerGroup(_left1, _left2);
 
   // The robot's drive
   //private final DifferentialDrive m_drive = new DifferentialDrive(m_left, m_right);
- // The robot's drive
- private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
+  // The robot's drive
+  @Log.DifferentialDrive(name = "Main Drive")
+  private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
   
   // slew limniter for speed
   SlewRateLimiter m_speedSlew = new SlewRateLimiter(kSlewSpeed);
@@ -87,7 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @param quickTurn button to quickTurn
    */
   public void curvatureDrive(double fwd, double rot, boolean quickTurn) {
-    m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), rot, quickTurn);
+    m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot), quickTurn);
   }
 
   /**
@@ -125,7 +135,7 @@ public class DriveSubsystem extends SubsystemBase {
    // return m_rightEncoder;
  // }
   
-
+  @Config(name="Max Drive Output", defaultValueNumeric = 1)
   /**
    * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
    *

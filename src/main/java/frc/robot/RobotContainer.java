@@ -12,9 +12,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -28,6 +29,9 @@ import frc.robot.commands.RaiseHopper;
 import frc.robot.commands.ManualHopper;
 import frc.robot.commands.ReadGyro;
 
+import io.github.oblarg.oblog.annotations.Config;
+import io.github.oblarg.oblog.annotations.Log;
+
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
 import static frc.robot.Constants.IntakeConstants.intakespeed;
 
@@ -39,15 +43,35 @@ import static frc.robot.Constants.IntakeConstants.intakespeed;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+
   // The robot's subsystems
+  @Config.NumberSlider(name = "Max Drive Output",
+                       methodName = "setMaxOutput",
+                       methodTypes = {double.class},
+                       defaultValue = 1)
+  @Log
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  
+  @Log
   private final BallLauncher m_robotLaunch = new BallLauncher();
+  
+  @Log
   private final UsbSerial gyro = new UsbSerial();
 
   private final double ballSpeed = 0.43;
-  // The autonomous routines
+
+  @Log
   private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
+
+  @Log
   private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
+
+  // A simple autonomous routine that does something
+  @Config.Command(name = "Autonomous Command")
+  private final Command m_autoCommand =
+     // Start by spinning up launcher
+    new WaitCommand(1);
+
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -93,15 +117,25 @@ public class RobotContainer {
    
 
     // Configure default commands
-    // Set the default drive command to split-stick arcade drive
+    // Default robot Drive is single-stick curvature drive
     m_robotDrive.setDefaultCommand(
-        // A split-stick arcade command, with forward/backward controlled by the left
-        // hand, and turning controlled by the right.
+        // A split-stick curvature command, with forward/backward controlled by the left Y
+        // hand, and turning controlled by the left X axis, and quick turn on right hand bumper.
         new RunCommand(()->m_robotDrive
             .curvatureDrive(m_driverController.getY(GenericHID.Hand.kLeft),
                             m_driverController.getX(GenericHID.Hand.kLeft),
                             m_driverController.getBumper(GenericHID.Hand.kRight)), m_robotDrive));
- 
+
+    // Default robot Intake is off
+    m_intakesystem.setDefaultCommand(
+      new DefaultIntake(m_intakesystem,() -> intakespeed));
+    
+    // Default robot Launcher is off
+    m_robotLaunch.setDefaultCommand(
+      new DefaultLauncher(
+        m_robotLaunch,
+        () -> ballSpeed,
+        () -> ballSpeed));
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);

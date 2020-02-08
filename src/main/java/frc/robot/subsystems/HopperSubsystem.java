@@ -2,6 +2,8 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Counter;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -12,11 +14,14 @@ import static frc.robot.Constants.HopperConstants.KEL_LIMIT_SWITCH;
 import static frc.robot.Constants.HopperConstants.GUS_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.CAN_ID_Hopper_Axle;
 
-public class HopperSubsystem extends SubsystemBase {
+public class HopperSubsystem extends SubsystemBase implements Loggable {
 
     WPI_TalonSRX _HopperAxle = new WPI_TalonSRX(CAN_ID_Hopper_Axle);
 
+     @Log(name = "Hopper High Limit")
      DigitalInput _HighSwitch=new DigitalInput(KEL_LIMIT_SWITCH); 
+     
+     @Log(name = "Hopper Low Limit")
      DigitalInput _LowSwitch=new DigitalInput(GUS_LIMIT_SWITCH); 
 
      //Counter UpperCounter = new Counter(_HighSwitch);
