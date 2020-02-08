@@ -24,6 +24,7 @@ import frc.robot.subsystems.UsbSerial;
 
 import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.DefaultIntake;
+import frc.robot.commands.RunIntake;
 import frc.robot.commands.LowerWhopper;
 import frc.robot.commands.RaiseHopper;
 import frc.robot.commands.ManualHopper;
@@ -59,7 +60,7 @@ public class RobotContainer {
   @Log
   private final UsbSerial gyro = new UsbSerial();
 
-  private final double ballSpeed = 0.43;
+  private final double ballSpeed = 0.60;
 
   @Log
   private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
@@ -87,14 +88,6 @@ public class RobotContainer {
     configureButtonBindings();
 
     
-    m_intakesystem.setDefaultCommand(
-      new DefaultIntake(
-        m_intakesystem,
-        () -> hopperIntakeSpeed,
-        () -> launcherIntakeSpeed
-      )
-    );
-    
 
     //gyro.setDefaultCommand(new ReadGyro(gyro));
 
@@ -105,18 +98,21 @@ public class RobotContainer {
       )
     );
     
-  
-
+    /* m_intakesystem.setDefaultCommand(
+      new DefaultIntake(m_intakesystem,
+      () -> hopperIntakeSpeed,
+      () -> launcherIntakeSpeed)); */
+    
    
-    m_robotLaunch.setDefaultCommand(
+      m_robotLaunch.setDefaultCommand(
       
       new DefaultLauncher(
         m_robotLaunch,
         () -> ballSpeed,
         () -> ballSpeed
       )
-    );
-   
+    ); 
+
 
     // Configure default commands
     // Default robot Drive is single-stick curvature drive
@@ -127,12 +123,6 @@ public class RobotContainer {
             .curvatureDrive(m_driverController.getY(GenericHID.Hand.kLeft),
                             m_driverController.getX(GenericHID.Hand.kLeft),
                             m_driverController.getBumper(GenericHID.Hand.kRight)), m_robotDrive));
-
-    // Default robot Intake is off
-    m_intakesystem.setDefaultCommand(
-      new DefaultIntake(m_intakesystem,
-      () -> hopperIntakeSpeed,
-      () -> launcherIntakeSpeed));
     
     // Default robot Launcher is off
     m_robotLaunch.setDefaultCommand(
@@ -162,6 +152,10 @@ public class RobotContainer {
     // While holding the shoulder button, drive at half speed
     //new JoystickButton(m_driverController, Button.kBumperRight.value)
     //    .whenHeld(new HalveDriveSpeed(m_robotDrive));
+    JoystickButton IntakeButton = new JoystickButton(m_driverController, XboxController.Button.kA.value); 
+    IntakeButton.toggleWhenPressed(new RunIntake(m_intakesystem,() -> launcherIntakeSpeed));
+    JoystickButton RollerButton = new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value);
+    RollerButton.whenPressed(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed));
   }
 
 

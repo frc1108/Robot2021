@@ -15,10 +15,9 @@ import frc.robot.subsystems.IntakeSubsystem;
 /**
  * A command to drive the robot with joystick input
  */
-public class DefaultIntake extends CommandBase {
+public class RunIntake extends CommandBase {
   private final IntakeSubsystem m_ballcatcher;
   private final DoubleSupplier m_intakespeed;
-
 
   /**
    * Creates a new DefaultDrive.
@@ -27,7 +26,7 @@ public class DefaultIntake extends CommandBase {
    * @param forward The control input for driving forwards/backwards
    * @param rotation The control input for turning
    */
-  public DefaultIntake(IntakeSubsystem subsystem, DoubleSupplier intakemotor) {
+  public RunIntake(IntakeSubsystem subsystem, DoubleSupplier intakemotor) {
     m_ballcatcher = subsystem;
     m_intakespeed = intakemotor;
     addRequirements(m_ballcatcher);
@@ -35,6 +34,6 @@ public class DefaultIntake extends CommandBase {
 
   @Override
   public void execute() {
-    m_ballcatcher.IntakeMotor(m_intakespeed.getAsDouble());
+    m_ballcatcher.LauncherIntakeMotor(m_intakespeed.getAsDouble());
   }
 }

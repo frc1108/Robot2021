@@ -16,8 +16,7 @@ public class IntakeSubsystem extends SubsystemBase implements Loggable{
     WPI_VictorSPX _HopperIntake = new WPI_VictorSPX(CAN_ID_Hopper_Intake);
     WPI_VictorSPX _LauncherIntake = new WPI_VictorSPX(CAN_ID_Launcher_Intake);
 
-    @Config.NumberSlider(name="Hopper Intake Speed", defaultValue = 1, tabName = "Other",
-                         width = 5, height = 5, columnIndex = 2, rowIndex = 2, min = 0)
+
     public void IntakeMotor(double hopper_intake_spd){
         _HopperIntake.set(hopper_intake_spd);
     }
