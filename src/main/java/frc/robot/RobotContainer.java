@@ -21,6 +21,7 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.UsbSerial;
+import frc.robot.subsystems.LightStrip;
 
 import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.DefaultIntake;
@@ -65,6 +66,9 @@ public class RobotContainer {
 
   @Log
   private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
+
+  @Log
+  private final LightStrip m_lightStrip = new LightStrip(9, 240);
 
   // A simple autonomous routine that does something
   @Config.Command(name = "Autonomous Command")
@@ -137,9 +141,11 @@ public class RobotContainer {
         () -> ballSpeed,
         () -> ballSpeed));
 
-    // Put the chooser on the dashboard
-    Shuffleboard.getTab("Autonomous").add(m_chooser);
-    Shuffleboard.getTab("Testing").add(m_hoppersystem);
+    m_lightStrip.setDefaultCommand(
+                 new RunCommand(()->m_lightStrip
+                     .allianceColors(),m_lightStrip));
+    
+    //Shuffleboard.getTab("Testing").add(m_hoppersystem);
   }
 
   /**
