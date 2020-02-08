@@ -16,25 +16,17 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final class DriveConstants {
+  public static final class DriveConstants{
 
+    // CAN IDs for Drive Motors
     public static final int CAN_ID_LEFT_DRIVE = 1;
     public static final int CAN_ID_RIGHT_DRIVE = 2;
     public static final int CAN_ID_LEFT_DRIVE_2 = 3;
     public static final int CAN_ID_RIGHT_DRIVE_2 = 4;
 
-    public static final int[] kLeftEncoderPorts = new int[]{0, 1};
-    public static final int[] kRightEncoderPorts = new int[]{2, 3};
-    public static final boolean kLeftEncoderReversed = false;
-    public static final boolean kRightEncoderReversed = true;
-
-    public static final int kEncoderCPR = 2048;
-    public static final double kWheelDiameterInches = 6;
-    public static final double kEncoderDistancePerPulse =
-        // Assumes the encoders are directly mounted on the wheel shafts
-        (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
-    public static final double kSlewSpeed = 36;
-    public static final double kSlewTurn = 48;
+    // Encoder in NEO motors calculation
+    public static final double kGearRatio = 8.45;
+    public static final double kWheelDiameterMeters = 0.1525;
   }
 
   public static final class BallLauncherConstants {
