@@ -16,11 +16,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj.Servo;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.UsbSerial;
+import frc.robot.subsystems.ClimberSubsystem;
 
 import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.DefaultIntake;
@@ -32,12 +34,14 @@ import frc.robot.commands.ReadGyro;
 
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
+import io.github.oblarg.oblog.annotations.Config.Configs;
 
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
 import static frc.robot.Constants.OIConstants.kOperatorControllerPort;
 import static frc.robot.Constants.IntakeConstants.hopperIntakeSpeed;
 import static frc.robot.Constants.IntakeConstants.launcherIntakeSpeed;
 import static frc.robot.Constants.BallLauncherConstants.ballLaunchSpeed;
+
 
 
 /**
@@ -53,12 +57,18 @@ public class RobotContainer {
                        methodName = "setMaxOutput",
                        methodTypes = {double.class},
                        defaultValue = 1)
+
+
+  
   @Log
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   
   @Log
   private final BallLauncher m_robotLaunch = new BallLauncher();
   
+  @Log
+  private final ClimberSubsystem m_climber = new ClimberSubsystem();
+
   @Log
   private final UsbSerial gyro = new UsbSerial();
   
@@ -83,7 +93,7 @@ public class RobotContainer {
   // The driver's controller
   XboxController m_driverController = new XboxController(kDriverControllerPort);
   // The operator's controller
-  XboxController m_operatorController = new XboxController(kDriverControllerPort);
+  XboxController m_operatorController = new XboxController(kOperatorControllerPort);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -99,7 +109,7 @@ public class RobotContainer {
     m_hoppersystem.setDefaultCommand(
       new ManualHopper(
         m_hoppersystem,
-        () -> m_driverController.getY(GenericHID.Hand.kRight)
+        () -> m_operatorController.getY(GenericHID.Hand.kRight)
       )
     );
     
@@ -153,9 +163,12 @@ public class RobotContainer {
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
     LaunchButton.toggleWhenPressed(new DefaultLauncher(m_robotLaunch,() -> ballSpeed,() -> ballSpeed));
 
+
+    new JoystickButton(m_driverController, XboxController.Button.kStart.value)
+        .whenPressed(new InstantCommand(m_climber::changeAngle, m_climber));
     /* JoystickButton RollerTrigger = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
     RollerTrigger.whenActive(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed*XboxController.Axis.kRightTrigger.value)); */
-  
+    
   }
 
 
@@ -167,4 +180,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();
   }
+  
+
 }

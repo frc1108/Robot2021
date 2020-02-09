@@ -58,4 +58,8 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
   }
+
+  public static final class PWMConstants {
+    public static final int PWM_ID_WINCH_SERVO = 1;
+  }
 }
