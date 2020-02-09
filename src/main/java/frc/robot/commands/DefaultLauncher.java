@@ -38,4 +38,14 @@ public class DefaultLauncher extends CommandBase {
   public void execute() {
     m_throw.throwBall(m_left.getAsDouble(), m_right.getAsDouble());
   }
+
+  @Override
+  public void end(boolean interrupt){
+    m_throw.throwBall(0,0);
+  }
+
+  @Override
+  public boolean isFinished(){
+    return false;
+  }
 }

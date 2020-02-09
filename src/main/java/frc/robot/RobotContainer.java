@@ -36,6 +36,7 @@ import io.github.oblarg.oblog.annotations.Log;
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
 import static frc.robot.Constants.IntakeConstants.hopperIntakeSpeed;
 import static frc.robot.Constants.IntakeConstants.launcherIntakeSpeed;
+import static frc.robot.Constants.BallLauncherConstants.ballLaunchSpeed;
 
 
 /**
@@ -59,8 +60,9 @@ public class RobotContainer {
   
   @Log
   private final UsbSerial gyro = new UsbSerial();
-
-  private final double ballSpeed = 0.50;
+  
+  @Log
+  private final double ballSpeed = ballLaunchSpeed;
 
   @Log
   private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
@@ -104,14 +106,14 @@ public class RobotContainer {
       () -> launcherIntakeSpeed)); */
     
    
-      m_robotLaunch.setDefaultCommand(
+/*       m_robotLaunch.setDefaultCommand(
       
       new DefaultLauncher(
         m_robotLaunch,
         () -> ballSpeed,
         () -> ballSpeed
       )
-    ); 
+    );  */
 
 
     // Configure default commands
@@ -124,12 +126,12 @@ public class RobotContainer {
                             m_driverController.getX(GenericHID.Hand.kLeft),
                             m_driverController.getBumper(GenericHID.Hand.kRight)), m_robotDrive));
     
-    // Default robot Launcher is off
+/*     // Default robot Launcher is off
     m_robotLaunch.setDefaultCommand(
       new DefaultLauncher(
         m_robotLaunch,
         () -> ballSpeed,
-        () -> ballSpeed));
+        () -> ballSpeed)); */
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -155,7 +157,15 @@ public class RobotContainer {
     JoystickButton IntakeButton = new JoystickButton(m_driverController, XboxController.Button.kA.value); 
     IntakeButton.toggleWhenPressed(new RunIntake(m_intakesystem,() -> launcherIntakeSpeed));
     JoystickButton RollerButton = new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value);
-    RollerButton.whenPressed(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed));
+    RollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed));
+    JoystickButton OutRollerButton = new JoystickButton(m_driverController, XboxController.Button.kBumperLeft.value);
+    OutRollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> -hopperIntakeSpeed));
+    JoystickButton LaunchButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+    LaunchButton.toggleWhenPressed(new DefaultLauncher(m_robotLaunch,() -> ballSpeed,() -> ballSpeed));
+
+    /* JoystickButton RollerTrigger = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
+    RollerTrigger.whenActive(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed*XboxController.Axis.kRightTrigger.value)); */
+  
   }
 
 
