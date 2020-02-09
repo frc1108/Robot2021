@@ -34,6 +34,7 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
+import static frc.robot.Constants.OIConstants.kOperatorControllerPort;
 import static frc.robot.Constants.IntakeConstants.hopperIntakeSpeed;
 import static frc.robot.Constants.IntakeConstants.launcherIntakeSpeed;
 import static frc.robot.Constants.BallLauncherConstants.ballLaunchSpeed;
@@ -81,6 +82,8 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController = new XboxController(kDriverControllerPort);
+  // The operator's controller
+  XboxController m_operatorController = new XboxController(kDriverControllerPort);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -123,15 +126,10 @@ public class RobotContainer {
         // hand, and turning controlled by the left X axis, and quick turn on right hand bumper.
         new RunCommand(()->m_robotDrive
             .curvatureDrive(m_driverController.getY(GenericHID.Hand.kLeft),
-                            m_driverController.getX(GenericHID.Hand.kLeft),
+                            m_driverController.getX(GenericHID.Hand.kRight),
                             m_driverController.getBumper(GenericHID.Hand.kRight)), m_robotDrive));
     
-/*     // Default robot Launcher is off
-    m_robotLaunch.setDefaultCommand(
-      new DefaultLauncher(
-        m_robotLaunch,
-        () -> ballSpeed,
-        () -> ballSpeed)); */
+
 
     // Put the chooser on the dashboard
     Shuffleboard.getTab("Autonomous").add(m_chooser);
@@ -145,22 +143,14 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Grab the hatch when the 'A' button is pressed.
-    //new JoystickButton(m_driverController, 1)
-    //    .whenPressed(new LowerWhopper(m_hoppersystem));
-    // Release the hatch when the 'B' button is pressed.
-    //new JoystickButton(m_driverController, 2)
-    //    .whenPressed(new RaiseHopper(m_hoppersystem));
-    // While holding the shoulder button, drive at half speed
-    //new JoystickButton(m_driverController, Button.kBumperRight.value)
-    //    .whenHeld(new HalveDriveSpeed(m_robotDrive));
-    JoystickButton IntakeButton = new JoystickButton(m_driverController, XboxController.Button.kA.value); 
+
+    JoystickButton IntakeButton = new JoystickButton(m_operatorController, XboxController.Button.kA.value); 
     IntakeButton.toggleWhenPressed(new RunIntake(m_intakesystem,() -> launcherIntakeSpeed));
-    JoystickButton RollerButton = new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value);
+    JoystickButton RollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
     RollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed));
-    JoystickButton OutRollerButton = new JoystickButton(m_driverController, XboxController.Button.kBumperLeft.value);
+    JoystickButton OutRollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value);
     OutRollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> -hopperIntakeSpeed));
-    JoystickButton LaunchButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+    JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
     LaunchButton.toggleWhenPressed(new DefaultLauncher(m_robotLaunch,() -> ballSpeed,() -> ballSpeed));
 
     /* JoystickButton RollerTrigger = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
