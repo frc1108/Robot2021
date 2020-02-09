@@ -60,7 +60,7 @@ public class RobotContainer {
   @Log
   private final UsbSerial gyro = new UsbSerial();
 
-  private final double ballSpeed = 0.60;
+  private final double ballSpeed = 0.50;
 
   @Log
   private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
