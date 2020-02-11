@@ -22,19 +22,19 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   
-  private Servo m_winchServo = new Servo(PWM_ID_WINCH_SERVO);
-  private double m_servoAngle;
+  Servo m_winchServo = new Servo(PWM_ID_WINCH_SERVO);
+
   public ClimberSubsystem() {
-    m_winchServo.setAngle(80);
+
   }
 
-  @Config(name="Servo Angle",defaultValueNumeric = 110)
-  public void setServoAngle(double servoAngle){
-    m_servoAngle = servoAngle;
+  public void WinchServo(double angle) {
+    m_winchServo.setAngle(angle);
   }
-  public void changeAngle(){
-    m_winchServo.setAngle(m_servoAngle);
+  public double AtAngle() {
+    return m_winchServo.getAngle();
   }
+
 /*   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.

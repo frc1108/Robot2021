@@ -96,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(m_speedSlew.calculate(fwd), m_turnSlew.calculate(rot));
+    m_drive.arcadeDrive(m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot));
   }
 
    /**

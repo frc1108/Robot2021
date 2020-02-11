@@ -31,6 +31,7 @@ import frc.robot.commands.LowerWhopper;
 import frc.robot.commands.RaiseHopper;
 import frc.robot.commands.ManualHopper;
 import frc.robot.commands.ReadGyro;
+import frc.robot.commands.MoveServo;
 
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -41,6 +42,8 @@ import static frc.robot.Constants.OIConstants.kOperatorControllerPort;
 import static frc.robot.Constants.IntakeConstants.hopperIntakeSpeed;
 import static frc.robot.Constants.IntakeConstants.launcherIntakeSpeed;
 import static frc.robot.Constants.BallLauncherConstants.ballLaunchSpeed;
+import static frc.robot.Constants.ClimberConstants.servoAngle;
+import static frc.robot.Constants.ClimberConstants.servoCloseAngle;
 
 
 
@@ -74,6 +77,12 @@ public class RobotContainer {
   
   @Log
   private final double ballSpeed = ballLaunchSpeed;
+
+  @Config
+  private final double servoAng = servoAngle;
+
+  @Config
+  private final double servoCloseAngl = servoCloseAngle;
 
   @Log
   private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
@@ -135,9 +144,8 @@ public class RobotContainer {
         // A split-stick curvature command, with forward/backward controlled by the left Y
         // hand, and turning controlled by the left X axis, and quick turn on right hand bumper.
         new RunCommand(()->m_robotDrive
-            .curvatureDrive(m_driverController.getY(GenericHID.Hand.kLeft),
-                            m_driverController.getX(GenericHID.Hand.kRight),
-                            m_driverController.getBumper(GenericHID.Hand.kRight)), m_robotDrive));
+            .arcadeDrive(m_driverController.getY(GenericHID.Hand.kLeft),
+                            m_driverController.getX(GenericHID.Hand.kRight)), m_robotDrive));
     
 
 
@@ -162,10 +170,11 @@ public class RobotContainer {
     OutRollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> -hopperIntakeSpeed));
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
     LaunchButton.toggleWhenPressed(new DefaultLauncher(m_robotLaunch,() -> ballSpeed,() -> ballSpeed));
+    JoystickButton ReleaseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kStart.value);
+    ReleaseServoButton.whenPressed(new MoveServo(m_climber,() -> servoAng));
+    JoystickButton CloseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value);
+    CloseServoButton.whenPressed(new MoveServo(m_climber,() -> servoCloseAngle));
 
-
-    new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-        .whenPressed(new InstantCommand(m_climber::changeAngle, m_climber));
     /* JoystickButton RollerTrigger = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
     RollerTrigger.whenActive(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed*XboxController.Axis.kRightTrigger.value)); */
     

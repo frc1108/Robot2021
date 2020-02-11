@@ -32,7 +32,7 @@ public final class Constants {
   public static final class BallLauncherConstants {
     public static final int CAN_ID_BALL_LAUNCH_LEFT = 7;
     public static final int CAN_ID_BALL_LAUNCH_RIGHT = 8;
-    public static final double ballLaunchSpeed = 0.50;
+    public static final double ballLaunchSpeed = 0.5;
     public static final double kLaunchspeed = 4000; //in rpm
     
   }
@@ -43,14 +43,16 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double hopperIntakeSpeed = -0.5; //hopper intake speed
-    public static final double launcherIntakeSpeed = .2; //middle intake speed
+    public static final double hopperIntakeSpeed = -0.60; //hopper intake speed
+    public static final double launcherIntakeSpeed = .38; //middle intake speed
     public static final int CAN_ID_Hopper_Intake = 6; //Intake
     public static final int CAN_ID_Launcher_Intake = 9; // launcher intake
   }
 
   public static final class ClimberConstants {
     public static final int CAN_ID_WINCH = 10; //Intake
+    public static final double servoAngle = 90; //Released Servo angle
+    public static final double servoCloseAngle = 120; //Closed Servo Angle
   }
 
 
