@@ -15,9 +15,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj.Servo;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
@@ -27,6 +29,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.DefaultIntake;
 import frc.robot.commands.RunIntake;
+import frc.robot.commands.ShootBalls;
 import frc.robot.commands.LowerWhopper;
 import frc.robot.commands.RaiseHopper;
 import frc.robot.commands.ManualHopper;
@@ -40,7 +43,6 @@ import io.github.oblarg.oblog.annotations.Config.Configs;
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
 import static frc.robot.Constants.OIConstants.kOperatorControllerPort;
 import static frc.robot.Constants.IntakeConstants.hopperIntakeSpeed;
-import static frc.robot.Constants.IntakeConstants.launcherIntakeSpeed;
 import static frc.robot.Constants.BallLauncherConstants.ballLaunchSpeed;
 import static frc.robot.Constants.ClimberConstants.servoAngle;
 import static frc.robot.Constants.ClimberConstants.servoCloseAngle;
@@ -65,6 +67,15 @@ public class RobotContainer {
   
   @Log
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+
+  @Log
+  private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
+
+  @Log
+  private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
+
+  @Log
+  private final FeederSubsystem m_feeder = new FeederSubsystem();
   
   @Log
   private final BallLauncher m_robotLaunch = new BallLauncher();
@@ -84,11 +95,6 @@ public class RobotContainer {
   @Config
   private final double servoCloseAngl = servoCloseAngle;
 
-  @Log
-  private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
-
-  @Log
-  private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
 
   // A simple autonomous routine that does something
   @Config.Command(name = "Autonomous Command")
@@ -162,14 +168,45 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    JoystickButton IntakeButton = new JoystickButton(m_operatorController, XboxController.Button.kA.value); 
-    IntakeButton.toggleWhenPressed(new RunIntake(m_intakesystem,() -> launcherIntakeSpeed));
-    JoystickButton RollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
-    RollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed));
-    JoystickButton OutRollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value);
-    OutRollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> -hopperIntakeSpeed));
+/*     new JoystickButton(m_operatorController, XboxController.Button.kA.value)
+        .whenPressed(()->m_feeder.startFeeder)
+        .whenReleased(()->m_feeder.stopFeeder); */
+
+    // Run feeder motor for time with operator button A
+    new JoystickButton(m_operatorController, XboxController.Button.kA.value)
+        .toggleWhenActive(new StartEndCommand(
+                              ()->m_feeder.slowOutFeeder(),
+                              ()->m_feeder.stopFeeder(),m_feeder).withTimeout(0.5));
+
+
+   // Reverse feeder motor for time with operator button B
+    new JoystickButton(m_operatorController, XboxController.Button.kB.value)
+        .toggleWhenActive(new WaitCommand(0.8).andThen(new StartEndCommand(
+      ()->m_feeder.startFeeder(),
+      ()->m_feeder.stopFeeder(),m_feeder).withTimeout(2.2)));
+    
+
+    // Run intake motor for time with operator button X
+    new JoystickButton(m_operatorController, XboxController.Button.kX.value)
+    .toggleWhenActive(new StartEndCommand(
+                          ()->m_feeder.slowOutFeeder(),
+                          ()->m_feeder.stopFeeder(),m_feeder).withTimeout(0.7));
+
+    //IntakeButton.toggleWhenPressed(new RunIntake(m_intakesystem,() -> launcherIntakeSpeed));
+   
+    JoystickButton rollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
+    rollerButton.whenPressed(new InstantCommand(m_intakesystem::startIntake,m_intakesystem).withTimeout(4))
+                .whenReleased(new InstantCommand(m_intakesystem::stopIntake,m_intakesystem));
+    //rollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed));
+
+    JoystickButton outRollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value);
+    outRollerButton.whenPressed(new InstantCommand(m_intakesystem::slowOutIntake,m_intakesystem))
+                .whenReleased(new InstantCommand(m_intakesystem::stopIntake,m_intakesystem));
+    //outRollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> -hopperIntakeSpeed));
+    
+    
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
-    LaunchButton.toggleWhenPressed(new DefaultLauncher(m_robotLaunch,() -> ballSpeed,() -> ballSpeed));
+    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(2.2));
     JoystickButton ReleaseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kStart.value);
     ReleaseServoButton.whenPressed(new MoveServo(m_climber,() -> servoAng));
     JoystickButton CloseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value);

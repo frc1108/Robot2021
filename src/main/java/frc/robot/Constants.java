@@ -32,10 +32,9 @@ public final class Constants {
   public static final class BallLauncherConstants {
     public static final int CAN_ID_BALL_LAUNCH_LEFT = 7;
     public static final int CAN_ID_BALL_LAUNCH_RIGHT = 8;
-    public static final double ballLaunchSpeed = 0.5;
-    public static final double kLaunchspeed = 4000; //in rpm
-    
+    public static final double ballLaunchSpeed = 0.75;
   }
+
   public static final class HopperConstants {
     public static final int KEL_LIMIT_SWITCH = 1; //upper limit switch
     public static final int GUS_LIMIT_SWITCH = 2; //lower limit switch
@@ -44,8 +43,11 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final double hopperIntakeSpeed = -0.60; //hopper intake speed
-    public static final double launcherIntakeSpeed = .38; //middle intake speed
     public static final int CAN_ID_Hopper_Intake = 6; //Intake
+  }
+
+  public static final class FeederConstants {
+    public static final double launcherIntakeSpeed = 0.38; //middle intake speed
     public static final int CAN_ID_Launcher_Intake = 9; // launcher intake
   }
 

@@ -35,12 +35,10 @@ public class DefaultIntake extends CommandBase {
 
   @Override
   public void execute() {
-    m_ballcatcher.IntakeMotor(m_intakespeed.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupt){
-    m_ballcatcher.IntakeMotor(0);
   }
 
   @Override

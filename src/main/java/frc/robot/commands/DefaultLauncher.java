@@ -6,7 +6,6 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
-import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -17,8 +16,6 @@ import frc.robot.subsystems.BallLauncher;
  */
 public class DefaultLauncher extends CommandBase {
   private final BallLauncher m_throw;
-  private final DoubleSupplier m_left;
-  private final DoubleSupplier m_right;
 
   /**
    * Creates a new DefaultDrive.
@@ -27,21 +24,23 @@ public class DefaultLauncher extends CommandBase {
    * @param leftMotor Speed for the left motor
    * @param rightMotor Speed for the right motor
    */
-  public DefaultLauncher(BallLauncher subsystem, DoubleSupplier leftMotor, DoubleSupplier rightMotor) {
+  public DefaultLauncher(BallLauncher subsystem) {
     m_throw = subsystem;
-    m_left = leftMotor;
-    m_right = rightMotor;
     addRequirements(m_throw);
   }
 
   @Override
+  public void initialize() {
+    m_throw.startLauncher();
+  }
+
+  @Override
   public void execute() {
-    m_throw.throwBall(m_left.getAsDouble(), m_right.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupt){
-    m_throw.throwBall(0,0);
+    m_throw.stopLauncher();
   }
 
   @Override

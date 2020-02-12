@@ -34,12 +34,11 @@ public class RunIntake extends CommandBase {
 
   @Override
   public void execute() {
-    m_ballcatcher.LauncherIntakeMotor(m_intakespeed.getAsDouble());
+   
   }
 
   @Override
   public void end(boolean interrupted){
-    m_ballcatcher.LauncherIntakeMotor(0);
   }
 
   @Override
