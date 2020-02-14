@@ -64,7 +64,7 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
         
         //Logic needs to be tested to verify polarity is correct
         
-        if ((!_LowSwitch.get() && spd < 0) || !_HighSwitch.get() && spd > 0 ) {
+        if ((_LowSwitch.get() && spd < 0) || _HighSwitch.get() && spd > 0 ) {
             _HopperAxle.set(spd);
         } else {
             _HopperAxle.set(0);
