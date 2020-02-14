@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
+import edu.wpi.first.wpilibj.AnalogInput;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -24,6 +25,11 @@ import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE;
 import static frc.robot.Constants.DriveConstants.CAN_ID_LEFT_DRIVE_2;
 import static frc.robot.Constants.DriveConstants.CAN_ID_RIGHT_DRIVE_2;
+import static frc.robot.Constants.DriveConstants.kUltrasonicPort;
+import static frc.robot.Constants.DriveConstants.kValueToInches;
+
+
+
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -55,6 +61,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   public double slewTurn = 48;
   private SlewRateLimiter m_speedSlew = new SlewRateLimiter(slewSpeed);
   private SlewRateLimiter m_turnSlew = new SlewRateLimiter(slewTurn);
+
+  // setup ultrasonic sensor
+  private final AnalogInput m_ultrasonic = new AnalogInput(kUltrasonicPort);
+  
 
   /**
    * Creates a new DriveSubsystem.
@@ -118,5 +128,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public void setMaxOutput(double maxOutput) {
     m_drive.setMaxOutput(maxOutput);
+  }
+
+  @Log.Graph(name = "Sonar Distance Inches")
+  public double getSonarDistanceInches(){
+    return m_ultrasonic.getValue()*kValueToInches;
   }
 }

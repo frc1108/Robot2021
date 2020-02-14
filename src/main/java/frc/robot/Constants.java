@@ -27,6 +27,11 @@ public final class Constants {
     // Encoder in NEO motors calculation
     public static final double kGearRatio = 8.45;
     public static final double kWheelDiameterMeters = 0.1525;
+
+    // Analog input port for ultrasonic sensor
+    public static final int kUltrasonicPort = 0;
+    public static final double kValueToInches = 0.125;
+    
   }
 
   public static final class BallLauncherConstants {

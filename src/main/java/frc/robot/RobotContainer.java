@@ -35,6 +35,7 @@ import frc.robot.commands.RaiseHopper;
 import frc.robot.commands.ManualHopper;
 import frc.robot.commands.ReadGyro;
 import frc.robot.commands.MoveServo;
+import frc.robot.commands.ManualClimber;
 
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -127,7 +128,12 @@ public class RobotContainer {
         () -> m_operatorController.getY(GenericHID.Hand.kRight)
       )
     );
-    
+    m_climber.setDefaultCommand(
+      new ManualClimber(
+        m_climber,
+        () -> m_operatorController.getY(GenericHID.Hand.kLeft)
+      )
+    );
     /* m_intakesystem.setDefaultCommand(
       new DefaultIntake(m_intakesystem,
       () -> hopperIntakeSpeed,
