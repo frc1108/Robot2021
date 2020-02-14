@@ -29,7 +29,7 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     
      
     public boolean isHighSwitchSet() {
-        return _HighSwitch.get();
+        return !_HighSwitch.get();
         //return UpperCounter.get() > 0;
     }
 
@@ -38,7 +38,7 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     }
    
     public boolean isLowSwitchSet() {
-        return _LowSwitch.get();
+        return !_LowSwitch.get();
         //return LowerCounter.get() > 0;
     }
 
