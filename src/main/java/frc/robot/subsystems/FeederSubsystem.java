@@ -39,7 +39,7 @@ public class FeederSubsystem extends SubsystemBase implements Loggable {
     m_feederSpeed = feederSpeed;
   }
 
-  @Config.NumberSlider(name = "Slow Out Speed", defaultValue = -0.2)
+  @Config.NumberSlider(name = "Slow Out Speed", defaultValue = 0.4)
   public void setSlowOutSpeed(double slowOutSpeed){
       m_slowOutSpeed = slowOutSpeed;
   }

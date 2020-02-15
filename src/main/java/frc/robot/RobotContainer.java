@@ -187,9 +187,9 @@ public class RobotContainer {
 
    // Reverse feeder motor for time with operator button B
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
-        .toggleWhenActive(new WaitCommand(0.8).andThen(new StartEndCommand(
+        .toggleWhenActive(new WaitCommand(1.0).andThen(new StartEndCommand(
       ()->m_feeder.startFeeder(),
-      ()->m_feeder.stopFeeder(),m_feeder).withTimeout(2.2)));
+      ()->m_feeder.stopFeeder(),m_feeder).withTimeout(9)));
     
 
     // Run intake motor for time with operator button X
@@ -212,7 +212,7 @@ public class RobotContainer {
     
     
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
-    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(2.2));
+    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(9));
     JoystickButton ReleaseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kStart.value);
     ReleaseServoButton.whenPressed(new MoveServo(m_climber,() -> servoAng));
     JoystickButton CloseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value);
