@@ -24,26 +24,26 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
      @Log(name = "Hopper Low Limit")
      DigitalInput _LowSwitch=new DigitalInput(GUS_LIMIT_SWITCH); 
 
-     //Counter UpperCounter = new Counter(_HighSwitch);
-     //Counter LowerCounter = new Counter(_LowSwitch);
+     Counter UpperCounter = new Counter(_HighSwitch);
+     Counter LowerCounter = new Counter(_LowSwitch);
     
      
     public boolean isHighSwitchSet() {
         return _HighSwitch.get();
-        //return UpperCounter.get() > 0;
+        return UpperCounter.get() > 0;
     }
 
     public void initializeHighCounter() {
-      //  UpperCounter.reset();
+        UpperCounter.reset();
     }
    
     public boolean isLowSwitchSet() {
-        return _LowSwitch.get();
-        //return LowerCounter.get() > 0;
+       return _LowSwitc h.get();
+        return LowerCounter.get() > 0;
     }
 
     public void initializeLowCounter() {
-        //LowerCounter.reset();
+        LowerCounter.reset();
     }
 
     public void HopperMotor(double hopper_spd){
