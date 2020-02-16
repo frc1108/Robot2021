@@ -27,14 +27,19 @@ public final class Constants {
     // Encoder in NEO motors calculation
     public static final double kGearRatio = 8.45;
     public static final double kWheelDiameterMeters = 0.1525;
+
+    // Analog input port for ultrasonic sensor
+    public static final int kUltrasonicPort = 0;
+    public static final double kValueToInches = 0.125;
+    
   }
 
   public static final class BallLauncherConstants {
     public static final int CAN_ID_BALL_LAUNCH_LEFT = 7;
     public static final int CAN_ID_BALL_LAUNCH_RIGHT = 8;
-    public static final double kLaunchspeed = 4000; //in rpm
-    
+    public static final double ballLaunchSpeed = 0.75;
   }
+
   public static final class HopperConstants {
     public static final int KEL_LIMIT_SWITCH = 1; //upper limit switch
     public static final int GUS_LIMIT_SWITCH = 2; //lower limit switch
@@ -42,17 +47,28 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double intakespeed = 0.2; //speed
+    public static final double hopperIntakeSpeed = -0.60; //hopper intake speed
     public static final int CAN_ID_Hopper_Intake = 6; //Intake
+  }
+
+  public static final class FeederConstants {
+    public static final double launcherIntakeSpeed = 0.38; //middle intake speed
     public static final int CAN_ID_Launcher_Intake = 9; // launcher intake
   }
 
   public static final class ClimberConstants {
     public static final int CAN_ID_WINCH = 10; //Intake
+    public static final double servoAngle = 90; //Released Servo angle
+    public static final double servoCloseAngle = 120; //Closed Servo Angle
   }
 
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
+  }
+
+  public static final class PWMConstants {
+    public static final int PWM_ID_WINCH_SERVO = 1;
   }
 }

@@ -29,7 +29,7 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     
      
     public boolean isHighSwitchSet() {
-        return _HighSwitch.get();
+        return !_HighSwitch.get();
         //return UpperCounter.get() > 0;
     }
 
@@ -38,7 +38,7 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     }
    
     public boolean isLowSwitchSet() {
-        return _LowSwitch.get();
+        return !_LowSwitch.get();
         //return LowerCounter.get() > 0;
     }
 
@@ -51,8 +51,8 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
         // temporary max speed
         double spd = -hopper_spd;
 
-        if (Math.abs(spd) > 0.2){
-            spd = 0.2*Math.signum(spd);  
+        if (Math.abs(spd) > 0.4){
+            spd = 0.4*Math.signum(spd);  
         } 
 
         // temporary deadband
@@ -64,11 +64,13 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
         
         //Logic needs to be tested to verify polarity is correct
         
-        if ((!_LowSwitch.get() && spd < 0) || !_HighSwitch.get() && spd > 0 ) {
+        /*
+        if ((_LowSwitch.get() && spd < 0) || _HighSwitch.get() && spd > 0 ) {
             _HopperAxle.set(spd);
         } else {
             _HopperAxle.set(0);
         }
+        */
         
 
     }

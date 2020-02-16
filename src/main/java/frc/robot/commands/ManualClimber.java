@@ -6,45 +6,38 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.commands;
-
+import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.subsystems.BallLauncher;
+import frc.robot.subsystems.ClimberSubsystem;
 
-/**
- * A command to drive the robot with joystick input
- */
-public class DefaultLauncher extends CommandBase {
-  private final BallLauncher m_throw;
-
+public class ManualClimber extends CommandBase {
+  private final ClimberSubsystem m_hopper;
+  private final DoubleSupplier hopper_spd;
   /**
-   * Creates a new DefaultDrive.
-   *
-   * @param subsystem The drive subsystem this command wil run on.
-   * @param leftMotor Speed for the left motor
-   * @param rightMotor Speed for the right motor
    */
-  public DefaultLauncher(BallLauncher subsystem) {
-    m_throw = subsystem;
-    addRequirements(m_throw);
+  public ManualClimber(ClimberSubsystem subsystem, DoubleSupplier speed) {
+    m_hopper = subsystem;
+    hopper_spd = speed;
+    addRequirements(m_hopper);
   }
 
   @Override
   public void initialize() {
-    m_throw.startLauncher();
   }
 
   @Override
   public void execute() {
+    m_hopper.WinchMotor(hopper_spd.getAsDouble());
   }
 
   @Override
-  public void end(boolean interrupt){
-    m_throw.stopLauncher();
+  public void end(boolean interrupted) {
+    m_hopper.WinchMotor(0);
   }
 
   @Override
-  public boolean isFinished(){
-    return false;
+  public boolean isFinished() {
+   return false;
   }
 }
