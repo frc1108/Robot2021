@@ -37,8 +37,8 @@ public class BallLauncher extends SubsystemBase implements Loggable {
 
     @Config
     public void setLauncherSpeed(
-                @Config.NumberSlider(name = "Left Motor Speed", defaultValue = 0.75) double leftMotorSpeed,
-                @Config.NumberSlider(name = "Right Motor Speed", defaultValue = -0.75) double rightMotorSpeed){
+                @Config.NumberSlider(name = "Left Motor Speed", defaultValue = 0.8) double leftMotorSpeed,
+                @Config.NumberSlider(name = "Right Motor Speed", defaultValue = -0.8) double rightMotorSpeed){
                     m_leftMotorSpeed = leftMotorSpeed;
                     m_rightMotorSpeed = rightMotorSpeed;
                 }

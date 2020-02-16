@@ -52,7 +52,7 @@ public final class Constants {
   }
 
   public static final class FeederConstants {
-    public static final double launcherIntakeSpeed = 0.38; //middle intake speed
+    public static final double launcherIntakeSpeed = 1; //middle intake speed
     public static final int CAN_ID_Launcher_Intake = 9; // launcher intake
   }
 

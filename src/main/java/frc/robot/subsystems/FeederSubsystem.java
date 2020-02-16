@@ -34,7 +34,7 @@ public class FeederSubsystem extends SubsystemBase implements Loggable {
     m_feeder.setNeutralMode(NeutralMode.Brake);
   }
 
-  @Config.NumberSlider(name = "Feeder Speed", defaultValue = 0.38)
+  @Config.NumberSlider(name = "Feeder Speed", defaultValue = 0.90)
   public void setFeederSpeed(double feederSpeed){
     m_feederSpeed = feederSpeed;
   }
