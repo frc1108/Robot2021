@@ -7,8 +7,6 @@ import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Counter;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 import static frc.robot.Constants.HopperConstants.KEL_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.GUS_LIMIT_SWITCH; 

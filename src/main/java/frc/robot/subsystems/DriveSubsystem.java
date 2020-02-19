@@ -34,7 +34,6 @@ import static frc.robot.Constants.DriveConstants.kValueToInches;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-import io.github.oblarg.oblog.annotations.Config.Configs;
 
 public class DriveSubsystem extends SubsystemBase implements Loggable {
 
@@ -93,6 +92,12 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    _left2.setSmartCurrentLimit(40, 60);
    _right1.setSmartCurrentLimit(40, 60);
    _right2.setSmartCurrentLimit(40, 60);
+
+   _left1.burnFlash();
+   _left2.burnFlash();
+   _right1.burnFlash();
+   _right2.burnFlash();
+
 
    // Set drive deadband and safety 
    m_drive.setDeadband(0.05);

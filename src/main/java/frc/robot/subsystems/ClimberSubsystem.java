@@ -35,6 +35,16 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     m_winch.configContinuousCurrentLimit(40);
     m_winch.configPeakCurrentLimit(60);
     m_winch.setInverted(false);
+
+    // PID and Sensor values for Motion Magic
+    m_winch.setSensorPhase(true);
+    m_winch.config_kP(0,20);
+    m_winch.config_kI(0,0);
+    m_winch.config_kD(0,200);
+    m_winch.config_kF(0,0);
+    m_winch.configMotionAcceleration(1200);
+    m_winch.configMotionCruiseVelocity(900);
+
   }
 
   public void WinchServo(double angle) {
@@ -72,6 +82,8 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
   public void setWinchSpeed(double winchSpeed){
     m_winchSpeed = winchSpeed;
   }
+
+  
   
   @Log
   public double getWinchCurrent(){
