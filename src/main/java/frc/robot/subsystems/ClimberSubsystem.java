@@ -13,19 +13,28 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import static frc.robot.Constants.PWMConstants.PWM_ID_WINCH_SERVO;
 import static frc.robot.Constants.ClimberConstants.CAN_ID_WINCH;
 /**
  * Add your docs here.
  */
 public class ClimberSubsystem extends SubsystemBase implements Loggable {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-  
+  @Log
   Servo m_winchServo = new Servo(PWM_ID_WINCH_SERVO);
-  WPI_TalonSRX _WinchMotor = new WPI_TalonSRX(CAN_ID_WINCH);
-  public ClimberSubsystem() {
+  @Log.SpeedController(name = "Winch Motor")
+  private final WPI_TalonSRX m_winch = new WPI_TalonSRX(CAN_ID_WINCH);
 
+  private double m_winchSpeed;
+
+  public ClimberSubsystem() {
+    // Initialize Talon SRX
+    m_winch.set(0);
+    m_winch.configFactoryDefault();
+    m_winch.setNeutralMode(NeutralMode.Brake);
+    m_winch.configContinuousCurrentLimit(40);
+    m_winch.configPeakCurrentLimit(60);
+    m_winch.setInverted(false);
   }
 
   public void WinchServo(double angle) {
@@ -48,11 +57,24 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
         spd = 0;
     }
 
-    _WinchMotor.set(spd);
+    m_winch.set(spd);
    }
-/*   @Override
-  public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-  } */
+
+  public void startWinch(){
+    m_winch.set(m_winchSpeed);
+  }
+
+  public void stopWinch(){
+    m_winch.set(0);
+  }
+
+  @Config(name = "Winch Speed",defaultValueNumeric = 0.5)
+  public void setWinchSpeed(double winchSpeed){
+    m_winchSpeed = winchSpeed;
+  }
+  
+  @Log
+  public double getWinchCurrent(){
+    return m_winch.getStatorCurrent();
+  }
 }

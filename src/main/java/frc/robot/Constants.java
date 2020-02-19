@@ -37,7 +37,7 @@ public final class Constants {
   public static final class BallLauncherConstants {
     public static final int CAN_ID_BALL_LAUNCH_LEFT = 7;
     public static final int CAN_ID_BALL_LAUNCH_RIGHT = 8;
-    public static final double ballLaunchSpeed = 0.75;
+    public static final double ballLaunchSpeed = 1;     //Should be at 0.75
   }
 
   public static final class HopperConstants {
@@ -58,8 +58,8 @@ public final class Constants {
 
   public static final class ClimberConstants {
     public static final int CAN_ID_WINCH = 10; //Intake
-    public static final double servoAngle = 90; //Released Servo angle
-    public static final double servoCloseAngle = 120; //Closed Servo Angle
+    public static final double servoAngle = 150; //Released Servo angle
+    public static final double servoCloseAngle = 50; //Closed Servo Angle
   }
 
 
