@@ -72,7 +72,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         return tachVel_UnitsPer100ms*600/1024;
     }
 
-    @Config(name="Set RPM", defaultValueNumeric = 2000)
+    @Config(name="Set RPM", defaultValueNumeric = 4000)
     public void setLauncherRPM (double launcherRPM){
         m_launcherRPM = -launcherRPM;
     }

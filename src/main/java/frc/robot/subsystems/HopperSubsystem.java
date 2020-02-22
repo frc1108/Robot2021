@@ -49,8 +49,8 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
         // temporary max speed
         double spd = -hopper_spd;
 
-        if (Math.abs(spd) > 0.4){
-            spd = 0.4*Math.signum(spd);  
+        if (Math.abs(spd) > 0.75){
+            spd = 0.75*Math.signum(spd);  
         } 
 
         // temporary deadband

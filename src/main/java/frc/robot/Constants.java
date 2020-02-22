@@ -47,7 +47,7 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double hopperIntakeSpeed = -0.60; //hopper intake speed
+    public static final double hopperIntakeSpeed = -0.70; //hopper intake speed
     public static final int CAN_ID_Hopper_Intake = 6; //Intake
   }
 

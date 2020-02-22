@@ -104,13 +104,13 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, XboxController.Button.kA.value)
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowOutFeeder(),
-                              ()->m_feeder.stopFeeder(),m_feeder).withTimeout(1.5));
+                              ()->m_feeder.stopFeeder(),m_feeder).withTimeout(4));
 
    // Reverse feeder motor for time with operator button B
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
         .toggleWhenActive(new WaitCommand(0.8).andThen(new StartEndCommand(
       ()->m_feeder.startFeeder(),
-      ()->m_feeder.stopFeeder(),m_feeder).withTimeout(4)));
+      ()->m_feeder.stopFeeder(),m_feeder).withTimeout(7)));
   
     // Run intake motor for time with operator button X
     new JoystickButton(m_operatorController, XboxController.Button.kX.value)
@@ -120,7 +120,7 @@ public class RobotContainer {
 
  
     JoystickButton rollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
-    rollerButton.whenPressed(new InstantCommand(m_intakesystem::startIntake,m_intakesystem).withTimeout(4))
+    rollerButton.whenPressed(new InstantCommand(m_intakesystem::startIntake,m_intakesystem).withTimeout(7))
                 .whenReleased(new InstantCommand(m_intakesystem::stopIntake,m_intakesystem));
 
     JoystickButton outRollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value);
@@ -129,7 +129,7 @@ public class RobotContainer {
     
     
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
-    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(4));
+    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(7));
     JoystickButton ReleaseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kStart.value);
     ReleaseServoButton.whenPressed(new MoveServo(m_climber,() -> servoAngle));
     JoystickButton CloseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value);
