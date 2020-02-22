@@ -101,7 +101,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Run feeder motor for time with operator button A
-    new JoystickButton(m_operatorController, XboxController.Button.kA.value)
+    new JoystickButton(m_operatorController, XboxController.Button.kX.value)
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowOutFeeder(),
                               ()->m_feeder.stopFeeder(),m_feeder).withTimeout(4));
@@ -113,7 +113,7 @@ public class RobotContainer {
       ()->m_feeder.stopFeeder(),m_feeder).withTimeout(1.5)));
   
     // Run intake motor for time with operator button X
-    new JoystickButton(m_operatorController, XboxController.Button.kX.value)
+    new JoystickButton(m_operatorController, XboxController.Button.kA.value)
     .toggleWhenActive(new StartEndCommand(
                           ()->m_feeder.slowOutFeeder(),
                           ()->m_feeder.stopFeeder(),m_feeder).withTimeout(0.7));
