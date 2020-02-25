@@ -7,11 +7,9 @@ import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Counter;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
-import static frc.robot.Constants.HopperConstants.KEL_LIMIT_SWITCH; 
-import static frc.robot.Constants.HopperConstants.GUS_LIMIT_SWITCH; 
+import static frc.robot.Constants.HopperConstants.UPPER_LIMIT_SWITCH; 
+import static frc.robot.Constants.HopperConstants.LOWER_LIMIT_SWITCH; 
 import static frc.robot.Constants.HopperConstants.CAN_ID_Hopper_Axle;
 
 public class HopperSubsystem extends SubsystemBase implements Loggable {
@@ -19,13 +17,13 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     WPI_TalonSRX _HopperAxle = new WPI_TalonSRX(CAN_ID_Hopper_Axle);
 
      @Log(name = "Hopper High Limit")
-     DigitalInput _HighSwitch=new DigitalInput(KEL_LIMIT_SWITCH); 
+     DigitalInput _HighSwitch=new DigitalInput(UPPER_LIMIT_SWITCH); 
      
      @Log(name = "Hopper Low Limit")
-     DigitalInput _LowSwitch=new DigitalInput(GUS_LIMIT_SWITCH); 
+     DigitalInput _LowSwitch=new DigitalInput(LOWER_LIMIT_SWITCH); 
 
-     //Counter UpperCounter = new Counter(_HighSwitch);
-     //Counter LowerCounter = new Counter(_LowSwitch);
+     Counter UpperCounter = new Counter(_HighSwitch);
+     Counter LowerCounter = new Counter(_LowSwitch);
     
      
     public boolean isHighSwitchSet() {
@@ -34,7 +32,7 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     }
 
     public void initializeHighCounter() {
-      //  UpperCounter.reset();
+        UpperCounter.reset();
     }
    
     public boolean isLowSwitchSet() {
@@ -43,7 +41,7 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     }
 
     public void initializeLowCounter() {
-        //LowerCounter.reset();
+        LowerCounter.reset();
     }
 
     public void HopperMotor(double hopper_spd){
@@ -51,8 +49,8 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
         // temporary max speed
         double spd = -hopper_spd;
 
-        if (Math.abs(spd) > 0.4){
-            spd = 0.4*Math.signum(spd);  
+        if (Math.abs(spd) > 0.55){
+            spd = 0.55*Math.signum(spd);  
         } 
 
         // temporary deadband
@@ -60,17 +58,17 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
             spd = 0;
         }
    
-        _HopperAxle.set(spd); 
+        //_HopperAxle.set(spd); 
         
         //Logic needs to be tested to verify polarity is correct
         
-        /*
+        
         if ((_LowSwitch.get() && spd < 0) || _HighSwitch.get() && spd > 0 ) {
             _HopperAxle.set(spd);
         } else {
             _HopperAxle.set(0);
         }
-        */
+        
         
 
     }

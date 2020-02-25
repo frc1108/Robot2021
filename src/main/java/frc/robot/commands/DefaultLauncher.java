@@ -31,7 +31,7 @@ public class DefaultLauncher extends CommandBase {
 
   @Override
   public void initialize() {
-    m_throw.startLauncher();
+    m_throw.startPIDLauncher();
   }
 
   @Override

@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj.Servo;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
@@ -26,30 +25,21 @@ import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.UsbSerial;
 import frc.robot.subsystems.LightStrip;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 
 import frc.robot.commands.DefaultLauncher;
-import frc.robot.commands.DefaultIntake;
-import frc.robot.commands.RunIntake;
-import frc.robot.commands.ShootBalls;
-import frc.robot.commands.LowerWhopper;
-import frc.robot.commands.RaiseHopper;
 import frc.robot.commands.ManualHopper;
-import frc.robot.commands.ReadGyro;
 import frc.robot.commands.MoveServo;
 import frc.robot.commands.ManualClimber;
+import frc.robot.commands.AutoCommandGroup;
+import frc.robot.commands.SetSolidColor;
 
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-import io.github.oblarg.oblog.annotations.Config.Configs;
 
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
 import static frc.robot.Constants.OIConstants.kOperatorControllerPort;
-import static frc.robot.Constants.IntakeConstants.hopperIntakeSpeed;
-import static frc.robot.Constants.BallLauncherConstants.ballLaunchSpeed;
 import static frc.robot.Constants.ClimberConstants.servoAngle;
 import static frc.robot.Constants.ClimberConstants.servoCloseAngle;
-
-
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -58,61 +48,27 @@ import static frc.robot.Constants.ClimberConstants.servoCloseAngle;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-
   // The robot's subsystems
-  @Config.NumberSlider(name = "Max Drive Output",
-                       methodName = "setMaxOutput",
-                       methodTypes = {double.class},
-                       defaultValue = 1)
+  @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  @Log private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
+  @Log private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
+  @Log private final FeederSubsystem m_feeder = new FeederSubsystem();
+  @Log private final BallLauncher m_robotLaunch = new BallLauncher();
+  @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
+  @Log private final LightsSubsystem m_lights = new LightsSubsystem();
+  @Log private final UsbSerial gyro = new UsbSerial();
+  @Log private final LightStrip m_lightStrip = new LightStrip(9, 240);
 
-
-  
-  @Log
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-
-  @Log
-  private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
-
-  @Log
-  private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
-
-  @Log
-  private final FeederSubsystem m_feeder = new FeederSubsystem();
-  
-  @Log
-  private final BallLauncher m_robotLaunch = new BallLauncher();
-  
-  @Log
-  private final ClimberSubsystem m_climber = new ClimberSubsystem();
-
-  @Log
-  private final UsbSerial gyro = new UsbSerial();
-  
-  @Log
-  private final double ballSpeed = ballLaunchSpeed;
-
-  @Config
-  private final double servoAng = servoAngle;
-
-  @Config
-  private final double servoCloseAngl = servoCloseAngle;
-
-
-  @Log
-  private final LightStrip m_lightStrip = new LightStrip(9, 240);
-
-  // A simple autonomous routine that does something
-  @Config.Command(name = "Autonomous Command")
-  private final Command m_autoCommand =
-     // Start by spinning up launcher
-    new WaitCommand(1);
+  private final Command m_basicAuto = new AutoCommandGroup();
+  private final Command m_setRedLights = new SetSolidColor(255,0,0);
+  private final Command m_setBlueLights = new SetSolidColor(0,0,255);
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SendableChooser<Command> m_ledChooser = new SendableChooser<>();
 
-  // The driver's controller
+  // Controller for driver and operator
   XboxController m_driverController = new XboxController(kDriverControllerPort);
-  // The operator's controller
   XboxController m_operatorController = new XboxController(kOperatorControllerPort);
 
   /**
@@ -122,54 +78,44 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    
+    /**
+     * Default command for manual control of subsystem
+     */
+    // Robot drive default
+    m_robotDrive.setDefaultCommand(
+        // A split-stick arcade drive with forward/backward controlled by the left Y
+        // hand, and turning controlled by the left X axis.
+        new RunCommand(()->m_robotDrive
+            .arcadeDrive(m_driverController.getY(GenericHID.Hand.kLeft),
+                            m_driverController.getX(GenericHID.Hand.kRight)), m_robotDrive));
 
-    //gyro.setDefaultCommand(new ReadGyro(gyro));
-
-    m_hoppersystem.setDefaultCommand(
-      new ManualHopper(
+    // Hopper axle default
+    m_hoppersystem.setDefaultCommand(new ManualHopper(
         m_hoppersystem,
         () -> m_operatorController.getY(GenericHID.Hand.kRight)
       )
     );
+
+    // Winch default
     m_climber.setDefaultCommand(
       new ManualClimber(
         m_climber,
         () -> m_operatorController.getY(GenericHID.Hand.kLeft)
       )
     );
-    /* m_intakesystem.setDefaultCommand(
-      new DefaultIntake(m_intakesystem,
-      () -> hopperIntakeSpeed,
-      () -> launcherIntakeSpeed)); */
-    
-   
-/*       m_robotLaunch.setDefaultCommand(
-      
-      new DefaultLauncher(
-        m_robotLaunch,
-        () -> ballSpeed,
-        () -> ballSpeed
-      )
-    );  */
 
-
-    // Configure default commands
-    // Default robot Drive is single-stick curvature drive
-    m_robotDrive.setDefaultCommand(
-        // A split-stick curvature command, with forward/backward controlled by the left Y
-        // hand, and turning controlled by the left X axis, and quick turn on right hand bumper.
-        new RunCommand(()->m_robotDrive
-            .arcadeDrive(m_driverController.getY(GenericHID.Hand.kLeft),
-                            m_driverController.getX(GenericHID.Hand.kRight)), m_robotDrive));
-    
-
+    // Add commands to the autonomous command chooser
+    m_chooser.setDefaultOption("Basic Auto", m_basicAuto);
+    m_ledChooser.setDefaultOption("Solid Red", m_setRedLights);
+    m_ledChooser.setDefaultOption("Solid Blue", m_setBlueLights);
 
     m_lightStrip.setDefaultCommand(
                  new RunCommand(()->m_lightStrip
                      .allianceColors(),m_lightStrip));
-    
-    //Shuffleboard.getTab("Testing").add(m_hoppersystem);
+
+    Shuffleboard.getTab("Autonomous").add(m_chooser);
+    Shuffleboard.getTab("Lights").add(m_ledChooser);
+
   }
 
   /**
@@ -179,54 +125,40 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-
-/*     new JoystickButton(m_operatorController, XboxController.Button.kA.value)
-        .whenPressed(()->m_feeder.startFeeder)
-        .whenReleased(()->m_feeder.stopFeeder); */
-
     // Run feeder motor for time with operator button A
     new JoystickButton(m_operatorController, XboxController.Button.kA.value)
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowOutFeeder(),
-                              ()->m_feeder.stopFeeder(),m_feeder).withTimeout(0.5));
-
+                              ()->m_feeder.stopFeeder(),m_feeder).withTimeout(4));
 
    // Reverse feeder motor for time with operator button B
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
-        .toggleWhenActive(new WaitCommand(1.0).andThen(new StartEndCommand(
+        .toggleWhenActive(new WaitCommand(0.8).andThen(new StartEndCommand(
       ()->m_feeder.startFeeder(),
-      ()->m_feeder.stopFeeder(),m_feeder).withTimeout(9)));
-    
-
+      ()->m_feeder.stopFeeder(),m_feeder).withTimeout(7)));
+  
     // Run intake motor for time with operator button X
     new JoystickButton(m_operatorController, XboxController.Button.kX.value)
     .toggleWhenActive(new StartEndCommand(
                           ()->m_feeder.slowOutFeeder(),
                           ()->m_feeder.stopFeeder(),m_feeder).withTimeout(0.7));
 
-    //IntakeButton.toggleWhenPressed(new RunIntake(m_intakesystem,() -> launcherIntakeSpeed));
-   
+ 
     JoystickButton rollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
-    rollerButton.whenPressed(new InstantCommand(m_intakesystem::startIntake,m_intakesystem).withTimeout(4))
+    rollerButton.whenPressed(new InstantCommand(m_intakesystem::startIntake,m_intakesystem).withTimeout(7))
                 .whenReleased(new InstantCommand(m_intakesystem::stopIntake,m_intakesystem));
-    //rollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed));
 
     JoystickButton outRollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value);
     outRollerButton.whenPressed(new InstantCommand(m_intakesystem::slowOutIntake,m_intakesystem))
                 .whenReleased(new InstantCommand(m_intakesystem::stopIntake,m_intakesystem));
-    //outRollerButton.toggleWhenPressed(new DefaultIntake(m_intakesystem,() -> -hopperIntakeSpeed));
     
     
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
-    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(9));
+    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(7));
     JoystickButton ReleaseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kStart.value);
-    ReleaseServoButton.whenPressed(new MoveServo(m_climber,() -> servoAng));
+    ReleaseServoButton.whenPressed(new MoveServo(m_climber,() -> servoAngle));
     JoystickButton CloseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value);
     CloseServoButton.whenPressed(new MoveServo(m_climber,() -> servoCloseAngle));
-
-    /* JoystickButton RollerTrigger = new JoystickButton(m_driverController, XboxController.Axis.kRightTrigger.value);
-    RollerTrigger.whenActive(new DefaultIntake(m_intakesystem,() -> hopperIntakeSpeed*XboxController.Axis.kRightTrigger.value)); */
-    
   }
 
 
@@ -238,6 +170,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();
   }
-  
 
+  public Command getLightInitCommand() {
+    return m_ledChooser.getSelected();
+  }
 }
