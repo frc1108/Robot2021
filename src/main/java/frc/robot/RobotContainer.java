@@ -23,6 +23,7 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.UsbSerial;
+import frc.robot.subsystems.LightStrip;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.LightsSubsystem;
 
@@ -56,10 +57,12 @@ public class RobotContainer {
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
   @Log private final LightsSubsystem m_lights = new LightsSubsystem();
   @Log private final UsbSerial gyro = new UsbSerial();
-  
+  @Log private final LightStrip m_lightStrip = new LightStrip(9, 240);
+
   private final Command m_basicAuto = new AutoCommandGroup();
   private final Command m_setRedLights = new SetSolidColor(255,0,0);
   private final Command m_setBlueLights = new SetSolidColor(0,0,255);
+
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   SendableChooser<Command> m_ledChooser = new SendableChooser<>();
@@ -106,9 +109,13 @@ public class RobotContainer {
     m_ledChooser.setDefaultOption("Solid Red", m_setRedLights);
     m_ledChooser.setDefaultOption("Solid Blue", m_setBlueLights);
 
-    // Put the chooser on the dashboard
+    m_lightStrip.setDefaultCommand(
+                 new RunCommand(()->m_lightStrip
+                     .allianceColors(),m_lightStrip));
+
     Shuffleboard.getTab("Autonomous").add(m_chooser);
     Shuffleboard.getTab("Lights").add(m_ledChooser);
+
   }
 
   /**
