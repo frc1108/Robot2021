@@ -58,8 +58,8 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     // temporary max speed
     double spd = -Winch_spd;
 
-    if (Math.abs(spd) > 0.3){
-        spd = 0.3*Math.signum(spd);  
+    if (Math.abs(spd) > 0.75){
+        spd = 0.75*Math.signum(spd);  
     } 
 
     // temporary deadband
