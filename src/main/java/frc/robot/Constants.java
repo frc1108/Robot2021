@@ -41,8 +41,8 @@ public final class Constants {
   }
 
   public static final class HopperConstants {
-    public static final int KEL_LIMIT_SWITCH = 1; //upper limit switch
-    public static final int GUS_LIMIT_SWITCH = 2; //lower limit switch
+    public static final int UPPER_LIMIT_SWITCH = 1; //upper limit switch
+    public static final int LOWER_LIMIT_SWITCH = 2; //lower limit switch
     public static final int CAN_ID_Hopper_Axle = 5; //Axle
   }
 
@@ -70,5 +70,6 @@ public final class Constants {
 
   public static final class PWMConstants {
     public static final int PWM_ID_WINCH_SERVO = 1;
+    public static final int PWM_ID_LEDS = 9;
   }
 }

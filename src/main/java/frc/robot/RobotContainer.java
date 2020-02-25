@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,11 +24,14 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.UsbSerial;
 import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.LightsSubsystem;
 
 import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.ManualHopper;
 import frc.robot.commands.MoveServo;
 import frc.robot.commands.ManualClimber;
+import frc.robot.commands.AutoCommandGroup;
+import frc.robot.commands.SetSolidColor;
 
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -50,10 +54,15 @@ public class RobotContainer {
   @Log private final FeederSubsystem m_feeder = new FeederSubsystem();
   @Log private final BallLauncher m_robotLaunch = new BallLauncher();
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
+  @Log private final LightsSubsystem m_lights = new LightsSubsystem();
   @Log private final UsbSerial gyro = new UsbSerial();
   
+  private final Command m_basicAuto = new AutoCommandGroup();
+  private final Command m_setRedLights = new SetSolidColor(255,0,0);
+  private final Command m_setBlueLights = new SetSolidColor(0,0,255);
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SendableChooser<Command> m_ledChooser = new SendableChooser<>();
 
   // Controller for driver and operator
   XboxController m_driverController = new XboxController(kDriverControllerPort);
@@ -84,13 +93,22 @@ public class RobotContainer {
       )
     );
 
-/*     // Winch default 
+    // Winch default
     m_climber.setDefaultCommand(
       new ManualClimber(
         m_climber,
         () -> m_operatorController.getY(GenericHID.Hand.kLeft)
       )
-    ); */
+    );
+
+    // Add commands to the autonomous command chooser
+    m_chooser.setDefaultOption("Basic Auto", m_basicAuto);
+    m_ledChooser.setDefaultOption("Solid Red", m_setRedLights);
+    m_ledChooser.setDefaultOption("Solid Blue", m_setBlueLights);
+
+    // Put the chooser on the dashboard
+    Shuffleboard.getTab("Autonomous").add(m_chooser);
+    Shuffleboard.getTab("Lights").add(m_ledChooser);
   }
 
   /**
@@ -144,5 +162,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return m_chooser.getSelected();
+  }
+
+  public Command getLightInitCommand() {
+    return m_ledChooser.getSelected();
   }
 }
