@@ -18,15 +18,13 @@ import frc.robot.subsystems.FeederSubsystem;;
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class AutoCommandGroup extends SequentialCommandGroup {
-  private static final DriveSubsystem m_drive = new DriveSubsystem();
-  private static final BallLauncher m_launcher = new BallLauncher();
-  private static final FeederSubsystem m_feeder = new FeederSubsystem();
   /**
    * Creates a new AutoCommandGroup.
    */
-  public AutoCommandGroup() {
+  public AutoCommandGroup(DriveSubsystem drive, BallLauncher ball, FeederSubsystem feeder) {
+    
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new DriveToWall(m_drive), new AutoBalls(m_launcher, m_feeder));
+    super(new DriveToWall(drive), new AutoBalls(ball, feeder));
   }
 }
