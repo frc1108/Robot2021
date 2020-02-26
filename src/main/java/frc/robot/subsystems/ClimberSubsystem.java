@@ -8,20 +8,22 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import static frc.robot.Constants.PWMConstants.PWM_ID_WINCH_SERVO;
-import static frc.robot.Constants.ClimberConstants.CAN_ID_WINCH;
+import static frc.robot.Constants.ClimberConstants.*;
 /**
  * Add your docs here.
  */
 public class ClimberSubsystem extends SubsystemBase implements Loggable {
-  @Log
-  Servo m_winchServo = new Servo(PWM_ID_WINCH_SERVO);
+  //Servo m_winchServo = new Servo(PWM_ID_WINCH_SERVO);
+
+  private final DigitalInput m_switch = new DigitalInput(TURNER_SWITCH_PORT);
+
   @Log.SpeedController(name = "Winch Motor")
   private final WPI_TalonSRX m_winch = new WPI_TalonSRX(CAN_ID_WINCH);
 
@@ -37,12 +39,12 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     m_winch.setInverted(false);
   }
 
-  public void WinchServo(double angle) {
+  /* public void WinchServo(double angle) {
     m_winchServo.setAngle(angle);
   }
   public double AtAngle() {
     return m_winchServo.getAngle();
-  }
+  } */
   public void WinchMotor(double Winch_spd){
        
     // temporary max speed
@@ -76,5 +78,10 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
   @Log
   public double getWinchCurrent(){
     return m_winch.getStatorCurrent();
+  }
+
+  @Log.BooleanBox(name= "Turner Switch",tabName = "Match View")
+  public boolean isTurnerVertical(){
+    return m_switch.get();
   }
 }

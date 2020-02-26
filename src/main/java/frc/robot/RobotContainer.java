@@ -123,20 +123,29 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Run feeder motor for time with operator button A
-    new JoystickButton(m_operatorController, XboxController.Button.kA.value)
+    // Reverse feeder motor for time with operator button Y
+    new JoystickButton(m_operatorController, XboxController.Button.kY.value)
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowOutFeeder(),
                               ()->m_feeder.stopFeeder(),m_feeder)
                               .withTimeout(0.2));
 
-   // Reverse feeder motor for time with operator button B
+   // Run feeder motor for time with operator button B
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
         .toggleWhenActive(new WaitCommand(0.8)
                               .andThen(new StartEndCommand(
                                            ()->m_feeder.fastInFeeder(),
                                            ()->m_feeder.stopFeeder(),m_feeder)
-                                           .withTimeout(7)));
+                                           .withTimeout(5)));
+
+   // Run intake motor for time with operator button B
+   new JoystickButton(m_operatorController, XboxController.Button.kB.value)
+   .toggleWhenActive(new WaitCommand(2)
+                         .andThen(new StartEndCommand(
+                                      ()->m_intakesystem.startIntake(),
+                                      ()->m_intakesystem.stopIntake(),m_intakesystem)
+                                      .withTimeout(1.25)));
+
   
     // Run feeder motor for time with operator button X
     new JoystickButton(m_operatorController, XboxController.Button.kX.value)
@@ -157,7 +166,7 @@ public class RobotContainer {
     
     // Run launcher motors when toggling Operator button B.  Simultaneous with feed wheel  
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
-    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(7));
+    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(6));
     
     /* // Servo open close buttons ---- NOT CONNECTED FOR NOW --------------
     JoystickButton ReleaseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kStart.value);

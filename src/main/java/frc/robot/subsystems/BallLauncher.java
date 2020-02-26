@@ -16,15 +16,13 @@ import static frc.robot.Constants.BallLauncherConstants.CAN_ID_BALL_LAUNCH_RIGHT
 
 public class BallLauncher extends SubsystemBase implements Loggable {
 
-    @Log.SpeedController(name = "Launcher L Motor")
     private WPI_TalonSRX m_leftBallThrow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_LEFT);
 
     // Talon Tach
-    @Log.SpeedController(name = "Launcher R Motor")
     private WPI_TalonSRX m_rightBallThrow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_RIGHT);
 
     private double m_launcherSpeed = 0.8;
-    private double m_launcherRPM = 3000;
+    private double m_launcherRPM = -3000;
 
     public BallLauncher(){
         m_leftBallThrow.configFactoryDefault();
@@ -52,10 +50,9 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_rightBallThrow.configPulseWidthPeriod_FilterWindowSz(filterWindowSize, kTimeoutMs);
     }
 
-    @Config(name = "Right Motor Speed")
     public void setLauncherSpeed(double rightMotorSpeed){
-                    m_launcherSpeed = rightMotorSpeed;
-                }
+        m_launcherSpeed = rightMotorSpeed;
+    }
 
     public void startLauncher(){
         m_rightBallThrow.set(m_launcherSpeed);
@@ -65,10 +62,10 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_rightBallThrow.set(0);
     }
 
-    @Log(name = "Launcher RPM")
+    @Log.Dial(name = "Launcher RPM", tabName = "Match View")
     public double getTachRPM(){
         double tachVel_UnitsPer100ms = m_rightBallThrow.getSelectedSensorVelocity(0);
-        return tachVel_UnitsPer100ms*600/1024;
+        return -1*tachVel_UnitsPer100ms*600/1024;
     }
 
     public void setLauncherRPM (double launcherRPM){  

@@ -23,7 +23,7 @@ public class FeederSubsystem extends SubsystemBase {
 
   private double m_fastInSpeed = 0.7;
   private double m_slowInSpeed = 0.4;
-  private double m_slowOutSpeed = -0.4;
+  private double m_slowOutSpeed = -0.6;
 
   public FeederSubsystem(){
     m_feeder.set(0);
