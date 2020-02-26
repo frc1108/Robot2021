@@ -10,9 +10,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
-import io.github.oblarg.oblog.annotations.Log;
 import frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -20,13 +17,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 /**
  * Add your docs here.
  */
-public class FeederSubsystem extends SubsystemBase implements Loggable {
+public class FeederSubsystem extends SubsystemBase {
 
-  @Log.SpeedController(name = "Feeder Motor")
   private WPI_VictorSPX m_feeder = new WPI_VictorSPX(FeederConstants.CAN_ID_Launcher_Intake);
 
-  private double m_feederSpeed;
-  private double m_slowOutSpeed;
+  private double m_fastInSpeed = 0.7;
+  private double m_slowInSpeed = 0.4;
+  private double m_slowOutSpeed = -0.4;
 
   public FeederSubsystem(){
     m_feeder.set(0);
@@ -34,26 +31,32 @@ public class FeederSubsystem extends SubsystemBase implements Loggable {
     m_feeder.setNeutralMode(NeutralMode.Brake);
   }
 
-  @Config(name = "Feeder Speed", defaultValueNumeric = 0.7)
-  public void setFeederSpeed(double feederSpeed){
-    m_feederSpeed = feederSpeed;
+  public void setFastInSpeed(double fastInSpeed){
+    m_fastInSpeed = fastInSpeed;
   }
 
-  @Config(name = "Slow Out Speed", defaultValueNumeric = 0.4)
   public void setSlowOutSpeed(double slowOutSpeed){
-      m_slowOutSpeed = slowOutSpeed;
+    m_slowOutSpeed = slowOutSpeed;
   }
 
-  public void startFeeder(){
-    m_feeder.set(m_feederSpeed);
+  public void setSlowInSpeed(double slowInSpeed){
+    m_slowInSpeed = slowInSpeed;
+  }
+
+  public void fastInFeeder(){
+    m_feeder.set(m_fastInSpeed);
   }
 
   public void stopFeeder(){
     m_feeder.set(0);
   }
 
+  public void slowInFeeder(){
+    m_feeder.set(m_slowInSpeed);
+  }
+
   public void slowOutFeeder(){
     m_feeder.set(m_slowOutSpeed);
-}
+  }
 
 }

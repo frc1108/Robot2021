@@ -30,7 +30,7 @@ public class ShootBalls extends CommandBase {
   public void initialize(){
     m_launcher.startLauncher();
     new WaitCommand(0.5);
-    m_feeder.startFeeder();    
+    m_feeder.fastInFeeder();    
   }
 
   @Override

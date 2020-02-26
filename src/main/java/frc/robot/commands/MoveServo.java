@@ -26,22 +26,20 @@ public class MoveServo extends CommandBase implements Loggable {
 
 
   // Called repeatedly when this Command is scheduled to run
-  @Override
+  /* @Override
   public void execute() {
     m_climber.WinchServo(m_angle.getAsDouble());
-  }
+  } */
 
   // Make this return true when this Command no longer needs to run execute()
-  @Override
+/*   @Override
   public boolean isFinished() {
     if((m_climber.AtAngle() >= (m_angle.getAsDouble()-1.5)) || (m_climber.AtAngle() <= (m_angle.getAsDouble()+1.5))) {
       return true;
     } else {
       return false;
-    }
-    
-    
-  }
+    }  
+  } */
 
   // Called once after isFinished returns true
   @Override

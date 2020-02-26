@@ -12,28 +12,29 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberSubsystem;
 
 public class ManualClimber extends CommandBase {
-  private final ClimberSubsystem m_hopper;
-  private final DoubleSupplier hopper_spd;
+  private final ClimberSubsystem m_climber;
+  private final DoubleSupplier m_winchSpeed;
   /**
    */
   public ManualClimber(ClimberSubsystem subsystem, DoubleSupplier speed) {
-    m_hopper = subsystem;
-    hopper_spd = speed;
-    addRequirements(m_hopper);
+    m_climber = subsystem;
+    m_winchSpeed = speed;
+    addRequirements(m_climber);
   }
 
   @Override
   public void initialize() {
+    m_climber.setWinchSpeed(m_winchSpeed.getAsDouble());
+    m_climber.startWinch();
   }
 
   @Override
   public void execute() {
-    m_hopper.WinchMotor(hopper_spd.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_hopper.WinchMotor(0);
+    m_climber.stopWinch();
   }
 
   @Override

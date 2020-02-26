@@ -10,6 +10,7 @@ package frc.robot;
 import io.github.oblarg.oblog.Logger;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -59,6 +60,7 @@ public class Robot extends TimedRobot {
     m_lightInitCommand = m_robotContainer.getLightInitCommand();
     if (m_lightInitCommand != null) {
       m_lightInitCommand.schedule();
+      //System.out.println("LED scheduled");
     }
   }
 
@@ -71,12 +73,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    m_lightInitCommand = m_robotContainer.getLightInitCommand();
-    if (m_lightInitCommand != null) {
-      m_lightInitCommand.schedule();
-    }
-    
-    
   }
 
   /**

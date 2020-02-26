@@ -57,9 +57,10 @@ public final class Constants {
   }
 
   public static final class ClimberConstants {
-    public static final int CAN_ID_WINCH = 10; //Intake
-    public static final double servoAngle = 150; //Released Servo angle
-    public static final double servoCloseAngle = 50; //Closed Servo Angle
+    public static final int CAN_ID_WINCH = 10; 
+    public static final int CAN_ID_TURNER = 11; 
+    //public static final double servoAngle = 150; //Released Servo angle
+    //public static final double servoCloseAngle = 50; //Closed Servo Angle
   }
 
 

@@ -31,7 +31,7 @@ import frc.robot.commands.ManualHopper;
 import frc.robot.commands.ManualClimber;
 import frc.robot.commands.SetSolidColor;
 import frc.robot.commands.AutoCommandGroup;
-
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 import static frc.robot.Constants.OIConstants.kDriverControllerPort;
@@ -58,9 +58,11 @@ public class RobotContainer {
   private final Command m_basicAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder);
   private final Command m_setRedLights = new SetSolidColor(m_lights,255,0,0);
   private final Command m_setBlueLights = new SetSolidColor(m_lights,0,0,255);
+  private final Command m_setNoneLights = new SetSolidColor(m_lights,0,0,0);
 
  
   // A chooser for autonomous commands
+  @Config(tabName = "Setup")
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   SendableChooser<Command> m_ledChooser = new SendableChooser<>();
 
@@ -72,6 +74,7 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -93,7 +96,7 @@ public class RobotContainer {
       )
     );
 
-     // Winch default 
+    // Winch default 
     m_climber.setDefaultCommand(
       new ManualClimber(
         m_climber,
@@ -105,10 +108,11 @@ public class RobotContainer {
     m_chooser.setDefaultOption("Basic Auto", m_basicAuto);
     m_ledChooser.setDefaultOption("Solid Red", m_setRedLights);
     m_ledChooser.addOption("Solid Blue", m_setBlueLights);
+    m_ledChooser.addOption("None", m_setNoneLights);
 
 
-    Shuffleboard.getTab("Autonomous").add(m_chooser);
-    Shuffleboard.getTab("Lights").add(m_ledChooser);
+    //Shuffleboard.getTab("Setup").add(m_chooser);
+    Shuffleboard.getTab("Setup").add(m_ledChooser);
 
   }
 
@@ -124,20 +128,20 @@ public class RobotContainer {
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowOutFeeder(),
                               ()->m_feeder.stopFeeder(),m_feeder)
-                              .withTimeout(4));
+                              .withTimeout(0.2));
 
    // Reverse feeder motor for time with operator button B
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
         .toggleWhenActive(new WaitCommand(0.8)
                               .andThen(new StartEndCommand(
-                                           ()->m_feeder.startFeeder(),
+                                           ()->m_feeder.fastInFeeder(),
                                            ()->m_feeder.stopFeeder(),m_feeder)
                                            .withTimeout(7)));
   
     // Run feeder motor for time with operator button X
     new JoystickButton(m_operatorController, XboxController.Button.kX.value)
         .toggleWhenActive(new StartEndCommand(
-                              ()->m_feeder.slowOutFeeder(),
+                              ()->m_feeder.slowInFeeder(),
                               ()->m_feeder.stopFeeder(),m_feeder)
                               .withTimeout(0.7));
 
@@ -160,6 +164,8 @@ public class RobotContainer {
     ReleaseServoButton.whenPressed(new MoveServo(m_climber,() -> servoAngle));
     JoystickButton CloseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value);
     CloseServoButton.whenPressed(new MoveServo(m_climber,() -> servoCloseAngle)); */
+  
+  
   }
 
 
