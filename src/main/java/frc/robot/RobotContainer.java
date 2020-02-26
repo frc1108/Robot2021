@@ -52,16 +52,17 @@ public class RobotContainer {
   @Log private final FeederSubsystem m_feeder = new FeederSubsystem();
   @Log private final BallLauncher m_robotLaunch = new BallLauncher();
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
+  @Log private final LightsSubsystem m_lights = new LightsSubsystem();
   @Log private final UsbSerial gyro = new UsbSerial();
  
   private final Command m_basicAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder);
-  //private final Command m_setRedLights = new SetSolidColor(255,0,0);
-  //private final Command m_setBlueLights = new SetSolidColor(0,0,255);
+  private final Command m_setRedLights = new SetSolidColor(m_lights,255,0,0);
+  private final Command m_setBlueLights = new SetSolidColor(m_lights,0,0,255);
 
  
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-  //SendableChooser<Command> m_ledChooser = new SendableChooser<>();
+  SendableChooser<Command> m_ledChooser = new SendableChooser<>();
 
   // Controller for driver and operator
   XboxController m_driverController = new XboxController(kDriverControllerPort);
@@ -102,12 +103,12 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Basic Auto", m_basicAuto);
-    //m_ledChooser.setDefaultOption("Solid Red", m_setRedLights);
-    //m_ledChooser.addOption("Solid Blue", m_setBlueLights);
+    m_ledChooser.setDefaultOption("Solid Red", m_setRedLights);
+    m_ledChooser.addOption("Solid Blue", m_setBlueLights);
 
 
     Shuffleboard.getTab("Autonomous").add(m_chooser);
-    //Shuffleboard.getTab("Lights").add(m_ledChooser);
+    Shuffleboard.getTab("Lights").add(m_ledChooser);
 
   }
 
@@ -171,7 +172,7 @@ public class RobotContainer {
     return m_chooser.getSelected();
   }  
 
-  /* public Command getLightInitCommand() {
+   public Command getLightInitCommand() {
     return m_ledChooser.getSelected();
-  } */
+  } 
 }

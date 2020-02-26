@@ -22,6 +22,7 @@ import edu.wpi.first.cameraserver.CameraServer;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
+  private Command m_lightInitCommand;
 
   private RobotContainer m_robotContainer;
   /**
@@ -54,8 +55,11 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     Logger.updateEntries();
     
-
     
+    m_lightInitCommand = m_robotContainer.getLightInitCommand();
+    if (m_lightInitCommand != null) {
+      m_lightInitCommand.schedule();
+    }
   }
 
   /**
@@ -67,10 +71,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
-    /* m_lightInitCommand = m_robotContainer.getLightInitCommand();
+    m_lightInitCommand = m_robotContainer.getLightInitCommand();
     if (m_lightInitCommand != null) {
       m_lightInitCommand.schedule();
-    } */
+    }
+    
+    
   }
 
   /**
