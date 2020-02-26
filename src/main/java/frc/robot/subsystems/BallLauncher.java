@@ -10,7 +10,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-//import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import static frc.robot.Constants.BallLauncherConstants.CAN_ID_BALL_LAUNCH_LEFT;
 import static frc.robot.Constants.BallLauncherConstants.CAN_ID_BALL_LAUNCH_RIGHT;
@@ -25,7 +24,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     private WPI_TalonSRX m_rightBallThrow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_RIGHT);
 
     private double m_launcherSpeed = 0.8;
-    private double m_launcherRPM;
+    private double m_launcherRPM = 3000;
 
     public BallLauncher(){
         m_leftBallThrow.configFactoryDefault();
@@ -72,7 +71,6 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         return tachVel_UnitsPer100ms*600/1024;
     }
 
-    @Config(name="Set RPM", defaultValueNumeric = 3000)
     public void setLauncherRPM (double launcherRPM){  
         m_launcherRPM = -launcherRPM;
     }
