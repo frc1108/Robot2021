@@ -54,7 +54,9 @@ public class RobotContainer {
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
   @Log private final LightsSubsystem m_lights = new LightsSubsystem();
   @Log private final UsbSerial gyro = new UsbSerial();
- 
+
+  private double m_autoTimeDelay;
+
   private final Command m_basicAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder);
   private final Command m_setRedLights = new SetSolidColor(m_lights,255,0,0);
   private final Command m_setBlueLights = new SetSolidColor(m_lights,0,0,255);
@@ -106,9 +108,10 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Basic Auto", m_basicAuto);
-    m_ledChooser.setDefaultOption("Solid Red", m_setRedLights);
+    m_ledChooser.setDefaultOption("None", m_setNoneLights);
+    m_ledChooser.addOption("Solid Red", m_setRedLights);
     m_ledChooser.addOption("Solid Blue", m_setBlueLights);
-    m_ledChooser.addOption("None", m_setNoneLights);
+    
 
 
     //Shuffleboard.getTab("Setup").add(m_chooser);
@@ -174,7 +177,13 @@ public class RobotContainer {
     JoystickButton CloseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value);
     CloseServoButton.whenPressed(new MoveServo(m_climber,() -> servoCloseAngle)); */
   
-  
+// Run feeder motor for time with operator button Start
+new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
+.toggleWhenActive(new StartEndCommand(
+                      ()->m_climber.startTurn(),
+                      ()->m_climber.stopTurn(),m_climber)
+                                   .withTimeout(0.55));
+
   }
 
 
@@ -190,4 +199,9 @@ public class RobotContainer {
    public Command getLightInitCommand() {
     return m_ledChooser.getSelected();
   } 
+
+  @Config(tabName = "Setup", defaultValueNumeric = 0)
+  public void setAutoDelay(double autoTimeDelay){
+    m_autoTimeDelay = autoTimeDelay;
+  }
 }

@@ -36,8 +36,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     Logger.configureLoggingAndConfig(m_robotContainer, false);
-    CameraServer.getInstance().startAutomaticCapture();
-
   }
 
   /**
@@ -54,14 +52,12 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    Logger.updateEntries();
-    
-    
     m_lightInitCommand = m_robotContainer.getLightInitCommand();
     if (m_lightInitCommand != null) {
       m_lightInitCommand.schedule();
       //System.out.println("LED scheduled");
     }
+    Logger.updateEntries();
   }
 
   /**

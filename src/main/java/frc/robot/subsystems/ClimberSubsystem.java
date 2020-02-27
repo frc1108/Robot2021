@@ -14,6 +14,7 @@ import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import static frc.robot.Constants.ClimberConstants.*;
 /**
@@ -27,7 +28,12 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
   @Log.SpeedController(name = "Winch Motor")
   private final WPI_TalonSRX m_winch = new WPI_TalonSRX(CAN_ID_WINCH);
 
-  private double m_winchSpeed;
+  @Log.SpeedController(name = "Turner Motor")
+  private final WPI_VictorSPX m_turner = new WPI_VictorSPX(CAN_ID_TURNER);
+
+
+  private double m_winchSpeed = 0.75;
+  private double m_turnSpeed  = 0.9;
 
   public ClimberSubsystem() {
     // Initialize Talon SRX
@@ -62,6 +68,18 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     m_winch.set(spd);
    }
 
+  public void startTurn(){
+    m_turner.set(m_turnSpeed);
+  }
+
+  public void stopTurn(){
+    m_turner.set(0);
+  }
+
+  public void reverseTurn(){
+    m_turner.set(-m_turnSpeed);
+  }
+
   public void startWinch(){
     m_winch.set(m_winchSpeed);
   }
@@ -70,7 +88,6 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     m_winch.set(0);
   }
 
-  @Config(name = "Winch Speed",defaultValueNumeric = 0.5)
   public void setWinchSpeed(double winchSpeed){
     m_winchSpeed = winchSpeed;
   }

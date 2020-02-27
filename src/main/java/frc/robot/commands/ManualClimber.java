@@ -24,12 +24,13 @@ public class ManualClimber extends CommandBase {
 
   @Override
   public void initialize() {
-    m_climber.setWinchSpeed(m_winchSpeed.getAsDouble());
-    m_climber.startWinch();
+
   }
 
   @Override
   public void execute() {
+   m_climber.setWinchSpeed(m_winchSpeed.getAsDouble());
+   m_climber.startWinch();
   }
 
   @Override

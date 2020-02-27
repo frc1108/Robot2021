@@ -26,12 +26,13 @@ public class DriveToWall extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.arcadeDrive(0.4,0);
+    m_drive.arcadeDrive(-0.6,0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    withTimeout(6);
   }
 
   // Called once the command ends or is interrupted.
@@ -44,6 +45,7 @@ public class DriveToWall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_drive.getSonarDistanceInches()<24);
+    //return (m_drive.getSonarDistanceInches()<24);
+    return false;
   }
 }
