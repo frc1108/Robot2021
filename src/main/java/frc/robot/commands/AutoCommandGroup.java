@@ -9,10 +9,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveToWall;
-import frc.robot.commands.AutoBalls;
+import frc.robot.commands.ShootBalls;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.BallLauncher;
-import frc.robot.subsystems.FeederSubsystem;;
+import frc.robot.subsystems.FeederSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -25,6 +25,7 @@ public class AutoCommandGroup extends SequentialCommandGroup {
     
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new DriveToWall(drive), new AutoBalls(ball, feeder));
+    super(new DriveToWall(drive), new ShootBalls(ball, feeder));
+
   }
 }

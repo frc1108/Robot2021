@@ -7,11 +7,14 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveToWall extends CommandBase {
   private final DriveSubsystem m_drive;
+  /* private long TimeToRun = 3000;
+  private long initTime = RobotController.getFPGATime(); */
 
   /**
    * Creates a new DriveToWall.
@@ -26,13 +29,13 @@ public class DriveToWall extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.arcadeDrive(-0.6,0);
+    m_drive.arcadeDrive(-0.4,0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    withTimeout(6);
+    //withTimeout(15);
   }
 
   // Called once the command ends or is interrupted.
@@ -45,7 +48,12 @@ public class DriveToWall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    //return (m_drive.getSonarDistanceInches()<24);
-    return false;
+    return (m_drive.getSonarDistanceInches()<10);
+    //return false;
+    /* if (RobotController.getFPGATime() - initTime <= TimeToRun) {
+      return false;
+    } else {
+      return true;
+    } */
   }
 }

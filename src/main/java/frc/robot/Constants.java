@@ -30,7 +30,7 @@ public final class Constants {
 
     // Analog input port for ultrasonic sensor
     public static final int kUltrasonicPort = 0;
-    public static final double kValueToInches = 0.125;
+    public static final double kValueToInches = 0.02482;
     
   }
 

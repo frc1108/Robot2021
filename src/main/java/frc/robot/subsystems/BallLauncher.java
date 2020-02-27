@@ -21,7 +21,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     // Talon Tach
     private WPI_TalonSRX m_rightBallThrow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_RIGHT);
 
-    private double m_launcherSpeed = 0.8;
+    private double m_launcherSpeed = -0.8;
     private double m_launcherRPM = -3000;
 
     public BallLauncher(){
