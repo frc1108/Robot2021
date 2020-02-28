@@ -14,12 +14,7 @@ import frc.robot.subsystems.HopperSubsystem;
 
 public class HopperShift extends CommandBase {
   private final HopperSubsystem m_hopper;
-  private long TimeToRun = 400000; //microseconds
-  private long initTime;
 
-  /**
-
-   */
   public HopperShift(HopperSubsystem subsystem) {
     m_hopper = subsystem;
     addRequirements(m_hopper);
@@ -31,7 +26,7 @@ public class HopperShift extends CommandBase {
 
   @Override
   public void execute() {
-    m_hopper.HopperMotor(-0.2);
+    m_hopper.HopperMotor(0.3);
   }
 
   @Override
@@ -41,11 +36,6 @@ public class HopperShift extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    //return ;
-    if (RobotController.getFPGATime() - initTime <= TimeToRun || !m_hopper.isLowSwitchSet()) {
-      return false;
-    } else {
-      return true;
-    }
+    return !m_hopper.isHighSwitchSet();
   }
 }

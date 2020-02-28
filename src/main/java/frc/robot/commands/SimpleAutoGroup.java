@@ -16,6 +16,6 @@ public class SimpleAutoGroup extends SequentialCommandGroup {
    * Creates a new SimpleAutoGroup. This Auto commmand just drives forward for 3 secodns and stops.
    */
   public SimpleAutoGroup(DriveSubsystem drive) {
-    super(new DriveTimed(drive));
+    super(new DriveTimed(drive).withTimeout(1));
   }
 }

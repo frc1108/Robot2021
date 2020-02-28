@@ -31,7 +31,8 @@ import frc.robot.commands.ManualHopper;
 import frc.robot.commands.ManualClimber;
 import frc.robot.commands.SetSolidColor;
 import frc.robot.commands.SetRainbow;
-import frc.robot.commands.AutoCommandGroup;
+//import frc.robot.commands.AutoCommandGroup;    Old Auto. It doesn't tilt the hopper.
+import frc.robot.commands.BasicCommandGroup;
 import frc.robot.commands.SimpleAutoGroup;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -59,8 +60,9 @@ public class RobotContainer {
 
   private double m_autoTimeDelay;
 
-  private final Command m_shootingAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder);
+  //private final Command m_shootingAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder); Old Auto. It doesn't tilt the hopper.
   private final Command m_driveOffLineAuto = new SimpleAutoGroup(m_robotDrive);
+  private final Command m_regularAuto = new BasicCommandGroup(m_robotDrive, m_robotLaunch, m_feeder, m_hoppersystem);
   private final Command m_setRedLights = new SetSolidColor(m_lights,255,0,0);
   private final Command m_setBlueLights = new SetSolidColor(m_lights,0,0,255);
   private final Command m_setNoneLights = new SetSolidColor(m_lights,0,0,0);
@@ -110,7 +112,8 @@ public class RobotContainer {
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Drive Off Line Auto", m_driveOffLineAuto);
-    m_chooser.addOption("Shooting Auto", m_shootingAuto);
+    //m_chooser.addOption("Shooting Auto", m_shootingAuto); Old Auto. It doesn't tilt the hopper.
+    m_chooser.addOption("Regular Auto", m_regularAuto);
     m_ledChooser.setDefaultOption("None", m_setNoneLights);
     m_ledChooser.addOption("Solid Red", m_setRedLights);
     m_ledChooser.addOption("Solid Blue", m_setBlueLights);

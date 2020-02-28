@@ -19,15 +19,15 @@ import frc.robot.subsystems.HopperSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class BetaCommandGroup extends SequentialCommandGroup {
+public class BasicCommandGroup extends SequentialCommandGroup {
   /**
    * Creates a new AutoCommandGroup.
    */
-  public BetaCommandGroup(DriveSubsystem drive, BallLauncher ball, FeederSubsystem feeder, HopperSubsystem hopper) {
+  public BasicCommandGroup(DriveSubsystem drive, BallLauncher ball, FeederSubsystem feeder, HopperSubsystem hopper) {
     
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new DriveToWall(drive), new HopperShift(hopper), new ShootBalls(ball, feeder));
+    super(new HopperShift(hopper), new DriveToWall(drive), new ShootBalls(ball, feeder));
 
   }
 }
