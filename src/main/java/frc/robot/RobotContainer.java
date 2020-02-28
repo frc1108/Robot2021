@@ -161,7 +161,7 @@ public class RobotContainer {
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowInFeeder(),
                               ()->m_feeder.stopFeeder(),m_feeder)
-                              .withTimeout(0.7));
+                              .withTimeout(0.6));
 
     // Run intake motor while Operator Right Bumper is pressed
     JoystickButton rollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
