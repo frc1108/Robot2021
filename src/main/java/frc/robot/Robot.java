@@ -107,6 +107,9 @@ public class Robot extends TimedRobot implements Loggable{
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    if (m_lightInitCommand != null) {
+      m_lightInitCommand.cancel();
+    }
   }
 
   /**

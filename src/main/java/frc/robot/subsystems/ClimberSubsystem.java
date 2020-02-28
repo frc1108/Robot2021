@@ -25,10 +25,10 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
 
   private final DigitalInput m_switch = new DigitalInput(TURNER_SWITCH_PORT);
 
-  //@Log.SpeedController(name = "Winch Motor")
+  @Log.SpeedController(name = "Winch Motor")
   private final WPI_TalonSRX m_winch = new WPI_TalonSRX(CAN_ID_WINCH);
 
-  //@Log.SpeedController(name = "Turner Motor")
+  @Log.SpeedController(name = "Turner Motor")
   private final WPI_VictorSPX m_turner = new WPI_VictorSPX(CAN_ID_TURNER);
 
 

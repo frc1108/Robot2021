@@ -30,7 +30,9 @@ import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.ManualHopper;
 import frc.robot.commands.ManualClimber;
 import frc.robot.commands.SetSolidColor;
+import frc.robot.commands.SetRainbow;
 import frc.robot.commands.AutoCommandGroup;
+import frc.robot.commands.SimpleAutoGroup;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -57,7 +59,8 @@ public class RobotContainer {
 
   private double m_autoTimeDelay;
 
-  private final Command m_basicAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder);
+  private final Command m_shootingAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder);
+  private final Command m_driveOffLineAuto = new SimpleAutoGroup(m_robotDrive);
   private final Command m_setRedLights = new SetSolidColor(m_lights,255,0,0);
   private final Command m_setBlueLights = new SetSolidColor(m_lights,0,0,255);
   private final Command m_setNoneLights = new SetSolidColor(m_lights,0,0,0);
@@ -106,7 +109,8 @@ public class RobotContainer {
     );
 
     // Add commands to the autonomous command chooser
-    m_chooser.setDefaultOption("Basic Auto", m_basicAuto);
+    m_chooser.setDefaultOption("Drive Off Line Auto", m_driveOffLineAuto);
+    m_chooser.addOption("Shooting Auto", m_shootingAuto);
     m_ledChooser.setDefaultOption("None", m_setNoneLights);
     m_ledChooser.addOption("Solid Red", m_setRedLights);
     m_ledChooser.addOption("Solid Blue", m_setBlueLights);
@@ -141,12 +145,12 @@ public class RobotContainer {
                                            .withTimeout(5)));
 
    // Run intake motor for time with operator button B
-   new JoystickButton(m_operatorController, XboxController.Button.kB.value)
+   /* new JoystickButton(m_operatorController, XboxController.Button.kB.value)
    .toggleWhenActive(new WaitCommand(2)
                          .andThen(new StartEndCommand(
                                       ()->m_intakesystem.startIntake(),
                                       ()->m_intakesystem.stopIntake(),m_intakesystem)
-                                      .withTimeout(1.25)));
+                                      .withTimeout(1.25))); */
 
   
     // Run feeder motor for time with operator button X
@@ -182,6 +186,10 @@ new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
                       ()->m_climber.startTurn(),
                       ()->m_climber.stopTurn(),m_climber)
                                    .withTimeout(0.55));
+
+// test rainbow code
+new JoystickButton(m_operatorController, XboxController.Button.kBack.value)
+.toggleWhenActive(new SetRainbow(m_lights));
 
   }
 

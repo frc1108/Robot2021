@@ -34,7 +34,7 @@ public class ShootBalls extends CommandBase {
     initTime = RobotController.getFPGATime();
     //m_launcher.setLauncherRPM(-3000);
     m_launcher.startPIDLauncher();
-    new WaitCommand(0.8);
+    new WaitCommand(1.2);
     m_feeder.fastInFeeder();    
   }
 

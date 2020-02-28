@@ -20,6 +20,7 @@ public class LightsSubsystem extends SubsystemBase{
   // here. Call these from Commands.
   private AddressableLED m_led = new AddressableLED(PWM_ID_LEDS);
   private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(160);
+  private int m_rainbowFirstPixelHue;
   
 
   public LightsSubsystem () {
@@ -38,5 +39,12 @@ public class LightsSubsystem extends SubsystemBase{
       m_led.start();  
     }
   }
-
+ public void rainbow(){
+    for (var i=0; i<m_ledBuffer.getLength();i++){
+        final var hue = (m_rainbowFirstPixelHue + (i*180/m_ledBuffer.getLength()))%180;
+        m_ledBuffer.setHSV(i, hue, 255, 128);
+      }
+      m_rainbowFirstPixelHue += 3;
+      m_rainbowFirstPixelHue %= 180;
+    } 
 }
