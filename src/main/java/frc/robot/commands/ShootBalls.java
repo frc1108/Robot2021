@@ -20,7 +20,7 @@ public class ShootBalls extends CommandBase {
 
   private final BallLauncher m_launcher;
   private final FeederSubsystem m_feeder;
-  private long TimeToRun = 6000000;
+  private long TimeToRun = 6000000; //microseconds
   private long initTime;
 
   public ShootBalls(BallLauncher launcher, FeederSubsystem feeder){
@@ -32,15 +32,14 @@ public class ShootBalls extends CommandBase {
   @Override
   public void initialize(){
     initTime = RobotController.getFPGATime();
-    m_launcher.setLauncherRPM(-3000);
-    m_launcher.startLauncher();
-    new WaitCommand(0.5);
+    //m_launcher.setLauncherRPM(-3000);
+    m_launcher.startPIDLauncher();
+    new WaitCommand(0.8);
     m_feeder.fastInFeeder();    
   }
 
   @Override
   public void execute(){
-    //withTimeout(4);
   }
 
   @Override

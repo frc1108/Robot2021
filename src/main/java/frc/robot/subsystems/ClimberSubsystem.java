@@ -25,15 +25,16 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
 
   private final DigitalInput m_switch = new DigitalInput(TURNER_SWITCH_PORT);
 
-  @Log.SpeedController(name = "Winch Motor")
+  //@Log.SpeedController(name = "Winch Motor")
   private final WPI_TalonSRX m_winch = new WPI_TalonSRX(CAN_ID_WINCH);
 
-  @Log.SpeedController(name = "Turner Motor")
+  //@Log.SpeedController(name = "Turner Motor")
   private final WPI_VictorSPX m_turner = new WPI_VictorSPX(CAN_ID_TURNER);
 
 
   private double m_winchSpeed = 0.75;
   private double m_turnSpeed  = 0.9;
+  private boolean isTurned;
 
   public ClimberSubsystem() {
     // Initialize Talon SRX
@@ -43,6 +44,7 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     m_winch.configContinuousCurrentLimit(40);
     m_winch.configPeakCurrentLimit(60);
     m_winch.setInverted(false);
+    isTurned = false;
   }
 
   /* public void WinchServo(double angle) {
@@ -70,6 +72,7 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
 
   public void startTurn(){
     m_turner.set(m_turnSpeed);
+    isTurned = true;
   }
 
   public void stopTurn(){
@@ -81,7 +84,10 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
   }
 
   public void startWinch(){
-    m_winch.set(m_winchSpeed);
+    if (isTurned){
+      m_winch.set(m_winchSpeed);
+    }
+   
   }
 
   public void stopWinch(){
@@ -97,8 +103,8 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     return m_winch.getStatorCurrent();
   }
 
-  @Log.BooleanBox(name= "Turner Switch",tabName = "Match View")
+  /* @Log.BooleanBox(name= "Turner Switch",tabName = "Match View")
   public boolean isTurnerVertical(){
     return m_switch.get();
-  }
+  } */
 }

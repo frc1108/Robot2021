@@ -45,15 +45,15 @@ import static frc.robot.Constants.OIConstants.kOperatorControllerPort;
  */
 public class RobotContainer {
   // The robot's subsystems
-  @Log private final Vision m_vision = new Vision();
+  private final Vision m_vision = new Vision();
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  @Log private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
+  private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
   @Log private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
-  @Log private final FeederSubsystem m_feeder = new FeederSubsystem();
+  private final FeederSubsystem m_feeder = new FeederSubsystem();
   @Log private final BallLauncher m_robotLaunch = new BallLauncher();
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
-  @Log private final LightsSubsystem m_lights = new LightsSubsystem();
-  @Log private final UsbSerial gyro = new UsbSerial();
+  private final LightsSubsystem m_lights = new LightsSubsystem();
+  private final UsbSerial gyro = new UsbSerial();
 
   private double m_autoTimeDelay;
 
@@ -64,7 +64,6 @@ public class RobotContainer {
 
  
   // A chooser for autonomous commands
-  @Config(tabName = "Setup")
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   SendableChooser<Command> m_ledChooser = new SendableChooser<>();
 
@@ -114,7 +113,7 @@ public class RobotContainer {
     
 
 
-    //Shuffleboard.getTab("Setup").add(m_chooser);
+    Shuffleboard.getTab("Setup").add(m_chooser);
     Shuffleboard.getTab("Setup").add(m_ledChooser);
 
   }

@@ -21,8 +21,8 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     // Talon Tach
     private WPI_TalonSRX m_rightBallThrow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_RIGHT);
 
-    private double m_launcherSpeed = -0.8;
-    private double m_launcherRPM = -3000;
+    //private double m_launcherSpeed = -0.8;
+    private final double m_launcherRPM = -3000;
 
     public BallLauncher(){
         m_leftBallThrow.configFactoryDefault();
@@ -50,13 +50,13 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_rightBallThrow.configPulseWidthPeriod_FilterWindowSz(filterWindowSize, kTimeoutMs);
     }
 
-    public void setLauncherSpeed(double rightMotorSpeed){
+    /* public void setLauncherSpeed(double rightMotorSpeed){
         m_launcherSpeed = rightMotorSpeed;
-    }
+    } */
 
-    public void startLauncher(){
+    /* public void startLauncher(){
         m_rightBallThrow.set(m_launcherSpeed);
-    }
+    } */
 
     public void stopLauncher(){
         m_rightBallThrow.set(0);
@@ -68,9 +68,9 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         return -1*tachVel_UnitsPer100ms*600/1024;
     }
 
-    public void setLauncherRPM (double launcherRPM){  
-        m_launcherRPM = -launcherRPM;
-    }
+    /* public void setLauncherRPM (double launcherRPM){  
+        m_launcherRPM = launcherRPM;
+    } */
 
     public void startPIDLauncher(){      
         m_rightBallThrow.set(ControlMode.Velocity,m_launcherRPM*1024/600);
