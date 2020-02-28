@@ -62,7 +62,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_rightBallThrow.set(0);
     }
 
-    @Log.Dial(name = "Launcher RPM", tabName = "Match View")
+    @Log.Dial(name = "Launcher RPM", tabName = "Match View", max = 3000)
     public double getTachRPM(){
         double tachVel_UnitsPer100ms = m_rightBallThrow.getSelectedSensorVelocity(0);
         return -1*tachVel_UnitsPer100ms*600/1024;
