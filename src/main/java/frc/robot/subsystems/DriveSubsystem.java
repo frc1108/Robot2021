@@ -135,8 +135,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     m_drive.setMaxOutput(maxOutput);
   }
 
-  @Log.Graph(name = "Sonar Distance Inches")
+  @Log(name = "Sonar Distance Inches")
   public double getSonarDistanceInches(){
     return m_ultrasonic.getValue()*kValueToInches;
   }
+  
+  
 }

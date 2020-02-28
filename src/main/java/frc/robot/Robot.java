@@ -10,11 +10,10 @@ package frc.robot;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,9 +26,6 @@ public class Robot extends TimedRobot implements Loggable{
   private Command m_lightInitCommand;
 
   private RobotContainer m_robotContainer;
-  AddressableLED m_led;
-  AddressableLEDBuffer m_ledBuffer;
-  private int m_rainbowFirstPixelHue;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -40,19 +36,6 @@ public class Robot extends TimedRobot implements Loggable{
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     Logger.configureLoggingAndConfig(m_robotContainer, false);
-     CameraServer.getInstance().startAutomaticCapture();
-
-     /* m_led = new AddressableLED(9);
-
-    m_ledBuffer = new AddressableLEDBuffer(240);
-    m_led.setLength(m_ledBuffer.getLength());
-
-    for (var i=0; i<m_ledBuffer.getLength();i++){
-      m_ledBuffer.setRGB(i,255,0,0);
-    }
-    
-    m_led.setData(m_ledBuffer);
-    m_led.start(); */  
   }
 
   /**
@@ -69,13 +52,12 @@ public class Robot extends TimedRobot implements Loggable{
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    Logger.updateEntries();
-//     rainbow();
-//    m_led.setData(m_ledBuffer);
     m_lightInitCommand = m_robotContainer.getLightInitCommand();
     if (m_lightInitCommand != null) {
       m_lightInitCommand.schedule();
+      //System.out.println("LED scheduled");
     }
+    Logger.updateEntries();
   }
 
   /**
@@ -86,7 +68,6 @@ public class Robot extends TimedRobot implements Loggable{
   }
 
   @Override
-
   public void disabledPeriodic() {
   }
 
@@ -105,9 +86,9 @@ public class Robot extends TimedRobot implements Loggable{
      */
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
+     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
-    }
+    } 
   }
 
   /**
@@ -148,7 +129,7 @@ public class Robot extends TimedRobot implements Loggable{
   @Override
   public void testPeriodic() {
   }
-/*   private void rainbow(){
+  /* private void rainbow(){
     for (var i=0; i<m_ledBuffer.getLength();i++){
         final var hue = (m_rainbowFirstPixelHue + (i*180/m_ledBuffer.getLength()))%180;
         m_ledBuffer.setHSV(i, hue, 255, 128);

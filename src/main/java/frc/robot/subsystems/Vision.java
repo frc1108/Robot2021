@@ -18,12 +18,10 @@ import edu.wpi.first.cameraserver.CameraServer;
 public class Vision extends SubsystemBase implements Loggable{
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  //private String m_cameraName = "Front Camera";
-  //private String m_cameraPath = "/dev/video0";
   
-  @Log.CameraStream
+  @Log.CameraStream(tabName = "Match View")
   private final UsbCamera m_camera = CameraServer.getInstance().startAutomaticCapture();
-  
+ 
   public Vision(){
   }
 }

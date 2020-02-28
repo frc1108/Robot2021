@@ -13,16 +13,18 @@ import frc.robot.subsystems.LightsSubsystem;
 
 public class SetSolidColor extends CommandBase {
   /**
-   * Creates a new SetLightsRed
+   * Creates a new SetSolidColor
    */
-  private LightsSubsystem m_lightsSubsystem = new LightsSubsystem();
+  private LightsSubsystem m_lightsSubsystem;
   private int m_red;
   private int m_green;
   private int m_blue;
   
-  public SetSolidColor(int red, int green, int blue) {
+  public SetSolidColor(LightsSubsystem lights, int red, int green, int blue) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_lightsSubsystem = lights;
     addRequirements(m_lightsSubsystem);
+    
     m_red = red;
     m_green = green;
     m_blue = blue;
@@ -31,12 +33,13 @@ public class SetSolidColor extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_lightsSubsystem.setSolidColor(m_red, m_green, m_blue);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_lightsSubsystem.setSolidColor(m_red, m_green, m_blue);
   }
 
 

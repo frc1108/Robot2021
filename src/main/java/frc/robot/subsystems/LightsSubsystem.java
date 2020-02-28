@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import io.github.oblarg.oblog.Loggable;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import static frc.robot.Constants.PWMConstants.PWM_ID_LEDS;
@@ -16,12 +15,11 @@ import static frc.robot.Constants.PWMConstants.PWM_ID_LEDS;
 /**
  * Add your docs here.
  */
-public class LightsSubsystem extends SubsystemBase implements Loggable {
+public class LightsSubsystem extends SubsystemBase{
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private AddressableLED m_led = new AddressableLED(PWM_ID_LEDS);
-  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(240);
-  private int m_rainbowFirstPixelHue;
+  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(160);
   
 
   public LightsSubsystem () {
@@ -40,10 +38,5 @@ public class LightsSubsystem extends SubsystemBase implements Loggable {
       m_led.start();  
     }
   }
-
-  public void setRainbow () {
-
-  }
-
 
 }

@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.BallLauncher;
@@ -19,6 +20,8 @@ public class ShootBalls extends CommandBase {
 
   private final BallLauncher m_launcher;
   private final FeederSubsystem m_feeder;
+  private long TimeToRun = 6000000; //microseconds
+  private long initTime;
 
   public ShootBalls(BallLauncher launcher, FeederSubsystem feeder){
     m_launcher = launcher;
@@ -28,14 +31,15 @@ public class ShootBalls extends CommandBase {
   
   @Override
   public void initialize(){
-    m_launcher.startLauncher();
-    new WaitCommand(0.5);
-    m_feeder.startFeeder();    
+    initTime = RobotController.getFPGATime();
+    //m_launcher.setLauncherRPM(-3000);
+    m_launcher.startPIDLauncher();
+    new WaitCommand(0.8);
+    m_feeder.fastInFeeder();    
   }
 
   @Override
   public void execute(){
-    withTimeout(4);
   }
 
   @Override
@@ -46,7 +50,12 @@ public class ShootBalls extends CommandBase {
 
   @Override
   public boolean isFinished(){
-    return false;
+    //return false;
+    if (RobotController.getFPGATime() - initTime <= TimeToRun) {
+      return false;
+    } else {
+      return true;
+    }
   } 
 
 }
