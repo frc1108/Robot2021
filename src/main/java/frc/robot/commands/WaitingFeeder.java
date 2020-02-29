@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.commands.FeederTimed;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -23,6 +24,6 @@ public class WaitingFeeder extends SequentialCommandGroup {
   public WaitingFeeder(FeederSubsystem feeder) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new WaitCommand(2), new InstantCommand(()->feeder.fastInFeeder()).withTimeout(4));
+    super(new WaitCommand(2), new FeederTimed(feeder));
   }
 }
