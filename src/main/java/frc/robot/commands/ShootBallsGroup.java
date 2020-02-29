@@ -7,24 +7,23 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.DriveToWall;
-import frc.robot.commands.ShootBalls;
-import frc.robot.subsystems.DriveSubsystem;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.commands.WaitingFeeder;
+import frc.robot.commands.ShootBalls;
+
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class AutoCommandGroup extends SequentialCommandGroup {
+public class ShootBallsGroup extends ParallelCommandGroup {
   /**
-   * Creates a new AutoCommandGroup.
+   * Creates a new ShootBallsGroup.
    */
-  public AutoCommandGroup(DriveSubsystem drive, BallLauncher ball, FeederSubsystem feeder) {
-    
-    // Add your commands in the super() call, e.g.
-    // super(new FooCommand(), new BarCommand());
-    super(new DriveToWall(drive), new ShootBalls(ball, feeder));
 
+  public ShootBallsGroup(BallLauncher launcher, FeederSubsystem feeder) {
+    // Add your commands in the super() call, e.g.
+    // super(new FooCommand(), new BarCommand());super();
+    super(new WaitingFeeder(feeder), new ShootBalls(launcher));
   }
 }

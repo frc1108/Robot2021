@@ -19,23 +19,20 @@ import frc.robot.subsystems.FeederSubsystem;
 public class ShootBalls extends CommandBase {
 
   private final BallLauncher m_launcher;
-  private final FeederSubsystem m_feeder;
   private long TimeToRun = 6000000; //microseconds
   private long initTime;
 
-  public ShootBalls(BallLauncher launcher, FeederSubsystem feeder){
+
+  public ShootBalls(BallLauncher launcher){
     m_launcher = launcher;
-    m_feeder = feeder;
-    addRequirements(m_launcher, m_feeder);
+    addRequirements(m_launcher);
   }
   
   @Override
   public void initialize(){
     initTime = RobotController.getFPGATime();
     //m_launcher.setLauncherRPM(-3000);
-    m_launcher.startPIDLauncher();
-    new WaitCommand(2);
-    m_feeder.fastInFeeder();    
+    m_launcher.startPIDLauncher();   
   }
 
   @Override
@@ -45,7 +42,6 @@ public class ShootBalls extends CommandBase {
   @Override
   public void end(boolean interrupt){
     m_launcher.stopLauncher();
-    m_feeder.stopFeeder();
   }
 
   @Override
