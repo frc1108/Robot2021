@@ -48,7 +48,7 @@ public class DriveToWall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_drive.getSonarDistanceInches()<10);
+    return (m_drive.getSonarDistanceInches()<7);
     //return false;
     /* if (RobotController.getFPGATime() - initTime <= TimeToRun) {
       return false;
