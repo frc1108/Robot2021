@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.DriveToWall;
 import frc.robot.commands.ShootBallsGroup;
 import frc.robot.commands.HopperShift;
+import frc.robot.commands.DriveCustom;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.FeederSubsystem;
@@ -27,7 +28,7 @@ public class BasicCommandGroup extends SequentialCommandGroup {
     
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new HopperShift(hopper), new DriveToWall(drive), new ShootBallsGroup(ball, feeder));
+    super(new HopperShift(hopper), new DriveToWall(drive), new ShootBallsGroup(ball, feeder), new DriveCustom(drive, 0.5, 0, 2), new DriveCustom(drive, 0, 0.6, 1));
 
   }
 }
