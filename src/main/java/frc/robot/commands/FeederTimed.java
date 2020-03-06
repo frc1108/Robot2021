@@ -17,7 +17,7 @@ import frc.robot.subsystems.FeederSubsystem;
 public class FeederTimed extends CommandBase {
 
   private final FeederSubsystem m_feeder;
-  private long TimeToRun = 4000000; //microseconds
+  private long TimeToRun = 2000000; //microseconds
   private long initTime;
 
 

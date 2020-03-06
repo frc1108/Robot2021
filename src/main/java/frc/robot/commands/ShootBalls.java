@@ -19,7 +19,7 @@ import frc.robot.subsystems.FeederSubsystem;
 public class ShootBalls extends CommandBase {
 
   private final BallLauncher m_launcher;
-  private long TimeToRun = 6000000; //microseconds
+  private long TimeToRun = 3500000; //microseconds
   private long initTime;
 
 
