@@ -20,12 +20,12 @@ public class DriveCustom extends CommandBase {
   /**
    * Creates a new DriveCustom
    */
-  public DriveCustom(DriveSubsystem subsystem, double fwd, double rot, long time) {
+  public DriveCustom(DriveSubsystem subsystem, double fwd, double rot, long milleseconds) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
     forward = fwd;
     rotation = rot;
-    TimeToRun = time*1000000;
+    TimeToRun = milleseconds*1000;
     addRequirements(m_drive);
   }
 
