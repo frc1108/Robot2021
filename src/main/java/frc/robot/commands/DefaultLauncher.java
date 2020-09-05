@@ -40,7 +40,7 @@ public class DefaultLauncher extends CommandBase {
 
   @Override
   public void end(boolean interrupt){
-    m_throw.stopLauncher();
+    m_throw.stop();
   }
 
   @Override

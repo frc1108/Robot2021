@@ -2,15 +2,13 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-
 import static frc.robot.Constants.BallLauncherConstants.CAN_ID_BALL_LAUNCH_LEFT;
 import static frc.robot.Constants.BallLauncherConstants.CAN_ID_BALL_LAUNCH_RIGHT;
 
@@ -18,21 +16,24 @@ public class BallLauncher extends SubsystemBase implements Loggable {
 
     private WPI_TalonSRX m_leftBallThrow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_LEFT);
 
-    // Talon Tach
+    // Talon Tach connected to right motor controller
     private WPI_TalonSRX m_rightBallThrow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_RIGHT);
 
+    // Default using velocity
     //private double m_launcherSpeed = -0.8;
     private final double m_launcherRPM = -3000;
 
     public BallLauncher(){
+        stop();
+        m_rightBallThrow.configFactoryDefault();
         m_leftBallThrow.configFactoryDefault();
+
+        m_rightBallThrow.setNeutralMode(NeutralMode.Coast);
         m_leftBallThrow.setNeutralMode(NeutralMode.Coast);
+
         m_leftBallThrow.follow(m_rightBallThrow);
         m_leftBallThrow.setInverted(true);
 
-        m_rightBallThrow.set(0);
-        m_rightBallThrow.configFactoryDefault();
-        m_rightBallThrow.setNeutralMode(NeutralMode.Coast);
         m_rightBallThrow.configContinuousCurrentLimit(30);
         m_rightBallThrow.setInverted(false);
 
@@ -48,6 +49,9 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_rightBallThrow.configPulseWidthPeriod_EdgesPerRot(edgesPerCycle, kTimeoutMs);
         int filterWindowSize = 1;
         m_rightBallThrow.configPulseWidthPeriod_FilterWindowSz(filterWindowSize, kTimeoutMs);
+
+        // Default command to stop() 
+        this.setDefaultCommand(new RunCommand(() -> stop(), this));
     }
 
     /* public void setLauncherSpeed(double rightMotorSpeed){
@@ -58,8 +62,9 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_rightBallThrow.set(m_launcherSpeed);
     } */
 
-    public void stopLauncher(){
-        m_rightBallThrow.set(0);
+    public void stop(){
+        m_rightBallThrow.stopMotor();;
+        m_leftBallThrow.stopMotor();
     }
 
     @Log.Dial(name = "Launcher RPM", tabName = "Match View", max = 3000)

@@ -38,7 +38,7 @@ public class FeederTimed extends CommandBase {
 
   @Override
   public void end(boolean interrupt){
-    m_feeder.stopFeeder();
+    m_feeder.stop();
   }
 
   @Override

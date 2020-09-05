@@ -136,7 +136,7 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, XboxController.Button.kY.value)
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowOutFeeder(),
-                              ()->m_feeder.stopFeeder(),m_feeder)
+                              ()->m_feeder.stop(),m_feeder)
                               .withTimeout(0.2));
 
    // Run feeder motor for time with operator button B
@@ -144,7 +144,7 @@ public class RobotContainer {
         .toggleWhenActive(new WaitCommand(0.8)
                               .andThen(new StartEndCommand(
                                            ()->m_feeder.fastInFeeder(),
-                                           ()->m_feeder.stopFeeder(),m_feeder)
+                                           ()->m_feeder.stop(),m_feeder)
                                            .withTimeout(5)));
 
    // Run intake motor for time with operator button B
@@ -160,18 +160,18 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, XboxController.Button.kX.value)
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowInFeeder(),
-                              ()->m_feeder.stopFeeder(),m_feeder)
+                              ()->m_feeder.stop(),m_feeder)
                               .withTimeout(0.6));
 
     // Run intake motor while Operator Right Bumper is pressed
     JoystickButton rollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
     rollerButton.whenPressed(new InstantCommand(m_intakesystem::startIntake,m_intakesystem))
-                .whenReleased(new InstantCommand(m_intakesystem::stopIntake,m_intakesystem));
+                .whenReleased(new InstantCommand(m_intakesystem::stop,m_intakesystem));
 
     // Reverse intake motor while Operator Left Bumper is pressed                
     JoystickButton outRollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value);
     outRollerButton.whenPressed(new InstantCommand(m_intakesystem::slowOutIntake,m_intakesystem))
-                .whenReleased(new InstantCommand(m_intakesystem::stopIntake,m_intakesystem));
+                .whenReleased(new InstantCommand(m_intakesystem::stop,m_intakesystem));
     
     // Run launcher motors when toggling Operator button B.  Simultaneous with feed wheel  
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
@@ -187,7 +187,7 @@ public class RobotContainer {
 new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
 .toggleWhenActive(new StartEndCommand(
                       ()->m_climber.startTurn(),
-                      ()->m_climber.stopTurn(),m_climber)
+                      ()->m_climber.stop(),m_climber)
                                    .withTimeout(0.55));
 
 // test rainbow code

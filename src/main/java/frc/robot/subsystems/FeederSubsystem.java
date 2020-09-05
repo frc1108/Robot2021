@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants.*;
 import io.github.oblarg.oblog.annotations.Log;
 
@@ -30,7 +31,7 @@ public class FeederSubsystem extends SubsystemBase {
   private final double m_feederRPM = -500;
 
   public FeederSubsystem(){
-    m_feeder.set(0);
+    stop();
     m_feeder.configFactoryDefault();
     m_feeder.setNeutralMode(NeutralMode.Brake);
 
@@ -46,6 +47,9 @@ public class FeederSubsystem extends SubsystemBase {
     m_feeder.configPulseWidthPeriod_EdgesPerRot(edgesPerCycle, kTimeoutMs);
     int filterWindowSize = 1;
     m_feeder.configPulseWidthPeriod_FilterWindowSz(filterWindowSize, kTimeoutMs);
+
+    // Default command to stop() 
+    this.setDefaultCommand(new RunCommand(() -> stop(), this));
   }
  
   @Log.Dial(name = "Launcher RPM", tabName = "Match View", max = 200)
@@ -71,8 +75,8 @@ public class FeederSubsystem extends SubsystemBase {
     m_feeder.set(m_fastInSpeed);
   }
 
-  public void stopFeeder(){
-    m_feeder.set(0);
+  public void stop(){
+    m_feeder.stopMotor();
   }
 
   public void slowInFeeder(){

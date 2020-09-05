@@ -7,11 +7,10 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj.DigitalInput;
 import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
@@ -38,7 +37,7 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
 
   public ClimberSubsystem() {
     // Initialize Talon SRX
-    m_winch.set(0);
+    stop();
     m_winch.configFactoryDefault();
     m_winch.setNeutralMode(NeutralMode.Brake);
     m_winch.configContinuousCurrentLimit(40);
@@ -55,6 +54,9 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     m_winch.configMotionCruiseVelocity(900); */
 
     isTurned = false;
+
+    // Default command to stop() 
+    this.setDefaultCommand(new RunCommand(() -> stop(), this));
   }
 
   /* public void WinchServo(double angle) {
@@ -85,11 +87,7 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     isTurned = true;
   }
 
-  public void stopTurn(){
-    m_turner.set(0);
-  }
-
-  public void reverseTurn(){
+   public void reverseTurn(){
     m_turner.set(-m_turnSpeed);
   }
 
@@ -99,8 +97,9 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     }
   }
 
-  public void stopWinch(){
-    m_winch.set(0);
+  public void stop(){
+    m_turner.stopMotor();
+    m_winch.stopMotor();
   }
 
   public void setWinchSpeed(double winchSpeed){

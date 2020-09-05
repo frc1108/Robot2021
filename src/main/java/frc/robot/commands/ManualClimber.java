@@ -35,7 +35,7 @@ public class ManualClimber extends CommandBase {
 
   @Override
   public void end(boolean interrupted) {
-    m_climber.stopWinch();
+    m_climber.stop();
   }
 
   @Override

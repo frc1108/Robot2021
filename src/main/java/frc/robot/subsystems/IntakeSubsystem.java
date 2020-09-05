@@ -2,12 +2,9 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Log;
-
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-
 import static frc.robot.Constants.*;
 
 public class IntakeSubsystem extends SubsystemBase{
@@ -19,9 +16,12 @@ public class IntakeSubsystem extends SubsystemBase{
     private double m_slowOutSpeed = 0.4;
 
     public IntakeSubsystem(){
-        m_intake.set(0);
+        stop();
         m_intake.configFactoryDefault();
         m_intake.setNeutralMode(NeutralMode.Coast);
+
+        // Default command to stop() 
+        this.setDefaultCommand(new RunCommand(() -> stop(), this));
     }
 
     public void setIntakeSpeed(double intakeSpeed){
@@ -37,8 +37,8 @@ public class IntakeSubsystem extends SubsystemBase{
         m_intake.set(m_intakeSpeed);
     }
 
-    public void stopIntake(){
-        m_intake.set(0);
+    public void stop(){
+        m_intake.stopMotor();
     }
 
     public void slowOutIntake(){

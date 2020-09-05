@@ -70,10 +70,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    */
   public DriveSubsystem() {
    // Zeroes drive motor output
-   _left1.set(0);
-   _left2.set(0);
-   _right1.set(0);
-   _right2.set(0);
+   stop();
 
    // Restores default CANSparkMax settings
    _left1.restoreFactoryDefaults();
@@ -139,6 +136,11 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   public double getSonarDistanceInches(){
     return m_ultrasonic.getValue()*kValueToInches;
   }
-  
-  
+
+  public void stop(){
+    _left1.stopMotor();
+    _left2.stopMotor();
+    _right1.stopMotor();
+    _right2.stopMotor();
+  }  
 }

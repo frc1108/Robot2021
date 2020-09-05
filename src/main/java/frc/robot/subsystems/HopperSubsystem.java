@@ -2,6 +2,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -24,12 +25,15 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     Counter LowerCounter = new Counter(_LowSwitch);
 
     public HopperSubsystem(){
-        _HopperAxle.set(0);
+        stop();
         _HopperAxle.configFactoryDefault();
         _HopperAxle.configContinuousCurrentLimit(30);
         _HopperAxle.configPeakCurrentLimit(40);
         _HopperAxle.setInverted(false);
         _HopperAxle.setNeutralMode(NeutralMode.Brake);
+
+        // Default command to stop() 
+        this.setDefaultCommand(new RunCommand(() -> stop(), this));
     }
     
     @Log.BooleanBox(name = "Hopper Up", tabName = "Match View") 
@@ -70,5 +74,9 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
         } else {
             _HopperAxle.set(0);
         }
+    }
+
+    public void stop(){
+        _HopperAxle.stopMotor();
     }
 }

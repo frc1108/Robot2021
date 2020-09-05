@@ -41,7 +41,7 @@ public class ShootBalls extends CommandBase {
 
   @Override
   public void end(boolean interrupt){
-    m_launcher.stopLauncher();
+    m_launcher.stop();
   }
 
   @Override
