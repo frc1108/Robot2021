@@ -56,8 +56,8 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
   
   // slew limniter for speed
-  public double slewSpeed = 36;
-  public double slewTurn = 48;
+  public double slewSpeed = 3;
+  public double slewTurn = 5;
   private SlewRateLimiter m_speedSlew = new SlewRateLimiter(slewSpeed);
   private SlewRateLimiter m_turnSlew = new SlewRateLimiter(slewTurn);
 
@@ -98,7 +98,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
    // Set drive deadband and safety 
    m_drive.setDeadband(0.05);
-   m_drive.setSafetyEnabled(false);
+   m_drive.setSafetyEnabled(true);
   }
 
   /**
@@ -108,7 +108,9 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    m_drive.arcadeDrive(m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot));
+    double speedLimit = 0.8;
+    double turnSpeed = 0.8;
+    m_drive.arcadeDrive(speedLimit*m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot));
   }
 
    /**

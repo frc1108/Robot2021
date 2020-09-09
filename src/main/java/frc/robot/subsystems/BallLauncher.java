@@ -64,7 +64,6 @@ public class BallLauncher extends SubsystemBase implements Loggable {
 
     public void stop(){
         m_rightBallThrow.stopMotor();;
-        m_leftBallThrow.stopMotor();
     }
 
     @Log.Dial(name = "Launcher RPM", tabName = "Match View", max = 3000)

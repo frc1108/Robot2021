@@ -21,11 +21,7 @@ public class DefaultIntake extends CommandBase {
 
 
   /**
-   * Creates a new DefaultDrive.
-   *
-   * @param subsystem The drive subsystem this command wil run on.
-   * @param forward The control input for driving forwards/backwards
-   * @param rotation The control input for turning
+   * Creates a new DefaultIntake
    */
   public DefaultIntake(IntakeSubsystem subsystem, DoubleSupplier intakemotor) {
     m_ballcatcher = subsystem;
