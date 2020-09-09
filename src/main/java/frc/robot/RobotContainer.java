@@ -50,7 +50,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final Vision m_vision = new Vision();
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final IntakeSubsystem m_intakesystem = new IntakeSubsystem();
+  private final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
   private final FeederSubsystem m_feeder = new FeederSubsystem();
   @Log private final BallLauncher m_robotLaunch = new BallLauncher();
@@ -151,8 +151,8 @@ public class RobotContainer {
    /* new JoystickButton(m_operatorController, XboxController.Button.kB.value)
    .toggleWhenActive(new WaitCommand(2)
                          .andThen(new StartEndCommand(
-                                      ()->m_intakesystem.startIntake(),
-                                      ()->m_intakesystem.stopIntake(),m_intakesystem)
+                                      ()->m_intake.startIntake(),
+                                      ()->m_intake.stopIntake(),m_intake)
                                       .withTimeout(1.25))); */
 
   
@@ -163,15 +163,21 @@ public class RobotContainer {
                               ()->m_feeder.stop(),m_feeder)
                               .withTimeout(0.6));
 
-    // Run intake motor while Operator Right Bumper is pressed
+    new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value)
+      .whileHeld(new RunCommand(() -> m_intake.startIntake(), m_intake));
+
+    new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value)
+      .whileHeld(new RunCommand(() -> m_intake.slowOutIntake(), m_intake));
+
+/*                               // Run intake motor while Operator Right Bumper is pressed
     JoystickButton rollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
-    rollerButton.whenPressed(new InstantCommand(m_intakesystem::startIntake,m_intakesystem))
-                .whenReleased(new InstantCommand(m_intakesystem::stop,m_intakesystem));
+    rollerButton.whenPressed(new InstantCommand(m_intake::startIntake,m_intake))
+                .whenReleased(new InstantCommand(m_intake::stop,m_intake));
 
     // Reverse intake motor while Operator Left Bumper is pressed                
     JoystickButton outRollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value);
-    outRollerButton.whenPressed(new InstantCommand(m_intakesystem::slowOutIntake,m_intakesystem))
-                .whenReleased(new InstantCommand(m_intakesystem::stop,m_intakesystem));
+    outRollerButton.whenPressed(new InstantCommand(m_intake::slowOutIntake,m_intake))
+                .whenReleased(new InstantCommand(m_intake::stop,m_intake)); */
     
     // Run launcher motors when toggling Operator button B.  Simultaneous with feed wheel  
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
