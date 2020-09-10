@@ -16,21 +16,21 @@ import static frc.robot.Constants.HopperConstants.CAN_ID_Hopper_Axle;
 
 public class HopperSubsystem extends SubsystemBase implements Loggable {
 
-    WPI_TalonSRX _HopperAxle = new WPI_TalonSRX(CAN_ID_Hopper_Axle);
+    private WPI_TalonSRX m_hopper = new WPI_TalonSRX(CAN_ID_Hopper_Axle);
 
-    DigitalInput _HighSwitch=new DigitalInput(UPPER_LIMIT_SWITCH); 
-    DigitalInput _LowSwitch=new DigitalInput(LOWER_LIMIT_SWITCH); 
+    DigitalInput m_highLimit=new DigitalInput(UPPER_LIMIT_SWITCH); 
+    DigitalInput m_lowLimit=new DigitalInput(LOWER_LIMIT_SWITCH); 
 
-    Counter UpperCounter = new Counter(_HighSwitch);
-    Counter LowerCounter = new Counter(_LowSwitch);
+    Counter UpperCounter = new Counter(m_highLimit);
+    Counter LowerCounter = new Counter(m_lowLimit);
 
     public HopperSubsystem(){
         stop();
-        _HopperAxle.configFactoryDefault();
-        _HopperAxle.configContinuousCurrentLimit(30);
-        _HopperAxle.configPeakCurrentLimit(40);
-        _HopperAxle.setInverted(false);
-        _HopperAxle.setNeutralMode(NeutralMode.Brake);
+        m_hopper.configFactoryDefault();
+        m_hopper.configContinuousCurrentLimit(30);
+        m_hopper.configPeakCurrentLimit(40);
+        m_hopper.setInverted(false);
+        m_hopper.setNeutralMode(NeutralMode.Brake);
 
         // Default command to stop() 
         this.setDefaultCommand(new RunCommand(() -> stop(), this));
@@ -38,7 +38,7 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     
     @Log.BooleanBox(name = "Hopper Up", tabName = "Match View") 
     public boolean isHighSwitchSet() {
-        return !_HighSwitch.get();
+        return !m_highLimit.get();  // inverted switch logic
     }
 
     public void initializeHighCounter() {
@@ -47,7 +47,19 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
    
     @Log.BooleanBox(name = "Hopper Down", tabName = "Match View")
     public boolean isLowSwitchSet() {
-        return !_LowSwitch.get();
+        return !m_lowLimit.get();   // inverted switch logic
+    }
+
+    public void up(){
+        if (m_highLimit.get()){
+            m_hopper.set(0.7);
+        }
+    }
+
+    public void down(){
+        if (m_lowLimit.get()){
+            m_hopper.set(-0.5);
+        }
     }
 
     public void initializeLowCounter() {
@@ -69,14 +81,14 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
         }
         
         // Logic needs to be tested to verify polarity is correct     
-        if ((_LowSwitch.get() && spd < 0) || _HighSwitch.get() && spd > 0 ) {
-            _HopperAxle.set(spd);
+        if ((m_lowLimit.get() && spd < 0) || m_highLimit.get() && spd > 0 ) {
+            m_hopper.set(spd);
         } else {
-            _HopperAxle.set(0);
+            m_hopper.set(0);
         }
     }
 
     public void stop(){
-        _HopperAxle.stopMotor();
+        m_hopper.stopMotor();
     }
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -51,7 +52,7 @@ public class RobotContainer {
   private final Vision m_vision = new Vision();
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
-  @Log private final HopperSubsystem m_hoppersystem = new HopperSubsystem();
+  @Log private final HopperSubsystem m_hopper = new HopperSubsystem();
   private final FeederSubsystem m_feeder = new FeederSubsystem();
   @Log private final BallLauncher m_robotLaunch = new BallLauncher();
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
@@ -62,7 +63,7 @@ public class RobotContainer {
 
   //private final Command m_shootingAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder); Old Auto. It doesn't tilt the hopper.
   private final Command m_driveOffLineAuto = new SimpleAutoGroup(m_robotDrive);
-  private final Command m_regularAuto = new BasicCommandGroup(m_robotDrive, m_robotLaunch, m_feeder, m_hoppersystem);
+  private final Command m_regularAuto = new BasicCommandGroup(m_robotDrive, m_robotLaunch, m_feeder, m_hopper);
   private final Command m_setRedLights = new SetSolidColor(m_lights,255,0,0);
   private final Command m_setBlueLights = new SetSolidColor(m_lights,0,0,255);
   private final Command m_setNoneLights = new SetSolidColor(m_lights,0,0,0);
@@ -96,11 +97,11 @@ public class RobotContainer {
                             m_driverController.getX(GenericHID.Hand.kRight)), m_robotDrive));
 
     // Hopper axle default
-    m_hoppersystem.setDefaultCommand(new ManualHopper(
-        m_hoppersystem,
+     m_hopper.setDefaultCommand(new ManualHopper(
+        m_hopper,
         () -> m_operatorController.getY(GenericHID.Hand.kRight)
       )
-    );
+    ); 
 
     // Winch default 
     m_climber.setDefaultCommand(
@@ -118,11 +119,8 @@ public class RobotContainer {
     m_ledChooser.addOption("Solid Red", m_setRedLights);
     m_ledChooser.addOption("Solid Blue", m_setBlueLights);
     
-
-
     Shuffleboard.getTab("Setup").add(m_chooser);
     Shuffleboard.getTab("Setup").add(m_ledChooser);
-
   }
 
   /**
@@ -147,15 +145,7 @@ public class RobotContainer {
                                            ()->m_feeder.stop(),m_feeder)
                                            .withTimeout(5)));
 
-   // Run intake motor for time with operator button B
-   /* new JoystickButton(m_operatorController, XboxController.Button.kB.value)
-   .toggleWhenActive(new WaitCommand(2)
-                         .andThen(new StartEndCommand(
-                                      ()->m_intake.startIntake(),
-                                      ()->m_intake.stopIntake(),m_intake)
-                                      .withTimeout(1.25))); */
-
-  
+   
     // Run feeder motor for time with operator button X
     new JoystickButton(m_operatorController, XboxController.Button.kX.value)
         .toggleWhenActive(new StartEndCommand(
@@ -168,40 +158,30 @@ public class RobotContainer {
 
     new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value)
       .whileHeld(new RunCommand(() -> m_intake.slowOutIntake(), m_intake));
-
-/*                               // Run intake motor while Operator Right Bumper is pressed
-    JoystickButton rollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value);
-    rollerButton.whenPressed(new InstantCommand(m_intake::startIntake,m_intake))
-                .whenReleased(new InstantCommand(m_intake::stop,m_intake));
-
-    // Reverse intake motor while Operator Left Bumper is pressed                
-    JoystickButton outRollerButton = new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value);
-    outRollerButton.whenPressed(new InstantCommand(m_intake::slowOutIntake,m_intake))
-                .whenReleased(new InstantCommand(m_intake::stop,m_intake)); */
     
+    new POVButton(m_operatorController, 180)  // Xbox down arrow
+      .whenPressed(new RunCommand(() -> m_hopper.down(), m_intake).withTimeout(2)
+      .withInterrupt(m_hopper::isLowSwitchSet));
+
+    new POVButton(m_operatorController, 0)  // Xbox up arrow
+      .whenPressed(new RunCommand(() -> m_hopper.up(), m_intake).withTimeout(2)
+      .withInterrupt(m_hopper::isHighSwitchSet));
+
     // Run launcher motors when toggling Operator button B.  Simultaneous with feed wheel  
     JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
     LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(6));
-    
-    /* // Servo open close buttons ---- NOT CONNECTED FOR NOW --------------
-    JoystickButton ReleaseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kStart.value);
-    ReleaseServoButton.whenPressed(new MoveServo(m_climber,() -> servoAngle));
-    JoystickButton CloseServoButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value);
-    CloseServoButton.whenPressed(new MoveServo(m_climber,() -> servoCloseAngle)); */
-  
-// Run feeder motor for time with operator button Start
-new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
-.toggleWhenActive(new StartEndCommand(
-                      ()->m_climber.startTurn(),
-                      ()->m_climber.stop(),m_climber)
-                                   .withTimeout(0.55));
+     
+    // Run feeder motor for time with operator button Start
+    new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
+    .toggleWhenActive(new StartEndCommand(
+                          ()->m_climber.startTurn(),
+                          ()->m_climber.stop(),m_climber)
+                                      .withTimeout(0.55));
 
-// test rainbow code
-new JoystickButton(m_operatorController, XboxController.Button.kBack.value)
-.toggleWhenActive(new SetRainbow(m_lights));
-
+    // test rainbow code
+    new JoystickButton(m_operatorController, XboxController.Button.kBack.value)
+    .toggleWhenActive(new SetRainbow(m_lights));
   }
-
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
