@@ -29,7 +29,6 @@ public class ShootBalls extends CommandBase {
   @Override
   public void initialize(){
     initTime = RobotController.getFPGATime();
-    //m_launcher.setLauncherRPM(-3000);
     m_launcher.startPIDLauncher();   
   }
 
@@ -44,7 +43,6 @@ public class ShootBalls extends CommandBase {
 
   @Override
   public boolean isFinished(){
-    //return false;
     if (RobotController.getFPGATime() - initTime <= TimeToRun) {
       return false;
     } else {

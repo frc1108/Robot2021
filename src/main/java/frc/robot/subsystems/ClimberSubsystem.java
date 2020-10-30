@@ -9,34 +9,20 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj.DigitalInput;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import static frc.robot.Constants.ClimberConstants.*;
 /**
  * Add your docs here.
  */
 public class ClimberSubsystem extends SubsystemBase implements Loggable {
-  //Servo m_winchServo = new Servo(PWM_ID_WINCH_SERVO);
-
-  private final DigitalInput m_switch = new DigitalInput(TURNER_SWITCH_PORT);
-
-  @Log.SpeedController(name = "Winch Motor")
   private final WPI_TalonSRX m_winch = new WPI_TalonSRX(CAN_ID_WINCH);
-
-  @Log.SpeedController(name = "Turner Motor")
-  private final WPI_VictorSPX m_turner = new WPI_VictorSPX(CAN_ID_TURNER);
-
-
-  private double m_winchSpeed = 0.75;
-  private double m_turnSpeed  = 0.9;
-  private boolean isTurned;
-
+  private double m_maxSpeed = 0;
+  
   public ClimberSubsystem() {
-    // Initialize Talon SRX
     stop();
     m_winch.configFactoryDefault();
     m_winch.setNeutralMode(NeutralMode.Brake);
@@ -44,76 +30,19 @@ public class ClimberSubsystem extends SubsystemBase implements Loggable {
     m_winch.configPeakCurrentLimit(60);
     m_winch.setInverted(false);
 
-    /* // PID and Sensor values for Motion Magic
-    m_winch.setSensorPhase(true);
-    m_winch.config_kP(0,20);
-    m_winch.config_kI(0,0);
-    m_winch.config_kD(0,200);
-    m_winch.config_kF(0,0);
-    m_winch.configMotionAcceleration(1200);
-    m_winch.configMotionCruiseVelocity(900); */
-
-    isTurned = false;
-
     // Default command to stop() 
     this.setDefaultCommand(new RunCommand(() -> stop(), this));
   }
 
-  /* public void WinchServo(double angle) {
-    m_winchServo.setAngle(angle);
-  }
-  public double AtAngle() {
-    return m_winchServo.getAngle();
-  } */
-  public void WinchMotor(double Winch_spd){
-       
-    // temporary max speed
-    double spd = -Winch_spd;
-
-    if (Math.abs(spd) > 0.75){
-        spd = 0.75*Math.signum(spd);  
-    } 
-
-    // temporary deadband
-    if (Math.abs(spd) < 0.1){
-        spd = 0;
-    }
-
-    m_winch.set(spd);
-   }
-
-  public void startTurn(){
-    m_turner.set(m_turnSpeed);
-    isTurned = true;
+  public void setSpeedMax(){
+    m_maxSpeed = 0.75;
   }
 
-   public void reverseTurn(){
-    m_turner.set(-m_turnSpeed);
-  }
-
-  public void startWinch(){
-    if (isTurned){
-      m_winch.set(m_winchSpeed);
-    }
+  public void manualControl(double speed){
+          m_winch.set(speed*m_maxSpeed);
   }
 
   public void stop(){
-    m_turner.stopMotor();
     m_winch.stopMotor();
   }
-
-  public void setWinchSpeed(double winchSpeed){
-    m_winchSpeed = winchSpeed;
-  }
- 
-  
-  @Log(name = "Winch current",tabName = "Match View")
-  public double getWinchCurrent(){
-    return m_winch.getStatorCurrent();
-  }
-
-  /* @Log.BooleanBox(name= "Turner Switch",tabName = "Match View")
-  public boolean isTurnerVertical(){
-    return m_switch.get();
-  } */
 }

@@ -1,16 +1,15 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Log;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import static frc.robot.Constants.BallLauncherConstants.CAN_ID_BALL_LAUNCH_LEFT;
-import static frc.robot.Constants.BallLauncherConstants.CAN_ID_BALL_LAUNCH_RIGHT;
+import static frc.robot.Constants.BallLauncherConstants.*;
 
 public class BallLauncher extends SubsystemBase implements Loggable {
 
@@ -44,10 +43,10 @@ public class BallLauncher extends SubsystemBase implements Loggable {
 
         // Config Talon Tach
         final int kTimeoutMs = 30;
+        final int edgesPerCycle = 1;
+        final int filterWindowSize = 1;
         m_rightBallThrow.configSelectedFeedbackSensor(FeedbackDevice.Tachometer, 0, kTimeoutMs);
-        int edgesPerCycle = 1;
         m_rightBallThrow.configPulseWidthPeriod_EdgesPerRot(edgesPerCycle, kTimeoutMs);
-        int filterWindowSize = 1;
         m_rightBallThrow.configPulseWidthPeriod_FilterWindowSz(filterWindowSize, kTimeoutMs);
 
         // Default command to stop() 

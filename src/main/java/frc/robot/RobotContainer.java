@@ -28,9 +28,7 @@ import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.LightsSubsystem;
 
-import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.ManualHopper;
-import frc.robot.commands.ManualClimber;
 import frc.robot.commands.SetSolidColor;
 import frc.robot.commands.BasicCommandGroup;
 import frc.robot.commands.SimpleAutoGroup;
@@ -47,7 +45,7 @@ public class RobotContainer {
   // The robot's subsystems
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   @Log private final HopperSubsystem m_hopper = new HopperSubsystem();
-  @Log private final BallLauncher m_robotLaunch = new BallLauncher();
+  @Log private final BallLauncher m_launcher = new BallLauncher();
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
   private final FeederSubsystem m_feeder = new FeederSubsystem();
@@ -67,32 +65,22 @@ public class RobotContainer {
   public RobotContainer() {
     configureButtonBindings();
 
-    // Drive default
+    // Drive default is split stick arcade drive (fwd left / rot right)
     m_robotDrive.setDefaultCommand(
-        // A split-stick arcade drive with forward/backward controlled by the left Y
-        // hand, and turning controlled by the left X axis.
-        new RunCommand(()->m_robotDrive
-            .arcadeDrive(m_driverController.getY(GenericHID.Hand.kLeft),
-                            m_driverController.getX(GenericHID.Hand.kRight)), m_robotDrive));
+        new RunCommand(()->m_robotDrive.arcadeDrive(m_driverController.getY(GenericHID.Hand.kLeft),
+            m_driverController.getX(GenericHID.Hand.kRight)), m_robotDrive));
 
     // Hopper axle default
-     m_hopper.setDefaultCommand(new ManualHopper(
-        m_hopper,
-        () -> m_operatorController.getY(GenericHID.Hand.kRight)
-      )
-    ); 
-
+    m_hopper.setDefaultCommand(
+        new ManualHopper(m_hopper, () -> m_operatorController.getY(GenericHID.Hand.kRight)));
+      
     // Winch default 
     m_climber.setDefaultCommand(
-      new ManualClimber(
-        m_climber,
-        () -> m_operatorController.getY(GenericHID.Hand.kLeft)
-      )
-    );
+        new RunCommand(()->m_climber.manualControl(m_operatorController.getY(GenericHID.Hand.kLeft)),m_climber));
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Drive Off Line Auto", new SimpleAutoGroup(m_robotDrive));
-    m_chooser.addOption("Regular Auto", new BasicCommandGroup(m_robotDrive, m_robotLaunch, m_feeder, m_hopper));
+    m_chooser.addOption("Regular Auto", new BasicCommandGroup(m_robotDrive, m_launcher, m_feeder, m_hopper));
     
     m_ledChooser.setDefaultOption("None", new SetSolidColor(m_lights,0,0,0));
     m_ledChooser.addOption("Red", new SetSolidColor(m_lights,255,0,0));
@@ -139,23 +127,18 @@ public class RobotContainer {
       .whileHeld(new RunCommand(() -> m_intake.slowOutIntake(), m_intake));
     
     new POVButton(m_operatorController, 180)  // Xbox down arrow
-      .whenPressed(new RunCommand(() -> m_hopper.down(), m_intake).withTimeout(2)
+      .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper).withTimeout(2)
       .withInterrupt(m_hopper::isLowSwitchSet));
 
     new POVButton(m_operatorController, 0)  // Xbox up arrow
-      .whenPressed(new RunCommand(() -> m_hopper.up(), m_intake).withTimeout(2)
+      .whenPressed(new RunCommand(() -> m_hopper.up(), m_hopper).withTimeout(2)
       .withInterrupt(m_hopper::isHighSwitchSet));
 
-    // Run launcher motors when toggling Operator button B.  Simultaneous with feed wheel  
-    JoystickButton LaunchButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
-    LaunchButton.toggleWhenActive(new DefaultLauncher(m_robotLaunch).withTimeout(6));
+    new JoystickButton(m_operatorController, XboxController.Button.kB.value)
+      .whenPressed(new RunCommand(()-> m_launcher.startPIDLauncher(), m_launcher).withTimeout(6));
      
-    // Run feeder motor for time with operator button Start
     new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
-    .toggleWhenActive(new StartEndCommand(
-                          ()->m_climber.startTurn(),
-                          ()->m_climber.stop(),m_climber)
-                                      .withTimeout(0.55));
+      .whenPressed(new RunCommand(()-> m_climber.setSpeedMax(),m_climber).withTimeout(0.1));
   }
 
   /**

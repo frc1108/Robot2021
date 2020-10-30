@@ -13,7 +13,6 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveTimed extends CommandBase {
   private final DriveSubsystem m_drive;
-  private long TimeToRun = 6000000;
   private long initTime = RobotController.getFPGATime();
 
   /**
@@ -35,7 +34,6 @@ public class DriveTimed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //withTimeout(15);
   }
 
   // Called once the command ends or is interrupted.
