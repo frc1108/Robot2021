@@ -2,8 +2,6 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.SerialPort;
-import frc.robot.lib.CR16;
 
 public class UsbSerial extends SubsystemBase{
 

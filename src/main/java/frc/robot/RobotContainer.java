@@ -7,39 +7,35 @@
 
 package frc.robot;
 
+import io.github.oblarg.oblog.annotations.Log;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
-import frc.robot.subsystems.UsbSerial;
-import frc.robot.subsystems.Vision;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.LightsSubsystem;
+
 import frc.robot.commands.DefaultLauncher;
 import frc.robot.commands.ManualHopper;
 import frc.robot.commands.ManualClimber;
 import frc.robot.commands.SetSolidColor;
-import frc.robot.commands.SetRainbow;
-//import frc.robot.commands.AutoCommandGroup;    Old Auto. It doesn't tilt the hopper.
 import frc.robot.commands.BasicCommandGroup;
 import frc.robot.commands.SimpleAutoGroup;
-import io.github.oblarg.oblog.annotations.Config;
-import io.github.oblarg.oblog.annotations.Log;
 
-import static frc.robot.Constants.OIConstants.kDriverControllerPort;
-import static frc.robot.Constants.OIConstants.kOperatorControllerPort;
+import static frc.robot.Constants.OIConstants.*;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -49,26 +45,14 @@ import static frc.robot.Constants.OIConstants.kOperatorControllerPort;
  */
 public class RobotContainer {
   // The robot's subsystems
-  private final Vision m_vision = new Vision();
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final IntakeSubsystem m_intake = new IntakeSubsystem();
   @Log private final HopperSubsystem m_hopper = new HopperSubsystem();
-  private final FeederSubsystem m_feeder = new FeederSubsystem();
   @Log private final BallLauncher m_robotLaunch = new BallLauncher();
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
+  private final IntakeSubsystem m_intake = new IntakeSubsystem();
+  private final FeederSubsystem m_feeder = new FeederSubsystem();
   private final LightsSubsystem m_lights = new LightsSubsystem();
-  private final UsbSerial gyro = new UsbSerial();
 
-  private double m_autoTimeDelay;
-
-  //private final Command m_shootingAuto = new AutoCommandGroup(m_robotDrive, m_robotLaunch, m_feeder); Old Auto. It doesn't tilt the hopper.
-  private final Command m_driveOffLineAuto = new SimpleAutoGroup(m_robotDrive);
-  private final Command m_regularAuto = new BasicCommandGroup(m_robotDrive, m_robotLaunch, m_feeder, m_hopper);
-  private final Command m_setRedLights = new SetSolidColor(m_lights,255,0,0);
-  private final Command m_setBlueLights = new SetSolidColor(m_lights,0,0,255);
-  private final Command m_setNoneLights = new SetSolidColor(m_lights,0,0,0);
-
- 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
   SendableChooser<Command> m_ledChooser = new SendableChooser<>();
@@ -81,14 +65,9 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-
-    // Configure the button bindings
     configureButtonBindings();
 
-    /**
-     * Default command for manual control of subsystem
-     */
-    // Robot drive default
+    // Drive default
     m_robotDrive.setDefaultCommand(
         // A split-stick arcade drive with forward/backward controlled by the left Y
         // hand, and turning controlled by the left X axis.
@@ -112,12 +91,12 @@ public class RobotContainer {
     );
 
     // Add commands to the autonomous command chooser
-    m_chooser.setDefaultOption("Drive Off Line Auto", m_driveOffLineAuto);
-    //m_chooser.addOption("Shooting Auto", m_shootingAuto); Old Auto. It doesn't tilt the hopper.
-    m_chooser.addOption("Regular Auto", m_regularAuto);
-    m_ledChooser.setDefaultOption("None", m_setNoneLights);
-    m_ledChooser.addOption("Solid Red", m_setRedLights);
-    m_ledChooser.addOption("Solid Blue", m_setBlueLights);
+    m_chooser.setDefaultOption("Drive Off Line Auto", new SimpleAutoGroup(m_robotDrive));
+    m_chooser.addOption("Regular Auto", new BasicCommandGroup(m_robotDrive, m_robotLaunch, m_feeder, m_hopper));
+    
+    m_ledChooser.setDefaultOption("None", new SetSolidColor(m_lights,0,0,0));
+    m_ledChooser.addOption("Red", new SetSolidColor(m_lights,255,0,0));
+    m_ledChooser.addOption("Blue", new SetSolidColor(m_lights,0,0,255));
     
     Shuffleboard.getTab("Setup").add(m_chooser);
     Shuffleboard.getTab("Setup").add(m_ledChooser);
@@ -177,10 +156,6 @@ public class RobotContainer {
                           ()->m_climber.startTurn(),
                           ()->m_climber.stop(),m_climber)
                                       .withTimeout(0.55));
-
-    // test rainbow code
-    new JoystickButton(m_operatorController, XboxController.Button.kBack.value)
-    .toggleWhenActive(new SetRainbow(m_lights));
   }
 
   /**
@@ -195,9 +170,4 @@ public class RobotContainer {
    public Command getLightInitCommand() {
     return m_ledChooser.getSelected();
   } 
-
-  @Config(tabName = "Setup", defaultValueNumeric = 0)
-  public void setAutoDelay(double autoTimeDelay){
-    m_autoTimeDelay = autoTimeDelay;
-  }
 }
