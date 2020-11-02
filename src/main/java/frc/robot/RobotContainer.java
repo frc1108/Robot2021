@@ -11,9 +11,22 @@ import io.github.oblarg.oblog.annotations.Log;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -30,10 +43,14 @@ import frc.robot.subsystems.LightsSubsystem;
 
 import frc.robot.commands.ManualHopper;
 import frc.robot.commands.SetSolidColor;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.BasicCommandGroup;
 import frc.robot.commands.SimpleAutoGroup;
 
 import static frc.robot.Constants.OIConstants.*;
+
+import java.util.List;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -76,7 +93,8 @@ public class RobotContainer {
       
     // Winch default 
     m_climber.setDefaultCommand(
-        new RunCommand(()->m_climber.manualControl(m_operatorController.getY(GenericHID.Hand.kLeft)),m_climber));
+        new RunCommand(()->m_climber.manualControl(m_operatorController.getY(GenericHID.Hand.kLeft)),
+            m_climber));
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Drive Off Line Auto", new SimpleAutoGroup(m_robotDrive));
@@ -139,6 +157,9 @@ public class RobotContainer {
      
     new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
       .whenPressed(new RunCommand(()-> m_climber.setSpeedMax(),m_climber).withTimeout(0.1));
+
+    new JoystickButton(m_driverController, XboxController.Button.kStart.value)
+    .whenPressed(new RunCommand(()-> m_robotDrive.zeroHeading()).andThen(new RunCommand(()-> m_robotDrive.resetEncoders())).withTimeout(0.1));
   }
 
   /**
@@ -146,9 +167,67 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-    public Command getAutonomousCommand() {
+ /*    public Command getAutonomousCommand() {
     return m_chooser.getSelected();
-  }  
+  } */
+  
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+        new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
+            DriveConstants.kaVoltSecondsSquaredPerMeter),
+        DriveConstants.kDriveKinematics, 10);
+
+    var autoKinematicConstraint = new DifferentialDriveKinematicsConstraint(
+      DriveConstants.kDriveKinematics,AutoConstants.kDifferentialDriveKinematicsConstraint);
+
+    var autoCentripetalConstraint = new CentripetalAccelerationConstraint(
+      AutoConstants.kmaxCentripetalAccelerationMetersPerSecondSq);
+
+    // Create config for trajectory
+    TrajectoryConfig config = new TrajectoryConfig(AutoConstants.kMaxSpeedMetersPerSecond,
+        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(DriveConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(autoVoltageConstraint)
+            //.addConstraint(autoKinematicConstraint)
+            //.addConstraint(autoCentripetalConstraint)
+            ;
+
+    // An example trajectory to follow. All units in meters.
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(3, 0, new Rotation2d(0)),
+        // Pass config
+        config);
+
+    RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, m_robotDrive::getPose,
+        new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
+            DriveConstants.kaVoltSecondsSquaredPerMeter),
+        DriveConstants.kDriveKinematics, m_robotDrive::getWheelSpeeds,
+        new PIDController(DriveConstants.kPDriveVel, 0, 0), new PIDController(DriveConstants.kPDriveVel, 0, 0),
+        // RamseteCommand passes volts to the callback
+        m_robotDrive::tankDriveVolts, m_robotDrive);
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand
+      //.beforeStarting(() -> m_robotDrive.zeroHeading())
+      //.beforeStarting(() -> m_robotDrive.resetOdometry())
+      .andThen(() -> m_robotDrive.tankDriveVolts(0, 0))
+      //.andThen(()->m_robotDrive.zero())
+      ;
+  }
 
    public Command getLightInitCommand() {
     return m_ledChooser.getSelected();

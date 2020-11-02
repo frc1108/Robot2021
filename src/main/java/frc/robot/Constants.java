@@ -7,13 +7,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants.  This class should not be used for any other purpose.  All constants should be
- * declared globally (i.e. public static).  Do not put anything functional in this class.
+ * The Constants class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean constants. This class should not be used for any other
+ * purpose. All constants should be declared globally (i.e. public static). Do
+ * not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
   public static final class DriveConstants{
@@ -25,12 +29,35 @@ public final class Constants {
     public static final int CAN_ID_RIGHT_DRIVE_2 = 4;
 
     // Encoder in NEO motors calculation
-    public static final double kGearRatio = 8.45;
-    public static final double kWheelDiameterMeters = 0.1525;
 
     // Analog input port for ultrasonic sensor
     public static final int kUltrasonicPort = 3;
     public static final double kValueToInches = 0.02482;
+
+    public static final int[] kLeftEncoderPorts = new int[]{1, 3};
+    public static final int[] kRightEncoderPorts = new int[]{2, 4};
+    public static final boolean kLeftEncoderReversed = false;
+    public static final boolean kRightEncoderReversed = true;
+
+    public static final double kTrackwidthMeters = 0.5086;
+    public static final DifferentialDriveKinematics kDriveKinematics =
+        new DifferentialDriveKinematics(kTrackwidthMeters);
+
+    public static final int kEncoderCPR = 42;
+    public static final double kGearRatio = 8.45;
+    public static final double kWheelDiameterMeters = 0.1525;
+    public static final double kEncoderDistanceConversionFactor = 1; //((double)(Math.PI*kWheelDiameterMeters)/(1*kGearRatio));
+    public static final double kEncoderVelocityConversionFactor = 1; //((double)(Math.PI*kWheelDiameterMeters)/(60*kGearRatio));
+
+
+    public static final double ksVolts = 0.169;
+    public static final double kvVoltSecondsPerMeter = 2.24;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.435;
+    public static final double kPDriveVel = 2.6;  //2.6
+
+    public static final boolean kGyroReversed = true;
+
+    
     
   }
 
@@ -73,5 +100,17 @@ public final class Constants {
   public static final class PWMConstants {
     public static final int PWM_ID_WINCH_SERVO = 1;
     public static final int PWM_ID_LEDS = 9;
+  }
+
+  public static final class AutoConstants { 
+    public static final double kMaxSpeedMetersPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
+    
+    public static final double kmaxCentripetalAccelerationMetersPerSecondSq = 0.03;
+    public static final double  kDifferentialDriveKinematicsConstraint = 0.3;
   }
 }
