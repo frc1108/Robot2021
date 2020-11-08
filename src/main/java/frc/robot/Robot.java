@@ -34,6 +34,7 @@ public class Robot extends TimedRobot implements Loggable{
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     Logger.configureLoggingAndConfig(m_robotContainer, false);
+    m_robotContainer.reset();
   }
 
   /**
@@ -63,6 +64,7 @@ public class Robot extends TimedRobot implements Loggable{
    */
   @Override
   public void disabledInit() {
+    m_robotContainer.reset();
   }
 
   @Override
@@ -74,6 +76,7 @@ public class Robot extends TimedRobot implements Loggable{
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.reset();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     /*
@@ -105,6 +108,7 @@ public class Robot extends TimedRobot implements Loggable{
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.reset();
     if (m_lightInitCommand != null) {
       m_lightInitCommand.cancel();
     }

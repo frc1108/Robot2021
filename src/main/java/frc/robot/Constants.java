@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -34,20 +35,15 @@ public final class Constants {
     public static final int kUltrasonicPort = 3;
     public static final double kValueToInches = 0.02482;
 
-    public static final int[] kLeftEncoderPorts = new int[]{1, 3};
-    public static final int[] kRightEncoderPorts = new int[]{2, 4};
-    public static final boolean kLeftEncoderReversed = false;
-    public static final boolean kRightEncoderReversed = true;
-
-    public static final double kTrackwidthMeters = 0.5086;
+    public static final double kTrackwidthMeters = Units.inchesToMeters(20);
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackwidthMeters);
 
     public static final int kEncoderCPR = 42;
     public static final double kGearRatio = 8.45;
-    public static final double kWheelDiameterMeters = 0.1525;
-    public static final double kEncoderDistanceConversionFactor = 1; //((double)(Math.PI*kWheelDiameterMeters)/(1*kGearRatio));
-    public static final double kEncoderVelocityConversionFactor = 1; //((double)(Math.PI*kWheelDiameterMeters)/(60*kGearRatio));
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(6);
+    public static final double kEncoderDistanceConversionFactor = ((double)(Math.PI*kWheelDiameterMeters)/(1*kGearRatio));
+    public static final double kEncoderVelocityConversionFactor = ((double)(Math.PI*kWheelDiameterMeters)/(60*kGearRatio));
 
 
     public static final double ksVolts = 0.169;
@@ -56,9 +52,6 @@ public final class Constants {
     public static final double kPDriveVel = 2.6;  //2.6
 
     public static final boolean kGyroReversed = true;
-
-    
-    
   }
 
   public static final class BallLauncherConstants {
@@ -103,8 +96,8 @@ public final class Constants {
   }
 
   public static final class AutoConstants { 
-    public static final double kMaxSpeedMetersPerSecond = 1;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+    public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(8);
+    public static final double kMaxAccelerationMetersPerSecondSquared = Units.feetToMeters(8);
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;

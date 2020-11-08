@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -157,9 +158,6 @@ public class RobotContainer {
      
     new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
       .whenPressed(new RunCommand(()-> m_climber.setSpeedMax(),m_climber).withTimeout(0.1));
-
-    new JoystickButton(m_driverController, XboxController.Button.kStart.value)
-    .whenPressed(new RunCommand(()-> m_robotDrive.zeroHeading()).andThen(new RunCommand(()-> m_robotDrive.resetEncoders())).withTimeout(0.1));
   }
 
   /**
@@ -201,24 +199,28 @@ public class RobotContainer {
             ;
 
     // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    Trajectory driveToGoal = TrajectoryGenerator.generateTrajectory(
         // Start at the origin facing the +X direction
         new Pose2d(0, 0, new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+        List.of(new Translation2d(.5, 0)),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
+        new Pose2d(Units.inchesToMeters(83), 0, new Rotation2d(0)),
         // Pass config
         config);
 
-    RamseteCommand ramseteCommand = new RamseteCommand(exampleTrajectory, m_robotDrive::getPose,
+
+
+    RamseteCommand ramseteCommand = new RamseteCommand(driveToGoal, m_robotDrive::getPose,
         new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
         new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
             DriveConstants.kaVoltSecondsSquaredPerMeter),
         DriveConstants.kDriveKinematics, m_robotDrive::getWheelSpeeds,
-        new PIDController(DriveConstants.kPDriveVel, 0, 0), new PIDController(DriveConstants.kPDriveVel, 0, 0),
+        new PIDController(DriveConstants.kPDriveVel, 0, 0),  // Left PID
+         new PIDController(DriveConstants.kPDriveVel, 0, 0), // Right PID
         // RamseteCommand passes volts to the callback
-        m_robotDrive::tankDriveVolts, m_robotDrive);
+        m_robotDrive::tankDriveVolts,
+        m_robotDrive);
 
     // Run path following command, then stop at the end.
     return ramseteCommand
@@ -232,4 +234,8 @@ public class RobotContainer {
    public Command getLightInitCommand() {
     return m_ledChooser.getSelected();
   } 
+
+  public void reset(){
+    m_robotDrive.reset();
+  }
 }
