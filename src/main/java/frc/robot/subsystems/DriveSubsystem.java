@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -37,15 +38,12 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   private final CANSparkMax _left2 = new CANSparkMax(DriveConstants.CAN_ID_LEFT_DRIVE_2,MotorType.kBrushless);
   private final CANSparkMax _right2 = new CANSparkMax(DriveConstants.CAN_ID_RIGHT_DRIVE_2,MotorType.kBrushless);
   
-  @Log.SpeedController
   private final SpeedControllerGroup m_right = new SpeedControllerGroup(_right1, _right2);
-  @Log.SpeedController
   private final SpeedControllerGroup m_left = new SpeedControllerGroup(_left1, _left2);
-
   private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
   
-  public double slewSpeed = 3;  // in units/s
-  public double slewTurn = 5;
+  public double slewSpeed = 4;  // in units/s
+  public double slewTurn = 4;
   private final SlewRateLimiter m_speedSlew = new SlewRateLimiter(slewSpeed);
   private final SlewRateLimiter m_turnSlew = new SlewRateLimiter(slewTurn);
 
@@ -82,6 +80,13 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     _right1.setSmartCurrentLimit(40, 60);
     _right2.setSmartCurrentLimit(40, 60);
 
+    m_encoderLeft = _left1.getEncoder();
+    m_encoderRight = _right1.getEncoder();
+    m_encoderRight.setPositionConversionFactor(DriveConstants.kEncoderDistanceConversionFactor);
+    m_encoderRight.setVelocityConversionFactor(DriveConstants.kEncoderVelocityConversionFactor);
+    m_encoderLeft.setPositionConversionFactor(DriveConstants.kEncoderDistanceConversionFactor);
+    m_encoderLeft.setVelocityConversionFactor(DriveConstants.kEncoderVelocityConversionFactor);
+
     _left1.burnFlash();
     _left2.burnFlash();
     _right1.burnFlash();
@@ -91,15 +96,21 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     m_drive.setDeadband(0.05);
     m_drive.setSafetyEnabled(true);
 
-    m_encoderLeft = _left1.getEncoder();
-    m_encoderRight = _right1.getEncoder();
-    m_gyro.reset();
+    //m_gyro.reset();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
 
   public void periodic(){
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_encoderLeft.getPosition()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters, 
-    -m_encoderRight.getPosition()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters);
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_encoderLeft.getPosition(), -m_encoderRight.getPosition());
+    SmartDashboard.putNumber("Left Dist", m_encoderLeft.getPosition());
+    SmartDashboard.putNumber("Right Dist", -m_encoderRight.getPosition());
+    SmartDashboard.putNumber("Right D Factor", m_encoderRight.getPositionConversionFactor());
+    SmartDashboard.putNumber("Left Dist Factor", m_encoderLeft.getPositionConversionFactor());
+    SmartDashboard.putNumber("Left Vel", m_encoderLeft.getVelocity());
+    SmartDashboard.putNumber("Right Vel", -m_encoderRight.getVelocity());
+    SmartDashboard.putNumber("Right Vel Factor", m_encoderRight.getVelocityConversionFactor());
+    SmartDashboard.putNumber("Left Vel Factor", m_encoderLeft.getVelocityConversionFactor());
+
   }
 
   public Pose2d getPose() {
@@ -107,10 +118,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-      return new DifferentialDriveWheelSpeeds(m_encoderLeft.getVelocity()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters/60,-m_encoderRight.getVelocity()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters/60);
+      return new DifferentialDriveWheelSpeeds(m_encoderLeft.getVelocity(),-m_encoderRight.getVelocity());
   } 
   
-  @Log public double getLeftSpeed(){
+/*   @Log public double getLeftSpeed(){
     return m_encoderLeft.getVelocity()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters/60;
   }
 
@@ -124,7 +135,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   @Log public double getRightDistance(){
     return -m_encoderRight.getPosition()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters;
-  }
+  } */
 
   public void tankDriveVolts(double leftVolts, double rightVolts) {
       m_left.setVoltage(leftVolts);
@@ -141,7 +152,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    * Zeroes the heading of the robot.
    */
   public void zeroHeading() {
-    m_gyro.zeroYaw();
+    m_gyro.reset();
   }
 
   public void reset(){
@@ -172,7 +183,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   public void curvatureDrive(double fwd, double rot, boolean quickTurn) {
     m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot), quickTurn);
   }
-
   
   @Config(name="Speed, max", defaultValueNumeric = 0.8)
   public void setSpeedMax(double xSpeed) {
@@ -184,23 +194,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     return m_ultrasonic.getValue()*DriveConstants.kValueToInches;
   }
   
-  public void invertRightMotors(){ 
-    _left1.setInverted(false);
-    _left2.setInverted(false);
-    _right1.setInverted(true);   
-    _right2.setInverted(true); // invalid pid from characterization tool
-}
   public void stop(){
     _left1.stopMotor();
     _left2.stopMotor();
     _right1.stopMotor();
     _right2.stopMotor();
   }  
-
-  public void setSafety(){
-    m_drive.setSafetyEnabled(true);
-}
-public void setNoSafety(){
-    m_drive.setSafetyEnabled(false);  
-}
 }

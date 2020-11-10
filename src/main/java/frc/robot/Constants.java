@@ -42,14 +42,14 @@ public final class Constants {
     public static final int kEncoderCPR = 42;
     public static final double kGearRatio = 8.45;
     public static final double kWheelDiameterMeters = Units.inchesToMeters(6);
-    public static final double kEncoderDistanceConversionFactor = ((double)(Math.PI*kWheelDiameterMeters)/(1*kGearRatio));
-    public static final double kEncoderVelocityConversionFactor = ((double)(Math.PI*kWheelDiameterMeters)/(60*kGearRatio));
+    public static final double kEncoderDistanceConversionFactor = ((double) (Math.PI*kWheelDiameterMeters)/(kGearRatio));
+    public static final double kEncoderVelocityConversionFactor = ((double) (Math.PI*kWheelDiameterMeters)/(60*kGearRatio));
 
 
     public static final double ksVolts = 0.169;
     public static final double kvVoltSecondsPerMeter = 2.24;
     public static final double kaVoltSecondsSquaredPerMeter = 0.0435;
-    public static final double kPDriveVel = 2.6;  //2.6
+    public static final double kPDriveVel = 2.85;  //2.6
 
     public static final boolean kGyroReversed = true;
   }
@@ -96,8 +96,8 @@ public final class Constants {
   }
 
   public static final class AutoConstants { 
-    public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(8);
-    public static final double kMaxAccelerationMetersPerSecondSquared = Units.feetToMeters(8);
+    public static final double kMaxSpeedMetersPerSecond = Units.feetToMeters(10);
+    public static final double kMaxAccelerationMetersPerSecondSquared = Units.feetToMeters(10);
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;
