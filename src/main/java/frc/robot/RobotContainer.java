@@ -187,7 +187,8 @@ public class RobotContainer {
               // Add kinematics to ensure max speed is actually obeyed
               .setKinematics(DriveConstants.kDriveKinematics)
               // Apply the voltage constraint
-              .addConstraint(autoVoltageConstraint);
+              .addConstraint(autoVoltageConstraint)
+              .setReversed(true);
 
       
 
@@ -196,9 +197,9 @@ public class RobotContainer {
           // Start at the origin facing the +X direction
           new Pose2d(0, 0, new Rotation2d(0)),
           // Pass through these two interior waypoints, making an 's' curve path
-          List.of(new Translation2d(1, 0)),
+          List.of(new Translation2d(Units.inchesToMeters(-24), 0)),
           // End 3 meters straight ahead of where we started, facing forward
-          new Pose2d(Units.inchesToMeters(150), Units.inchesToMeters(-40), new Rotation2d(Units.degreesToRadians(-15))),
+          new Pose2d(Units.inchesToMeters(-100), Units.inchesToMeters(-28), new Rotation2d(0)),
           // Pass config
           config);
 
