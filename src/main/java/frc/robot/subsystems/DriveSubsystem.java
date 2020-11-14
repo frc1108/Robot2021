@@ -56,6 +56,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   private final CANEncoder m_encoderLeft;
   private final DifferentialDriveOdometry m_odometry;
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+
+  private final NetworkTableEntry m_xEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
+  private final NetworkTableEntry m_yEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
+  private final NetworkTableEntry m_zEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Z");
  
   /**
    * Creates a new DriveSubsystem.
@@ -102,11 +106,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
   }
 
-  NetworkTableEntry m_xEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
-  NetworkTableEntry m_yEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
-  NetworkTableEntry m_zEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Z");
-
-
   public void periodic(){
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_encoderLeft.getPosition(), -m_encoderRight.getPosition());
     SmartDashboard.putNumber("Left Dist", m_encoderLeft.getPosition());
@@ -118,8 +117,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     m_xEntry.setNumber(translation.getX());
     m_yEntry.setNumber(translation.getY());
     m_zEntry.setNumber(rotation.getDegrees());
-
-
   }
 
   public Pose2d getPose() {
@@ -128,6 +125,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
   public void resetOdometry(Pose2d pose) {
     resetEncoders();
+    zeroHeading();
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
@@ -140,22 +138,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
       return new DifferentialDriveWheelSpeeds(m_encoderLeft.getVelocity(),-m_encoderRight.getVelocity());
   } 
   
-/*   @Log public double getLeftSpeed(){
-    return m_encoderLeft.getVelocity()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters/60;
-  }
-
-  @Log public double getRightSpeed(){
-    return -m_encoderRight.getVelocity()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters/60;
-  }
-
-  @Log public double getLeftDistance(){
-    return m_encoderLeft.getPosition()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters;
-  }
-
-  @Log public double getRightDistance(){
-    return -m_encoderRight.getPosition()/DriveConstants.kGearRatio*Math.PI*DriveConstants.kWheelDiameterMeters;
-  } */
-
   public void tankDriveVolts(double leftVolts, double rightVolts) {
       m_left.setVoltage(leftVolts);
       m_right.setVoltage(-rightVolts);
@@ -177,7 +159,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   public void reset(){
     m_encoderLeft.setPosition(0);
     m_encoderRight.setPosition(0);
-    //m_gyro.reset();
     m_odometry.resetPosition(new Pose2d(), Rotation2d.fromDegrees(getHeading()));
   }
 
@@ -219,4 +200,14 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     _right1.stopMotor();
     _right2.stopMotor();
   }  
+
+  public double getHeadingCW() {
+    // Not negating
+    return Math.IEEEremainder(m_gyro.getAngle(), 360);
+  }
+
+  public double getTurnRateCW() {
+    // Not negating
+    return m_gyro.getRate();
+  }
 }
