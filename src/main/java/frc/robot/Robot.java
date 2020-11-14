@@ -21,9 +21,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot implements Loggable{
   private Command m_autonomousCommand;
-  private Command m_lightInitCommand;
-
-  private RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer = new RobotContainer();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -32,7 +30,6 @@ public class Robot extends TimedRobot implements Loggable{
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
     Logger.configureLoggingAndConfig(m_robotContainer, false);
     m_robotContainer.reset();
   }
@@ -51,11 +48,6 @@ public class Robot extends TimedRobot implements Loggable{
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    m_lightInitCommand = m_robotContainer.getLightInitCommand();
-    if (m_lightInitCommand != null) {
-      m_lightInitCommand.schedule();
-      //System.out.println("LED scheduled");
-    }
     Logger.updateEntries();
   }
 
@@ -64,7 +56,6 @@ public class Robot extends TimedRobot implements Loggable{
    */
   @Override
   public void disabledInit() {
-    m_robotContainer.reset();
   }
 
   @Override
@@ -78,14 +69,6 @@ public class Robot extends TimedRobot implements Loggable{
   public void autonomousInit() {
     m_robotContainer.reset();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
-
     // schedule the autonomous command (example)
      if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -108,10 +91,6 @@ public class Robot extends TimedRobot implements Loggable{
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    m_robotContainer.reset();
-    if (m_lightInitCommand != null) {
-      m_lightInitCommand.cancel();
-    }
   }
 
   /**
@@ -119,7 +98,6 @@ public class Robot extends TimedRobot implements Loggable{
    */
   @Override
   public void teleopPeriodic() {
-    //NetworkTableInstance.getDefault().getTable("SmartDashboard").getEntry("AutoButton").setBoolean(autoAlign);
   }
 
   @Override
@@ -134,12 +112,4 @@ public class Robot extends TimedRobot implements Loggable{
   @Override
   public void testPeriodic() {
   }
-  /* private void rainbow(){
-    for (var i=0; i<m_ledBuffer.getLength();i++){
-        final var hue = (m_rainbowFirstPixelHue + (i*180/m_ledBuffer.getLength()))%180;
-        m_ledBuffer.setHSV(i, hue, 255, 128);
-      }
-      m_rainbowFirstPixelHue += 3;
-      m_rainbowFirstPixelHue %= 180;
-    } */
 }

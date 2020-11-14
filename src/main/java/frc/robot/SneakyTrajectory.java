@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -37,6 +38,7 @@ public class SneakyTrajectory {
         public Trajectory[] leftAuto6Cell = new Trajectory[6];
         public Trajectory[] centerRightAuto8Cell = new Trajectory[6];
         public Trajectory[] rightAuto8Cell = new Trajectory[6];
+        public Trajectory[] centerAuto8Cell = new Trajectory[4];
         private DriveSubsystem m_drive;
         private static double bottomRectAngle = -Math.toRadians(67.5);
         private static double topRectAngle = Math.toRadians(22.5);
@@ -72,119 +74,130 @@ public class SneakyTrajectory {
                 }
                 centerRightAuto[0] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(13 / divisor, -5.8 / divisor, new Rotation2d(0)),
-                                                new Pose2d(11.5 / divisor, -7.0 / divisor, new Rotation2d(0)),
-                                                new Pose2d(8 / divisor, -7.0 / divisor, new Rotation2d(0))),
+                                        new Pose2d(11.5 / divisor, -7.0 / divisor, new Rotation2d(0)),
+                                        new Pose2d(8 / divisor, -7.0 / divisor, new Rotation2d(0))),
                                 configReversed);
                 centerRightAuto[1] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(8 / divisor, -7.05 / divisor, new Rotation2d(0)),
-                                                new Pose2d(10.5 / divisor, -5.80 / divisor, new Rotation2d(0)),
-                                                new Pose2d(13 / divisor, -5.80 / divisor, new Rotation2d(0))),
+                                        new Pose2d(10.5 / divisor, -5.80 / divisor, new Rotation2d(0)),
+                                        new Pose2d(13 / divisor, -5.80 / divisor, new Rotation2d(0))),
                                 configForward);
                 rightAuto[0] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(13 / divisor, -7 / divisor, new Rotation2d(0)),
-                                                new Pose2d(11.5 / divisor, -7.50 / divisor, new Rotation2d(0)),
-                                                new Pose2d(8 / divisor, -7.40 / divisor, new Rotation2d(0))),
+                                        new Pose2d(11.5 / divisor, -7.50 / divisor, new Rotation2d(0)),
+                                        new Pose2d(8 / divisor, -7.40 / divisor, new Rotation2d(0))),
                                 configReversed);
                 rightAuto[1] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0)),
-                                                new Pose2d(10.5 / divisor, -5.75 / divisor, new Rotation2d(0)),
-                                                new Pose2d(13 / divisor, -5.75 / divisor, new Rotation2d(0))),
+                                        new Pose2d(10.5 / divisor, -5.75 / divisor, new Rotation2d(0)),
+                                        new Pose2d(13 / divisor, -5.75 / divisor, new Rotation2d(0))),
                                 configForward);
-
                 centerRightAuto8Cell[0] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(13 / divisor, -5.8 / divisor, new Rotation2d(0)),
-                                                new Pose2d(11.5 / divisor, -7.6 / divisor, new Rotation2d(0)),
-                                                new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0))),
+                                        new Pose2d(11.5 / divisor, -7.6 / divisor, new Rotation2d(0)),
+                                        new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0))),
                                 configReversed);
-                centerRightAuto8Cell[1] = TrajectoryGenerator
-                                .generateTrajectory(
-                                                List.of(new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0)),
-                                                                new Pose2d(10 / divisor, -6.2 / divisor,
-                                                                                new Rotation2d(bottomRectAngle))),
-                                                configForward);
-                centerRightAuto8Cell[2] = TrajectoryGenerator.generateTrajectory(List.of(
-                                new Pose2d(10 / divisor, -6.2 / divisor, new Rotation2d(bottomRectAngle)),
-                                new Pose2d(9.8 / divisor, -5.65 / divisor, new Rotation2d(bottomRectAngle))),
-                                configReversed);
-                centerRightAuto8Cell[3] = TrajectoryGenerator.generateTrajectory(List.of(
-                                new Pose2d(9.8 / divisor, -6.2 / divisor, new Rotation2d(bottomRectAngle)),
-                                new Pose2d(10.45 / divisor, -6.1 / divisor, new Rotation2d(bottomRectAngle))),
+                centerRightAuto8Cell[1] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0)),
+                                        new Pose2d(10 / divisor, -6.2 / divisor,
+                                        new Rotation2d(bottomRectAngle))),
                                 configForward);
-                centerRightAuto8Cell[4] = TrajectoryGenerator.generateTrajectory(List.of(
-                                new Pose2d(10.45 / divisor, -6.1 / divisor, new Rotation2d(bottomRectAngle)),
-                                new Pose2d(10.1 / divisor, -5.4 / divisor, new Rotation2d(bottomRectAngle))),
+                centerRightAuto8Cell[2] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(10 / divisor, -6.2 / divisor, new Rotation2d(bottomRectAngle)),
+                                        new Pose2d(9.8 / divisor, -5.65 / divisor, new Rotation2d(bottomRectAngle))),
+                                configReversed);
+                centerRightAuto8Cell[3] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(9.8 / divisor, -6.2 / divisor, new Rotation2d(bottomRectAngle)),
+                                        new Pose2d(10.45 / divisor, -6.1 / divisor, new Rotation2d(bottomRectAngle))),
+                                configForward);
+                centerRightAuto8Cell[4] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(10.45 / divisor, -6.1 / divisor, new Rotation2d(bottomRectAngle)),
+                                        new Pose2d(10.1 / divisor, -5.4 / divisor, new Rotation2d(bottomRectAngle))),
                                 configReversed);
                 centerRightAuto8Cell[5] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(10.1 / divisor, -5.4 / divisor, new Rotation2d(bottomRectAngle)),
-                                                new Pose2d(11 / divisor, -5.8 / divisor, new Rotation2d(0))),
+                                        new Pose2d(11 / divisor, -5.8 / divisor, new Rotation2d(0))),
                                 configForward);
                 rightAuto8Cell[0] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(13 / divisor, -7 / divisor, new Rotation2d(0)),
-                                                new Pose2d(11.5 / divisor, -7.6 / divisor, new Rotation2d(0)),
-                                                new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0))),
+                                        new Pose2d(11.5 / divisor, -7.6 / divisor, new Rotation2d(0)),
+                                        new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0))),
                                 configReversed);
-                rightAuto8Cell[1] = TrajectoryGenerator
-                                .generateTrajectory(
-                                                List.of(new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0)),
-                                                                new Pose2d(10 / divisor, -6.1 / divisor,
-                                                                                new Rotation2d(bottomRectAngle))),
-                                                configForward);
-                rightAuto8Cell[2] = TrajectoryGenerator.generateTrajectory(List.of(
-                                new Pose2d(10 / divisor, -6.1 / divisor, new Rotation2d(bottomRectAngle)),
-                                new Pose2d(9.75 / divisor, -5.5 / divisor, new Rotation2d(bottomRectAngle))),
-                                configReversed);
-                rightAuto8Cell[3] = TrajectoryGenerator.generateTrajectory(List.of(
-                                new Pose2d(9.75 / divisor, -5.5 / divisor, new Rotation2d(bottomRectAngle)),
-                                new Pose2d(10.3 / divisor, -5.75 / divisor, new Rotation2d(bottomRectAngle))),
+                rightAuto8Cell[1] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(8 / divisor, -7.55 / divisor, new Rotation2d(0)),
+                                        new Pose2d(10 / divisor, -6.1 / divisor,
+                                        new Rotation2d(bottomRectAngle))),
                                 configForward);
-                rightAuto8Cell[4] = TrajectoryGenerator.generateTrajectory(List.of(
-                                new Pose2d(10.3 / divisor, -5.75 / divisor, new Rotation2d(bottomRectAngle)),
-                                new Pose2d(10.1 / divisor, -5.4 / divisor, new Rotation2d(bottomRectAngle))),
+                rightAuto8Cell[2] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(10 / divisor, -6.1 / divisor, new Rotation2d(bottomRectAngle)),
+                                        new Pose2d(9.75 / divisor, -5.5 / divisor, new Rotation2d(bottomRectAngle))),
+                                configReversed);
+                rightAuto8Cell[3] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(9.75 / divisor, -5.5 / divisor, new Rotation2d(bottomRectAngle)),
+                                        new Pose2d(10.3 / divisor, -5.75 / divisor, new Rotation2d(bottomRectAngle))),
+                                configForward);
+                rightAuto8Cell[4] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(10.3 / divisor, -5.75 / divisor, new Rotation2d(bottomRectAngle)),
+                                        new Pose2d(10.1 / divisor, -5.4 / divisor, new Rotation2d(bottomRectAngle))),
                                 configReversed);
                 rightAuto8Cell[5] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(10.1 / divisor, -5.4 / divisor, new Rotation2d(bottomRectAngle)),
-                                                new Pose2d(11 / divisor, -5.75 / divisor, new Rotation2d(0))),
+                                        new Pose2d(11 / divisor, -5.75 / divisor, new Rotation2d(0))),
                                 configForward);
 
                 leftAuto5Cell[0] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(13 / divisor, -4.25 / divisor, new Rotation2d(0)),
-                                                new Pose2d(10.7 / divisor, -0.48 / divisor, new Rotation2d(0)),
-                                                new Pose2d(9.7 / divisor, -0.48 / divisor, new Rotation2d(0))),
+                                        new Pose2d(10.7 / divisor, -0.48 / divisor, new Rotation2d(0)),
+                                        new Pose2d(9.7 / divisor, -0.48 / divisor, new Rotation2d(0))),
                                 configReversed);
                 leftAuto5Cell[1] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(9.7 / divisor, -0.48 / divisor, new Rotation2d(0)),
-                                                new Pose2d(10.7 / divisor, -0.95 / divisor, new Rotation2d(0))),
+                                        new Pose2d(10.7 / divisor, -0.95 / divisor, new Rotation2d(0))),
                                 configForward);
                 leftAuto5Cell[2] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(10.7 / divisor, -0.95 / divisor, new Rotation2d(0)),
-                                                new Pose2d(9.7 / divisor, -0.95 / divisor, new Rotation2d(0))),
+                                        new Pose2d(9.7 / divisor, -0.95 / divisor, new Rotation2d(0))),
                                 configReversed);
                 leftAuto5Cell[3] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(9.7 / divisor, -0.95 / divisor, new Rotation2d(0)),
-                                                new Pose2d(11.4 / divisor, -5.15 / divisor, new Rotation2d(0))),
+                                        new Pose2d(11.4 / divisor, -5.15 / divisor, new Rotation2d(0))),
                                 configForward);
-
                 leftAuto5Cell[0] = TrajectoryGenerator.generateTrajectory(
-                                                List.of(new Pose2d(13 / divisor, -5.10 / divisor, new Rotation2d(0)),
-                                                                new Pose2d(10.7 / divisor, -4.30 / divisor,
-                                                                                new Rotation2d(topRectAngle))),
-                                                configReversed);
-
+                                List.of(new Pose2d(13 / divisor, -5.10 / divisor, new Rotation2d(0)),
+                                        new Pose2d(10.7 / divisor, -4.30 / divisor,
+                                        new Rotation2d(topRectAngle))),
+                                configReversed);
                 leftAuto5Cell[1] = TrajectoryGenerator.generateTrajectory(
                                 List.of(new Pose2d(10.7 / divisor, -4.30 / divisor, new Rotation2d(topRectAngle)),
-                                                new Pose2d(11.7 / divisor, -3.95 / divisor,
-                                                                new Rotation2d(Math.toRadians(-112.5)))),
+                                        new Pose2d(11.7 / divisor, -3.95 / divisor,
+                                        new Rotation2d(Math.toRadians(-112.5)))),
                                 configForward);
-
-                leftAuto5Cell[2] = TrajectoryGenerator.generateTrajectory(List.of(
-                                new Pose2d(11.7 / divisor, -3.95 / divisor, new Rotation2d(topRectAngle)),
-                                new Pose2d(10.25 / divisor, -3.75 / divisor, new Rotation2d(topRectAngle))),
+                leftAuto5Cell[2] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(11.7 / divisor, -3.95 / divisor, new Rotation2d(topRectAngle)),
+                                        new Pose2d(10.25 / divisor, -3.75 / divisor, new Rotation2d(topRectAngle))),
                                 configReversed);
                 leftAuto5Cell[3] = TrajectoryGenerator.generateTrajectory(
-                                                List.of(new Pose2d(10.25 / divisor, -3.75 / divisor, new Rotation2d(0)),
-                                                                new Pose2d(13 / divisor, -5.80 / divisor,
-                                                                                new Rotation2d(0))), // 5.80
-                                                configForward);
+                                List.of(new Pose2d(10.25 / divisor, -3.75 / divisor, new Rotation2d(0)),
+                                        new Pose2d(13 / divisor, -5.80 / divisor,
+                                        new Rotation2d(0))), // 5.80
+                                configForward);
+                centerAuto8Cell[0] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(Units.inchesToMeters(83),Units.inchesToMeters(229),new Rotation2d(Units.degreesToRadians(0))),
+                                        new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(229),new Rotation2d(Units.degreesToRadians(0)))), 
+                                configForward);
+                centerAuto8Cell[1] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(Units.inchesToMeters(0),Units.inchesToMeters(-95),new Rotation2d(Units.degreesToRadians(0))),
+                                        new Pose2d(Units.inchesToMeters(120),Units.inchesToMeters(0),new Rotation2d(Units.degreesToRadians(90)))), 
+                                configReversed);
+                centerAuto8Cell[2] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(Units.inchesToMeters(120),Units.inchesToMeters(0),new Rotation2d(Units.degreesToRadians(90))),
+                                        new Pose2d(Units.inchesToMeters(375),Units.inchesToMeters(-28),new Rotation2d(Units.degreesToRadians(0)))), 
+                                configForward);
+                centerAuto8Cell[3] = TrajectoryGenerator.generateTrajectory(
+                                List.of(new Pose2d(Units.inchesToMeters(375),Units.inchesToMeters(-28),new Rotation2d(Units.degreesToRadians(0))),
+                                        new Pose2d(Units.inchesToMeters(190),Units.inchesToMeters(-28),new Rotation2d(Units.degreesToRadians(0))),
+                                        new Pose2d(Units.inchesToMeters(70),Units.inchesToMeters(-60),new Rotation2d(Units.degreesToRadians(24)))), 
+                                configForward);
         }
 
         public RamseteCommand getRamsete(Trajectory traj) {

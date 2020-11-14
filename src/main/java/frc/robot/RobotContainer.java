@@ -8,7 +8,7 @@
 package frc.robot;
 
 import io.github.oblarg.oblog.annotations.Log;
-
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -64,7 +65,7 @@ public class RobotContainer {
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   @Log private final HopperSubsystem m_hopper = new HopperSubsystem();
   @Log private final BallLauncher m_launcher = new BallLauncher();
-  @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
+  private final ClimberSubsystem m_climber = new ClimberSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
   private final FeederSubsystem m_feeder = new FeederSubsystem();
   private final LightsSubsystem m_lights = new LightsSubsystem();
@@ -188,34 +189,70 @@ public class RobotContainer {
               .setKinematics(DriveConstants.kDriveKinematics)
               // Apply the voltage constraint
               .addConstraint(autoVoltageConstraint)
-              .setReversed(true);
+              .setReversed(false);
+
+      
 
       
 
       // An example trajectory to follow. All units in meters.
       Trajectory driveToGoal = TrajectoryGenerator.generateTrajectory(
           // Start at the origin facing the +X direction
-          new Pose2d(0, 0, new Rotation2d(0)),
+          new Pose2d(0,-2, new Rotation2d(Units.degreesToRadians(0))),
           // Pass through these two interior waypoints, making an 's' curve path
-          List.of(new Translation2d(Units.inchesToMeters(-24), 0)),
+          List.of(),
           // End 3 meters straight ahead of where we started, facing forward
-          new Pose2d(Units.inchesToMeters(-100), Units.inchesToMeters(-28), new Rotation2d(0)),
+          new Pose2d(2.5,-2.5, new Rotation2d(Units.degreesToRadians(-45))),
           // Pass config
           config);
+      
+      m_robotDrive.resetOdometry(driveToGoal.getInitialPose());
+
+      // Paste this variable in
+      RamseteController disabledRamsete = new RamseteController() {
+      @Override
+      public ChassisSpeeds calculate(Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters,
+          double angularVelocityRefRadiansPerSecond) {
+      return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
+          }
+      };
+
+      var table = NetworkTableInstance.getDefault().getTable("troubleshooting");
+      var leftReference = table.getEntry("left_reference");
+      var leftMeasurement = table.getEntry("left_measurement");
+      var rightReference = table.getEntry("right_reference");
+      var rightMeasurement = table.getEntry("right_measurement");
+      var leftController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
+      var rightController = new PIDController(DriveConstants.kPDriveVel, 0, 0);
 
       RamseteCommand ramseteCommand = new RamseteCommand(driveToGoal, m_robotDrive::getPose,
+          //disabledRamsete,
           new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
           new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
               DriveConstants.kaVoltSecondsSquaredPerMeter),
-          DriveConstants.kDriveKinematics, m_robotDrive::getWheelSpeeds,
-          new PIDController(DriveConstants.kPDriveVel, 0, 0),  // Left PID
-          new PIDController(DriveConstants.kPDriveVel, 0, 0), // Right PID
+          DriveConstants.kDriveKinematics, 
+          m_robotDrive::getWheelSpeeds,
+          leftController,
+          rightController,
+          //new PIDController(DriveConstants.kPDriveVel, 0, 0),  // Left PID
+          //new PIDController(DriveConstants.kPDriveVel, 0, 0), // Right PID
           // RamseteCommand passes volts to the callback
-          m_robotDrive::tankDriveVolts,
+          // RamseteCommand passes volts to the callback
+          (leftVolts, rightVolts) -> {
+              m_robotDrive.tankDriveVolts(leftVolts, rightVolts);
+
+              leftMeasurement.setNumber(m_robotDrive.getWheelSpeeds().leftMetersPerSecond);
+              leftReference.setNumber(leftController.getSetpoint());
+
+              rightMeasurement.setNumber(m_robotDrive.getWheelSpeeds().rightMetersPerSecond);
+              rightReference.setNumber(rightController.getSetpoint());
+          },
+          //m_robotDrive::tankDriveVolts,
           m_robotDrive);
 
       // Run path following command, then stop at the end.
       return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
+      //return m_traj.getRamsete(m_traj.rightAuto8Cell[0]).andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
   }
 
    public Command getLightInitCommand() {
