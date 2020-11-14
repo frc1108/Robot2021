@@ -157,6 +157,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   }
 
   public void reset(){
+    m_gyro.reset();
     m_encoderLeft.setPosition(0);
     m_encoderRight.setPosition(0);
     m_odometry.resetPosition(new Pose2d(), Rotation2d.fromDegrees(getHeading()));
@@ -201,6 +202,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     _right2.stopMotor();
   }  
 
+  @Log
   public double getHeadingCW() {
     // Not negating
     return Math.IEEEremainder(m_gyro.getAngle(), 360);

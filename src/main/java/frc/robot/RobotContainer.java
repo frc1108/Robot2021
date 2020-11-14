@@ -49,6 +49,8 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.BasicCommandGroup;
 import frc.robot.commands.SimpleAutoGroup;
+import frc.robot.commands.drive.FieldOrientedTurn;
+import frc.robot.commands.auto.Center8BallAuto;
 
 import static frc.robot.Constants.OIConstants.*;
 
@@ -77,6 +79,8 @@ public class RobotContainer {
   // Controller for driver and operator
   XboxController m_driverController = new XboxController(kDriverControllerPort);
   XboxController m_operatorController = new XboxController(kOperatorControllerPort);
+
+  SneakyTrajectory s_trajectory = new SneakyTrajectory(m_robotDrive);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -159,6 +163,9 @@ public class RobotContainer {
      
     new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
       .whenPressed(new RunCommand(()-> m_climber.setSpeedMax(),m_climber).withTimeout(0.1));
+
+    new JoystickButton(m_driverController, XboxController.Button.kB.value)
+      .whenPressed(new FieldOrientedTurn(120,m_robotDrive));
   }
 
   /**
@@ -170,6 +177,10 @@ public class RobotContainer {
     return m_chooser.getSelected();
   } */
   
+  public Command getAutoCommand() {
+    return new Center8BallAuto(s_trajectory,m_robotDrive);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -190,10 +201,6 @@ public class RobotContainer {
               // Apply the voltage constraint
               .addConstraint(autoVoltageConstraint)
               .setReversed(false);
-
-      
-
-      
 
       // An example trajectory to follow. All units in meters.
       Trajectory driveToGoal = TrajectoryGenerator.generateTrajectory(

@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.util.Units;
+import io.github.oblarg.oblog.annotations.Config;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -53,16 +54,16 @@ public final class Constants {
 
     public static final boolean kGyroReversed = true;
 
-    public static final double kTurnP = 0.94;
-        public static final double kTurnI = 0.00;
-        public static final double kTurnD = 0.04;
-        public static final double kMinCommand = 0.07;
+    @Config public static final double kTurnP = 0.94; //0.94
+    @Config public static final double kTurnI = 0.00;
+    @Config public static final double kTurnD = 0.04; //0.04
+    public static final double kMinCommand = 0.07;
 
-        public static final double kMaxTurnRateDegPerS = 120;
-        public static final double kMaxTurnAccelerationDegPerSSquared = 300;
+    public static final double kMaxTurnRateDegPerS = 120;
+    public static final double kMaxTurnAccelerationDegPerSSquared = 300;
 
-        public static final double kTurnToleranceDeg = 0.5;
-        public static final double kTurnRateToleranceDegPerS = 8;
+    public static final double kTurnToleranceDeg = 5; //0.5
+    public static final double kTurnRateToleranceDegPerS = 8;
   }
 
   public static final class BallLauncherConstants {
@@ -91,8 +92,6 @@ public final class Constants {
     public static final int CAN_ID_WINCH = 10; 
     public static final int CAN_ID_TURNER = 11;
     public static final int TURNER_SWITCH_PORT = 3; 
-    //public static final double servoAngle = 150; //Released Servo angle
-    //public static final double servoCloseAngle = 50; //Closed Servo Angle
   }
 
 
