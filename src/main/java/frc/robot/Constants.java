@@ -54,9 +54,9 @@ public final class Constants {
 
     public static final boolean kGyroReversed = true;
 
-    @Config public static final double kTurnP = 0.94; //0.94
-    @Config public static final double kTurnI = 0.00;
-    @Config public static final double kTurnD = 0.04; //0.04
+    public static final double kTurnP = 0.94; //0.94
+    public static final double kTurnI = 0.00;
+    public static final double kTurnD = 0.04; //0.04
     public static final double kMinCommand = 0.07;
 
     public static final double kMaxTurnRateDegPerS = 120;
@@ -93,7 +93,6 @@ public final class Constants {
     public static final int CAN_ID_TURNER = 11;
     public static final int TURNER_SWITCH_PORT = 3; 
   }
-
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
