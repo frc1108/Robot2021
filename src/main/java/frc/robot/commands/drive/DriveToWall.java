@@ -5,20 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class DriveTimed extends CommandBase {
+public class DriveToWall extends CommandBase {
   private final DriveSubsystem m_drive;
-  private long initTime = RobotController.getFPGATime();
+  /* private long TimeToRun = 3000;
+  private long initTime = RobotController.getFPGATime(); */
 
   /**
    * Creates a new DriveToWall.
    */
-  public DriveTimed(DriveSubsystem subsystem) {
+  public DriveToWall(DriveSubsystem subsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
 
@@ -34,6 +34,7 @@ public class DriveTimed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //withTimeout(15);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +47,12 @@ public class DriveTimed extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-     return false;
+    return (m_drive.getSonarDistanceInches()<7);
+    //return false;
+    /* if (RobotController.getFPGATime() - initTime <= TimeToRun) {
+      return false;
+    } else {
+      return true;
+    } */
   }
 }
