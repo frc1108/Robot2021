@@ -41,6 +41,10 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
         return !m_highLimit.get();  // inverted switch logic
     }
 
+    public boolean isHighSwitchNotSet() {
+        return !isHighSwitchSet();
+    }
+
     public void initializeHighCounter() {
         UpperCounter.reset();
     }

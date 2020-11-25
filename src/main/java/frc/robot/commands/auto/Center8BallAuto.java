@@ -10,6 +10,8 @@ package frc.robot.commands.auto;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.SneakyTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -18,12 +20,14 @@ public class Center8BallAuto extends SequentialCommandGroup {
   /**
    * Creates a new Center8BallAuto.
    */
-  public Center8BallAuto(SneakyTrajectory s_trajectory, DriveSubsystem drive) {
+  public Center8BallAuto(SneakyTrajectory s_trajectory, DriveSubsystem drive, HopperSubsystem m_hopper) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(s_trajectory.getInitialPose(s_trajectory.centerAuto8Cell[0]),
+    super(new InstantCommand(() -> m_hopper.down(),m_hopper).withTimeout(0.1).withInterrupt(m_hopper::isHighSwitchNotSet),
+          s_trajectory.getInitialPose(s_trajectory.centerAuto8Cell[0]),
           s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[0]),
           s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[1]),
-          s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[2]));
+          s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[2])
+          .andThen(() -> drive.arcadeDrive(0, 0)));
   }
 }

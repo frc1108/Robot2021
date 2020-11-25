@@ -152,6 +152,10 @@ public class RobotContainer {
       .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper).withTimeout(2)
       .withInterrupt(m_hopper::isLowSwitchSet));
 
+    new POVButton(m_operatorController, 90)  // Xbox down arrow
+      .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper).withTimeout(0.2)
+      .withInterrupt(m_hopper::isHighSwitchNotSet));
+
     new POVButton(m_operatorController, 0)  // Xbox up arrow
       .whenPressed(new RunCommand(() -> m_hopper.up(), m_hopper).withTimeout(2)
       .withInterrupt(m_hopper::isHighSwitchSet));
@@ -176,7 +180,7 @@ public class RobotContainer {
   } */
   
   public Command getAutoCommand() {
-    return new Center8BallAuto(s_trajectory,m_robotDrive);
+    return new Center8BallAuto(s_trajectory,m_robotDrive,m_hopper);
   }
 
   /**
