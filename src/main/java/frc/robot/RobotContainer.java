@@ -180,7 +180,7 @@ public class RobotContainer {
   } */
   
   public Command getAutoCommand() {
-    return new Center8BallAuto(s_trajectory,m_robotDrive,m_hopper);
+    return new Center8BallAuto(s_trajectory,m_robotDrive,m_hopper,m_launcher);
   }
 
   /**
