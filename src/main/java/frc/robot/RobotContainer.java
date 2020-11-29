@@ -148,15 +148,17 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value)
       .whileHeld(new RunCommand(() -> m_intake.slowOutIntake(), m_intake));
     
-    new POVButton(m_operatorController, 180)  // Xbox down arrow
+    new POVButton(m_driverController, 180)  // Xbox down arrow
       .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper).withTimeout(2)
       .withInterrupt(m_hopper::isLowSwitchSet));
 
-    new POVButton(m_operatorController, 90)  // Xbox down arrow
-      .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper).withTimeout(0.2)
-      .withInterrupt(m_hopper::isHighSwitchNotSet));
+    new POVButton(m_driverController, 90)  // Xbox down arrow
+      .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper)
+      //.withTimeout(0.2)
+      .withInterrupt(m_hopper::isHighSwitchNotSet))
+      ;
 
-    new POVButton(m_operatorController, 0)  // Xbox up arrow
+    new POVButton(m_driverController, 0)  // Xbox up arrow
       .whenPressed(new RunCommand(() -> m_hopper.up(), m_hopper).withTimeout(2)
       .withInterrupt(m_hopper::isHighSwitchSet));
 

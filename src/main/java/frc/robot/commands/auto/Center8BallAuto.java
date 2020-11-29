@@ -13,6 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.shoot.ShootBalls;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -31,12 +32,16 @@ public class Center8BallAuto extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
 
-    super(new InstantCommand(() -> m_hopper.down(),m_hopper).withTimeout(0.1).withInterrupt(m_hopper::isHighSwitchNotSet),
+    super(
+          //new InstantCommand(() -> m_hopper.down(),m_hopper).withTimeout(0.1).withInterrupt(m_hopper::isHighSwitchNotSet),
           s_trajectory.getInitialPose(s_trajectory.centerAuto8Cell[0]),
           s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[0]),
-          new ShootBalls(m_shooter),
-          s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[1]),
-          s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[2])
-          .andThen(() -> drive.arcadeDrive(0, 0)));
+          new RunCommand(() -> m_hopper.down(),m_hopper).withTimeout(0.3)
+          .andThen(() -> m_hopper.stop()),
+          //.withInterrupt(() -> true),
+          s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[1])
+          //s_trajectory.getRamsete(s_trajectory.centerAuto8Cell[2])
+          .andThen(() -> drive.arcadeDrive(0, 0))
+         );
   }
 }
