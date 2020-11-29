@@ -164,12 +164,16 @@ public class RobotContainer {
 
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
       .whenPressed(new RunCommand(()-> m_launcher.startPIDLauncher(), m_launcher).withTimeout(6));
+
+    new JoystickButton(m_driverController, XboxController.Button.kY.value)
+      .whenPressed(new RunCommand(()-> m_launcher.start(), m_launcher))
+      .whenReleased(new RunCommand(()-> m_launcher.stopDC(), m_launcher));
      
     new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
       .whenPressed(new RunCommand(()-> m_climber.setSpeedMax(),m_climber).withTimeout(0.1));
 
-    new JoystickButton(m_driverController, XboxController.Button.kB.value)
-      .whenPressed(new FieldOrientedTurn(120,m_robotDrive));
+/*     new JoystickButton(m_driverController, XboxController.Button.kB.value)
+      .whenPressed(new FieldOrientedTurn(120,m_robotDrive)); */
   }
 
   /**
