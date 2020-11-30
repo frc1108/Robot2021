@@ -2,6 +2,7 @@
 package frc.robot.subsystems;
 
 import io.github.oblarg.oblog.Loggable;
+import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.Nat;
@@ -23,6 +24,7 @@ import static frc.robot.Constants.BallLauncherConstants.*;
 import java.util.function.Supplier;
 
 public class BallLauncher extends SubsystemBase implements Loggable {
+    @Log.SpeedController
     private WPI_TalonSRX m_rightMain = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_RIGHT);
     private WPI_TalonSRX m_leftFollow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_LEFT);
 
@@ -30,10 +32,10 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     Supplier<Double> encoderRate;
 
       // Volts per (radian per second)
-  private static final double kFlywheelKv = 0.125;
+  private static final double kFlywheelKv = 0.128;
 
   // Volts per (radian per second squared)
-  private static final double kFlywheelKa = 0.001;
+  private static final double kFlywheelKa = 0.005;
 
   // The plant holds a state-space model of our flywheel. This system has the following properties:
   //
@@ -50,14 +52,13 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         Nat.N1(), Nat.N1(),
         m_flywheelPlant,
         VecBuilder.fill(3.0), // How accurate we think our model is
-        VecBuilder.fill(0.01), // How accurate we think our encoder
-        // data is
+        VecBuilder.fill(0.01), // How accurate we think our encoder data is
         0.020);
 
   // A LQR uses feedback to create voltage commands.
   private final LinearQuadraticRegulator<N1, N1, N1> m_controller
         = new LinearQuadraticRegulator<>(m_flywheelPlant,
-        VecBuilder.fill(8.0), // Velocity error tolerance
+        VecBuilder.fill(8.0),  // Velocity error tolerance
         VecBuilder.fill(12.0), // Control effort (voltage) tolerance
         0.020);
 
@@ -75,8 +76,8 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     private static final int filterWindowSize = 1;
 
     private static final double m_launcherRPM = -3000;
-    private static final double kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(500);
-
+    private static double kSpinupRadPerSec;
+    
     public BallLauncher(){
         stop();
         m_rightMain.configFactoryDefault();
@@ -100,43 +101,29 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         double encoderConstant = (1 / ENCODER_EDGES_PER_REV) * 1;
 
         m_rightMain.configSelectedFeedbackSensor(FeedbackDevice.Tachometer, PIDIDX, kTimeoutMs);
-    m_rightMain.configPulseWidthPeriod_EdgesPerRot(ENCODER_EDGES_PER_REV, kTimeoutMs);
-    m_rightMain.configPulseWidthPeriod_FilterWindowSz(filterWindowSize, kTimeoutMs);
+        m_rightMain.configPulseWidthPeriod_EdgesPerRot(ENCODER_EDGES_PER_REV, kTimeoutMs);
+        m_rightMain.configPulseWidthPeriod_FilterWindowSz(filterWindowSize, kTimeoutMs);
 
-    encoderPosition = ()
-        -> m_rightMain.getSelectedSensorPosition(PIDIDX) * encoderConstant/1024;
-    encoderRate = ()
-        -> m_rightMain.getSelectedSensorVelocity(PIDIDX) * encoderConstant * 10/1024;
+        encoderPosition = ()
+            -> m_rightMain.getSelectedSensorPosition(PIDIDX) * encoderConstant/1024;
+        encoderRate = ()
+            -> (m_rightMain.getSelectedSensorVelocity(PIDIDX) * encoderConstant * 10/1024);
 
-    // Reset encoders
-    m_rightMain.setSelectedSensorPosition(0);
-        
-        
-        /* // Config Talon Tach
-        final int kTimeoutMs = 30;
-        final int edgesPerCycle = 1;
-        final int filterWindowSize = 1;
-        m_rightMain.configSelectedFeedbackSensor(FeedbackDevice.Tachometer, 0, kTimeoutMs);
-        m_rightMain.configPulseWidthPeriod_EdgesPerRot(edgesPerCycle, kTimeoutMs);
-        m_rightMain.configPulseWidthPeriod_FilterWindowSz(filterWindowSize, kTimeoutMs); */
+        // Reset encoders
+        //m_rightMain.setSelectedSensorPosition(0);
 
         // Default command to stop() 
-
-        m_loop.reset(VecBuilder.fill(encoderRate.get()));
+        m_loop.reset(VecBuilder.fill(Units.rotationsPerMinuteToRadiansPerSecond(60*encoderRate.get())));
 
         this.setDefaultCommand(new RunCommand(() -> stop(), this));
     }
 
-    /* public void setLauncherSpeed(double rightMotorSpeed){
-        m_launcherSpeed = rightMotorSpeed;
-    } */
-
-    /* public void startLauncher(){
-        m_rightMain.set(m_launcherSpeed);
-    } */
-
     public void stop(){
         m_rightMain.stopMotor();;
+    }
+
+    public void stopDC(){
+        m_loop.setNextR(VecBuilder.fill(0.0));
     }
 
     @Log.Dial(name = "Launcher RPM", tabName = "Match View", max = 3000)
@@ -144,10 +131,6 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         double tachVel_UnitsPer100ms = m_rightMain.getSelectedSensorVelocity(0);
         return -1*tachVel_UnitsPer100ms*600/1024;
     }
-
-    /* public void setLauncherRPM (double launcherRPM){  
-        m_launcherRPM = launcherRPM;
-    } */
 
     public void startPIDLauncher(){      
         m_rightMain.set(ControlMode.Velocity,m_launcherRPM*1024/600);
@@ -157,14 +140,11 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_loop.setNextR(VecBuilder.fill(kSpinupRadPerSec));
     }
 
-    public void stopDC(){
-        m_loop.setNextR(VecBuilder.fill(0.0));
-    }
 
     @Override
     public void periodic(){
-            // Correct our Kalman filter's state vector estimate with encoder data.
-    m_loop.correct(VecBuilder.fill(encoderRate.get()));
+    // Correct our Kalman filter's state vector estimate with encoder data.
+    m_loop.correct(VecBuilder.fill(Units.rotationsPerMinuteToRadiansPerSecond(60*encoderRate.get())));
 
     // Update our LQR to generate new voltage commands and use the voltages to predict the next
     // state with out Kalman filter.
@@ -175,6 +155,15 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     // duty cycle = voltage / battery voltage
     double nextVoltage = m_loop.getU(0);
     m_rightMain.setVoltage(nextVoltage);
+    }
 
+    @Config.NumberSlider(name="SpinupRPM",defaultValue = 500,min = 0,max=4000,blockIncrement = 100)
+    public void setSpinupRotPerMin(double spinupRotPerMin){
+        kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(spinupRotPerMin);
+    }
+
+    @Log
+    public double getEncoderRate(){
+        return 60*encoderRate.get();
     }
 }
