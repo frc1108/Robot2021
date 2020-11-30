@@ -167,7 +167,7 @@ public class RobotContainer {
 
     new JoystickButton(m_driverController, XboxController.Button.kY.value)
       .whenPressed(new RunCommand(()-> m_launcher.start(), m_launcher))
-      .whenReleased(new RunCommand(()-> m_launcher.stopDC(), m_launcher));
+      .whenReleased(new RunCommand(()-> m_launcher.stop(), m_launcher));
      
     new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
       .whenPressed(new RunCommand(()-> m_climber.setSpeedMax(),m_climber).withTimeout(0.1));

@@ -32,10 +32,10 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     Supplier<Double> encoderRate;
 
       // Volts per (radian per second)
-  private static final double kFlywheelKv = 0.128;
+  private static final double kFlywheelKv = (0.128/(2*Math.PI));
 
   // Volts per (radian per second squared)
-  private static final double kFlywheelKa = 0.005;
+  private static final double kFlywheelKa = (0.005/(2*Math.PI));
 
   // The plant holds a state-space model of our flywheel. This system has the following properties:
   //
@@ -83,8 +83,8 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_rightMain.configFactoryDefault();
         m_leftFollow.configFactoryDefault();
 
-        m_rightMain.setNeutralMode(NeutralMode.Brake);
-        m_leftFollow.setNeutralMode(NeutralMode.Brake);
+        m_rightMain.setNeutralMode(NeutralMode.Coast);
+        m_leftFollow.setNeutralMode(NeutralMode.Coast);
 
         m_rightMain.setInverted(true);
         m_rightMain.setSensorPhase(false);
@@ -119,6 +119,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     }
 
     public void stop(){
+        m_loop.setNextR(VecBuilder.fill(0.0));
         m_rightMain.stopMotor();;
     }
 
@@ -157,7 +158,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     m_rightMain.setVoltage(nextVoltage);
     }
 
-    @Config.NumberSlider(name="SpinupRPM",defaultValue = 500,min = 0,max=4000,blockIncrement = 100)
+    @Config.NumberSlider(name="SpinupRPM",defaultValue = 3000,min = 0,max=4000,blockIncrement = 100)
     public void setSpinupRotPerMin(double spinupRotPerMin){
         kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(spinupRotPerMin);
     }
