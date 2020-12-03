@@ -5,40 +5,40 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.hopper;
 
+import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.HopperSubsystem;
 
-public class DriveDistance extends CommandBase {
-  private final DriveSubsystem m_drive;
-  private final double m_distance;
-  private final double m_speed;
-
+public class ManualHopper extends CommandBase {
+  private final HopperSubsystem m_hopper;
+  private final DoubleSupplier hopper_spd;
   /**
-
    */
-  public DriveDistance(double inches, double speed, DriveSubsystem drive) {
-    m_distance = inches;
-    m_speed = speed;
-    m_drive = drive;
+  public ManualHopper(HopperSubsystem subsystem, DoubleSupplier speed) {
+    m_hopper = subsystem;
+    hopper_spd = speed;
+    addRequirements(m_hopper);
   }
 
   @Override
   public void initialize() {
-   // m_drive.resetEncoders();
-    m_drive.arcadeDrive(m_speed, 0);
+  }
+
+  @Override
+  public void execute() {
+    m_hopper.HopperMotor(hopper_spd.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_drive.arcadeDrive(0, 0);
+    m_hopper.HopperMotor(0);
   }
 
   @Override
   public boolean isFinished() {
-   // return Math.abs(m_drive.getAverageEncoderDistance()) >= m_distance;
-   return true;
+   return false;
   }
 }

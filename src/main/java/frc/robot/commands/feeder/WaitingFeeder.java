@@ -5,25 +5,24 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.feeder;
 
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.BallLauncher;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.FeederSubsystem;
-import frc.robot.commands.WaitingFeeder;
-import frc.robot.commands.ShootBalls;
+import frc.robot.commands.feeder.FeederTimed;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class ShootBallsGroup extends ParallelCommandGroup {
+public class WaitingFeeder extends SequentialCommandGroup {
   /**
-   * Creates a new ShootBallsGroup.
+   * Creates a new WaitingFeeder.
    */
-
-  public ShootBallsGroup(BallLauncher launcher, FeederSubsystem feeder) {
+  
+  public WaitingFeeder(FeederSubsystem feeder) {
     // Add your commands in the super() call, e.g.
-    // super(new FooCommand(), new BarCommand());super();
-    super(new WaitingFeeder(feeder), new ShootBalls(launcher));
+    // super(new FooCommand(), new BarCommand());
+    super(new WaitCommand(2), new FeederTimed(feeder));
   }
 }

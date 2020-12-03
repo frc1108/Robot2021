@@ -10,41 +10,62 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import static frc.robot.Constants.PWMConstants.PWM_ID_LEDS;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-/**
- * Add your docs here.
- */
 public class LightsSubsystem extends SubsystemBase{
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-  private AddressableLED m_led = new AddressableLED(PWM_ID_LEDS);
-  private AddressableLEDBuffer m_ledBuffer = new AddressableLEDBuffer(160);
-  private int m_rainbowFirstPixelHue;
-  
-
-  public LightsSubsystem () {
-    m_led.setLength(m_ledBuffer.getLength());
-  }
-
-  public void setLights (AddressableLEDBuffer Buffer) {
-    m_led.setData(m_ledBuffer);
-    m_led.start();
-  }
-
-  public void setSolidColor (int red, int green, int blue) {
-    for (int i=0; i<m_ledBuffer.getLength();i++){
-      m_ledBuffer.setRGB(i,red,green,blue);
-      m_led.setData(m_ledBuffer);
-      m_led.start();  
+    private AddressableLED m_led;
+    private AddressableLEDBuffer m_ledBuffer;
+    private int m_rainbowFirstPixelHue;
+    private int ledCount;
+    private DriverStation m_ds;
+   
+    public LightsSubsystem(int port, int ledCount) {
+        this.m_ds = DriverStation.getInstance();
+        this.m_led = new AddressableLED(port);
+        this.m_ledBuffer = new AddressableLEDBuffer(ledCount);
+        this.m_led.setLength(m_ledBuffer.getLength());
+        this.m_led.setData(m_ledBuffer);
+        this.m_led.start();
     }
-  }
- public void rainbow(){
-    for (var i=0; i<m_ledBuffer.getLength();i++){
-        final var hue = (m_rainbowFirstPixelHue + (i*180/m_ledBuffer.getLength()))%180;
-        m_ledBuffer.setHSV(i, hue, 255, 128);
+
+    public void allianceColors(){
+        int red, blue, green = 0;
+        
+        if(m_ds.getAlliance() != Alliance.Blue) {
+            red = 255;
+            blue = 0;
+        } else {
+            blue = 255;
+            red = 0;
+        }
+
+        for (int i=0; i<10; i++) {
+            m_ledBuffer.setRGB(i, red, green, blue);
+            this.m_led.setData(m_ledBuffer);
+        }
+    }
+
+    public void setLights (AddressableLEDBuffer Buffer) {
+      m_led.setData(m_ledBuffer);
+      m_led.start();
+    }
+
+    public void setSolidColor (int red, int green, int blue) {
+      for (int i=0; i<m_ledBuffer.getLength();i++){
+        m_ledBuffer.setRGB(i,red,green,blue);
+        m_led.setData(m_ledBuffer);
+        m_led.start();  
       }
-      m_rainbowFirstPixelHue += 3;
-      m_rainbowFirstPixelHue %= 180;
-    } 
+    }
+
+      public void rainbow(){
+      for (var i=0; i<m_ledBuffer.getLength();i++){
+          final var hue = (m_rainbowFirstPixelHue + (i*180/m_ledBuffer.getLength()))%180;
+          m_ledBuffer.setHSV(i, hue, 255, 128);
+        }
+        m_rainbowFirstPixelHue += 3;
+        m_rainbowFirstPixelHue %= 180;
+      } 
 }

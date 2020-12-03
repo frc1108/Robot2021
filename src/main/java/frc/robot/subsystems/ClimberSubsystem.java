@@ -9,8 +9,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import io.github.oblarg.oblog.Loggable;
-import io.github.oblarg.oblog.annotations.Log;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -18,7 +16,7 @@ import static frc.robot.Constants.ClimberConstants.*;
 /**
  * Add your docs here.
  */
-public class ClimberSubsystem extends SubsystemBase implements Loggable {
+public class ClimberSubsystem extends SubsystemBase {
   private final WPI_TalonSRX m_winch = new WPI_TalonSRX(CAN_ID_WINCH);
   private double m_maxSpeed = 0;
   
