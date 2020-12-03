@@ -13,7 +13,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveTimed extends CommandBase {
   private final DriveSubsystem m_drive;
-  private long TimeToRun = 6000000;
+  private long TimeToRun = 3000000;
   private long initTime = RobotController.getFPGATime();
 
   /**

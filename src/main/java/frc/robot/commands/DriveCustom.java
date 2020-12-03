@@ -11,25 +11,29 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class DriveToWall extends CommandBase {
+public class DriveCustom extends CommandBase {
   private final DriveSubsystem m_drive;
-  /* private long TimeToRun = 3000;
-  private long initTime = RobotController.getFPGATime(); */
-
+  private double forward;
+  private double rotation;
+  private long TimeToRun; //microseconds
+  private long initTime;
   /**
-   * Creates a new DriveToWall.
+   * Creates a new DriveCustom
    */
-  public DriveToWall(DriveSubsystem subsystem) {
+  public DriveCustom(DriveSubsystem subsystem, double fwd, double rot, long milleseconds) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drive = subsystem;
-
+    forward = fwd;
+    rotation = rot;
+    TimeToRun = milleseconds*1000;
     addRequirements(m_drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_drive.arcadeDrive(-0.4,0);
+    initTime = RobotController.getFPGATime();
+    m_drive.arcadeDrive(forward, rotation);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -48,12 +52,10 @@ public class DriveToWall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (m_drive.getSonarDistanceInches()<8);
-    //return false;
-    /* if (RobotController.getFPGATime() - initTime <= TimeToRun) {
+    if (RobotController.getFPGATime() - initTime <= TimeToRun) {
       return false;
     } else {
       return true;
-    } */
+    }
   }
 }

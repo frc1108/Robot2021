@@ -28,7 +28,7 @@ public class LowerWhopper extends CommandBase {
 
   @Override
   public void execute() {
-    m_hopper.HopperMotor(-0.5);
+    m_hopper.HopperMotor(0.5);
   }
 
   @Override

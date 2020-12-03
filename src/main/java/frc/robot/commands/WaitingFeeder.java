@@ -24,6 +24,6 @@ public class WaitingFeeder extends SequentialCommandGroup {
   public WaitingFeeder(FeederSubsystem feeder) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new WaitCommand(2), new FeederTimed(feeder));
+    super(new WaitCommand(1.5), new FeederTimed(feeder));
   }
 }
