@@ -148,26 +148,32 @@ public class RobotContainer {
     new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value)
       .whileHeld(new RunCommand(() -> m_intake.slowOutIntake(), m_intake));
     
-    new POVButton(m_operatorController, 180)  // Xbox down arrow
+    new POVButton(m_driverController, 180)  // Xbox down arrow
       .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper).withTimeout(2)
       .withInterrupt(m_hopper::isLowSwitchSet));
 
-    new POVButton(m_operatorController, 90)  // Xbox down arrow
-      .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper).withTimeout(0.2)
-      .withInterrupt(m_hopper::isHighSwitchNotSet));
+    new POVButton(m_driverController, 90)  // Xbox down arrow
+      .whenPressed(new RunCommand(() -> m_hopper.down(), m_hopper)
+      //.withTimeout(0.2)
+      .withInterrupt(m_hopper::isHighSwitchNotSet))
+      ;
 
-    new POVButton(m_operatorController, 0)  // Xbox up arrow
+    new POVButton(m_driverController, 0)  // Xbox up arrow
       .whenPressed(new RunCommand(() -> m_hopper.up(), m_hopper).withTimeout(2)
       .withInterrupt(m_hopper::isHighSwitchSet));
 
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
       .whenPressed(new RunCommand(()-> m_launcher.startPIDLauncher(), m_launcher).withTimeout(6));
+
+    new JoystickButton(m_driverController, XboxController.Button.kY.value)
+      .whenPressed(new RunCommand(()-> m_launcher.start(), m_launcher))
+      .whenReleased(new RunCommand(()-> m_launcher.stop(), m_launcher));
      
     new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
       .whenPressed(new RunCommand(()-> m_climber.setSpeedMax(),m_climber).withTimeout(0.1));
 
-    new JoystickButton(m_driverController, XboxController.Button.kB.value)
-      .whenPressed(new FieldOrientedTurn(120,m_robotDrive));
+/*     new JoystickButton(m_driverController, XboxController.Button.kB.value)
+      .whenPressed(new FieldOrientedTurn(120,m_robotDrive)); */
   }
 
   /**
@@ -180,7 +186,7 @@ public class RobotContainer {
   } */
   
   public Command getAutoCommand() {
-    return new Center8BallAuto(s_trajectory,m_robotDrive,m_hopper);
+    return new Center8BallAuto(s_trajectory,m_robotDrive,m_hopper,m_launcher);
   }
 
   /**
