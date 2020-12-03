@@ -62,7 +62,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
-    implementation "com.github.Oblarg.Oblog:lib:3.1.0"  // Oblog logging library dependency
+    implementation "com.github.Oblarg.Oblog:lib:3.1.2"  // Oblog logging library dependency
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
