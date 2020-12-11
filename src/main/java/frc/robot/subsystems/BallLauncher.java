@@ -120,7 +120,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
 
     public void stop(){
         m_loop.setNextR(VecBuilder.fill(0.0));
-        m_rightMain.stopMotor();;
+        m_rightMain.stopMotor();
     }
 
     public void stopDC(){

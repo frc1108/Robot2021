@@ -50,19 +50,19 @@ public final class Constants {
     public static final double ksVolts = 0.169;
     public static final double kvVoltSecondsPerMeter = 2.24;
     public static final double kaVoltSecondsSquaredPerMeter = 0.0435;
-    public static final double kPDriveVel = 2.95;  //2.6 -> 2.95
+    public static final double kPDriveVel = 2.4;  //2.6 -> 2.95
 
     public static final boolean kGyroReversed = true;
 
-    public static final double kTurnP = 0.94; //0.94
+    public static final double kTurnP = 0.125; //0.94, 0.125
     public static final double kTurnI = 0.00;
-    public static final double kTurnD = 0.04; //0.04
-    public static final double kMinCommand = 0.07;
+    public static final double kTurnD = 0.0135; //0.04, 0.0085
+    public static final double kMinCommand = 0.0;
 
-    public static final double kMaxTurnRateDegPerS = 120;
-    public static final double kMaxTurnAccelerationDegPerSSquared = 300;
+    public static final double kMaxTurnRateDegPerS = 360;
+    public static final double kMaxTurnAccelerationDegPerSSquared = 480;
 
-    public static final double kTurnToleranceDeg = 5; //0.5
+    public static final double kTurnToleranceDeg = 3; //0.5
     public static final double kTurnRateToleranceDegPerS = 8;
   }
 

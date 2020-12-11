@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.SPI;
 
 import com.revrobotics.CANEncoder;
@@ -43,6 +45,11 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   private final SpeedControllerGroup m_right = new SpeedControllerGroup(_right1, _right2);
   private final SpeedControllerGroup m_left = new SpeedControllerGroup(_left1, _left2);
   private final DifferentialDrive m_drive = new DifferentialDrive(m_left,  m_right);
+
+  private final PIDController leftPID = new PIDController(DriveConstants.kPDriveVel, 0, 0);
+  private final PIDController rightPID = new PIDController(DriveConstants.kPDriveVel, 0, 0);
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,DriveConstants.kvVoltSecondsPerMeter,DriveConstants.kaVoltSecondsSquaredPerMeter);
+
   
   public double slewSpeed = 4;  // in units/s
   public double slewTurn = 4;
@@ -143,6 +150,14 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
       m_right.setVoltage(-rightVolts);
       m_drive.feed();
   }
+
+  public void tankDriveWithFeedforwardPID(double leftVelocitySetpoint, double rightVelocitySetpoint) {
+      m_left.setVoltage(feedforward.calculate(leftVelocitySetpoint)
+          + leftPID.calculate(m_encoderLeft.getVelocity(), leftVelocitySetpoint));
+      m_right.setVoltage(feedforward.calculate(rightVelocitySetpoint)
+          + rightPID.calculate(-m_encoderRight.getVelocity(), rightVelocitySetpoint));
+    m_drive.feed();
+}
 
   @Log
   public double getHeading() {

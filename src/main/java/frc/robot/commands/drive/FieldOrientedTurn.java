@@ -38,8 +38,7 @@ public class FieldOrientedTurn extends ProfiledPIDCommand {
         // Set reference to target
         targetAngleDegrees,
         // Pipe output to turn robot
-        (output, setpoint) -> drive.arcadeDrive(0,
-            (output > 0) ? DriveConstants.kMinCommand + output / 12 : -DriveConstants.kMinCommand + output / 12),
+        (output, setpoint) -> drive.tankDriveWithFeedforwardPID(output,output),
         // Require the drive
         drive);
 
@@ -69,6 +68,6 @@ public class FieldOrientedTurn extends ProfiledPIDCommand {
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
-    m_drive.arcadeDrive(0, 0);
+    m_drive.stop();
   }
 }
