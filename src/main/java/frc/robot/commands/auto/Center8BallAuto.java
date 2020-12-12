@@ -12,10 +12,8 @@ import frc.robot.SneakyTrajectory;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.BallLauncher;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.commands.drive.FieldOrientedTurn;
-import frc.robot.commands.shoot.ShootBalls;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
