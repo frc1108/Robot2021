@@ -1,14 +1,11 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2020.3.2"
+    id "edu.wpi.first.GradleRIO" version "2021.1.1-beta-4"
     id "com.diffplug.gradle.spotless" version "3.28.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
-
-wpi.maven.useDevelopment = true
-wpi.wpilibVersion = '2020.+'
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
@@ -58,13 +55,20 @@ dependencies {
     nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
 
-    simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
-
     implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
     testImplementation 'junit:junit:4.12'
+
+    // Enable simulation gui support. Must check the box in vscode to enable support
+    // upon debugging
+    simulation wpi.deps.sim.gui(wpi.platforms.desktop, true)
+    simulation wpi.deps.sim.driverstation(wpi.platforms.desktop, true)
+
+    // Websocket extensions require additional configuration.
+    // simulation wpi.deps.sim.ws_server(wpi.platforms.desktop, false)
+    // simulation wpi.deps.sim.ws_client(wpi.platforms.desktop, false)
 
     implementation "com.github.Oblarg.Oblog:lib:3.1.2"  // Oblog logging library dependency
 }
