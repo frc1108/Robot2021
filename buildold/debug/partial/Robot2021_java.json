@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Robot2021 (in project Robot2021)",
+    "file": "C:\\Users\\PantherMentor\\Documents\\Robot2021\\build\\libs\\Robot2021.jar",
+    "extensions": [
+      "C:\\Users\\PantherMentor\\Documents\\Robot2021\\build\\tmp\\expandedArchives\\halsim_gui-2021.1.2-windowsx86-64debug.zip_2215e51a8649dbd549873328223fcd8a\\windows\\x86-64\\shared\\halsim_guid.dll",
+      "C:\\Users\\PantherMentor\\Documents\\Robot2021\\build\\tmp\\expandedArchives\\halsim_ds_socket-2021.1.2-windowsx86-64debug.zip_78cffbe2652ba714cd91434259c87122\\windows\\x86-64\\shared\\halsim_ds_socketd.dll"
+    ],
+    "env": {},
+    "librarydir": "C:\\Users\\PantherMentor\\Documents\\Robot2021\\build\\tmp\\jniExtractDir",
+    "mainclass": "frc.robot.Main"
+  }
+]
