@@ -29,8 +29,6 @@ public final class Constants {
     public static final int CAN_ID_LEFT_DRIVE_2 = 3;
     public static final int CAN_ID_RIGHT_DRIVE_2 = 4;
 
-    // Encoder in NEO motors calculation
-
     // Analog input port for ultrasonic sensor
     public static final int kUltrasonicPort = 3;
     public static final double kValueToInches = 0.02482;
@@ -44,7 +42,6 @@ public final class Constants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(6);
     public static final double kEncoderDistanceConversionFactor = ((double) (Math.PI*kWheelDiameterMeters)/(kGearRatio));
     public static final double kEncoderVelocityConversionFactor = ((double) (Math.PI*kWheelDiameterMeters)/(60*kGearRatio));
-
 
     public static final double ksVolts = 0.169;
     public static final double kvVoltSecondsPerMeter = 2.24;
@@ -68,7 +65,6 @@ public final class Constants {
   public static final class BallLauncherConstants {
     public static final int CAN_ID_BALL_LAUNCH_LEFT = 7;
     public static final int CAN_ID_BALL_LAUNCH_RIGHT = 8;
-    public static final double ballLaunchSpeed = 1;     //Should be at 0.75
   }
 
   public static final class HopperConstants {
@@ -87,20 +83,9 @@ public final class Constants {
     public static final int CAN_ID_Launcher_Intake = 9; // launcher intake
   }
 
-  public static final class ClimberConstants {
-    public static final int CAN_ID_WINCH = 10; 
-    public static final int CAN_ID_TURNER = 11;
-    public static final int TURNER_SWITCH_PORT = 3; 
-  }
-
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
-  }
-
-  public static final class PWMConstants {
-    public static final int PWM_ID_WINCH_SERVO = 1;
-    public static final int PWM_ID_LEDS = 9;
   }
 
   public static final class AutoConstants { 

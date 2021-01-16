@@ -21,14 +21,13 @@ public class IntakeSubsystem extends SubsystemBase{
         m_intake.setNeutralMode(NeutralMode.Coast);
 
         // Default command to stop() 
-        this.setDefaultCommand(new RunCommand(() -> stop(), this));
+        this.setDefaultCommand(new RunCommand(() -> stop(), this).withName("Stop Intake"));
     }
 
     public void setIntakeSpeed(double intakeSpeed){
         m_intakeSpeed = intakeSpeed;
     }
 
-    
     public void setSlowOutSpeed(double slowOutSpeed){
         m_slowOutSpeed = slowOutSpeed;
     }

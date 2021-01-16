@@ -37,7 +37,6 @@ import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
-import frc.robot.subsystems.ClimberSubsystem;
 
 import frc.robot.commands.hopper.ManualHopper;
 import frc.robot.Constants.AutoConstants;
@@ -62,7 +61,6 @@ public class RobotContainer {
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   @Log private final HopperSubsystem m_hopper = new HopperSubsystem();
   @Log private final BallLauncher m_launcher = new BallLauncher();
-  private final ClimberSubsystem m_climber = new ClimberSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
   private final FeederSubsystem m_feeder = new FeederSubsystem();
 
@@ -90,11 +88,6 @@ public class RobotContainer {
     // Hopper axle default
     m_hopper.setDefaultCommand(
         new ManualHopper(m_hopper, () -> m_operatorController.getY(GenericHID.Hand.kRight)));
-      
-    // Winch default 
-    m_climber.setDefaultCommand(
-        new RunCommand(()->m_climber.manualControl(m_operatorController.getY(GenericHID.Hand.kLeft)),
-            m_climber));
 
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Drive Off Line Auto", new SimpleAutoGroup(m_robotDrive));
@@ -159,9 +152,6 @@ public class RobotContainer {
 
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
       .whenPressed(new RunCommand(()-> m_launcher.start(), m_launcher).withTimeout(6));
-     
-    new JoystickButton(m_operatorController, XboxController.Button.kStart.value)
-      .whenPressed(new RunCommand(()-> m_climber.setSpeedMax(),m_climber).withTimeout(0.1));
 
       new JoystickButton(m_driverController, XboxController.Button.kB.value)
       .whenPressed(new FieldOrientedTurn(120,m_robotDrive));
