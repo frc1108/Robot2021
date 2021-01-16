@@ -32,8 +32,6 @@ import com.kauailabs.navx.frc.AHRS;
 
 import static frc.robot.Constants.*;
 
-import java.util.Arrays;
-
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
@@ -76,6 +74,24 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     // Stops drive motors
     stop();
 
+    // Restores default CANSparkMax settings
+    _left1.restoreFactoryDefaults();
+    _left2.restoreFactoryDefaults();
+    _right1.restoreFactoryDefaults();
+    _right2.restoreFactoryDefaults();
+
+    // Set Idle mode for CANSparkMax (brake)
+    _left1.setIdleMode(IdleMode.kBrake);
+    _left2.setIdleMode(IdleMode.kBrake);
+    _right1.setIdleMode(IdleMode.kBrake);
+    _right2.setIdleMode(IdleMode.kBrake);
+
+    // Set Smart Current Limit for CAN SparkMax
+    _left1.setSmartCurrentLimit(40, 60);
+    _left2.setSmartCurrentLimit(40, 60);
+    _right1.setSmartCurrentLimit(40, 60);
+    _right2.setSmartCurrentLimit(40, 60);
+
     m_encoderLeft = _left1.getEncoder();
     m_encoderRight = _right1.getEncoder();
     m_encoderRight.setPositionConversionFactor(DriveConstants.kEncoderDistanceConversionFactor);
@@ -83,14 +99,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     m_encoderLeft.setPositionConversionFactor(DriveConstants.kEncoderDistanceConversionFactor);
     m_encoderLeft.setVelocityConversionFactor(DriveConstants.kEncoderVelocityConversionFactor);
 
-    // Set all the CANSparkMax settings
-    Arrays.asList(_left1, _left2, _right1, _right2)
-    .forEach((CANSparkMax spark) -> {
-      spark.restoreFactoryDefaults();
-      spark.setIdleMode(IdleMode.kBrake);
-      spark.setSmartCurrentLimit(40, 60);
-      spark.burnFlash();
-    });
+    _left1.burnFlash();
+    _left2.burnFlash();
+    _right1.burnFlash();
+    _right2.burnFlash();
 
     // Set drive deadband and safety 
     m_drive.setDeadband(0.05);

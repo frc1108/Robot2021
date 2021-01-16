@@ -38,13 +38,10 @@ import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.LightsSubsystem;
 
 import frc.robot.commands.hopper.ManualHopper;
-import frc.robot.commands.light.SetSolidColor;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.PWMConstants;
 import frc.robot.commands.auto.BasicCommandGroup;
 import frc.robot.commands.auto.SimpleAutoGroup;
 import frc.robot.commands.drive.FieldOrientedTurn;
@@ -68,7 +65,6 @@ public class RobotContainer {
   private final ClimberSubsystem m_climber = new ClimberSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
   private final FeederSubsystem m_feeder = new FeederSubsystem();
-  private final LightsSubsystem m_lights = new LightsSubsystem(PWMConstants.PWM_ID_LEDS,160);
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -103,10 +99,6 @@ public class RobotContainer {
     // Add commands to the autonomous command chooser
     m_chooser.setDefaultOption("Drive Off Line Auto", new SimpleAutoGroup(m_robotDrive));
     m_chooser.addOption("Regular Auto", new BasicCommandGroup(m_robotDrive, m_launcher, m_feeder, m_hopper));
-    
-    m_ledChooser.setDefaultOption("None", new RunCommand(() -> m_lights.setSolidColor(0, 0, 0)));
-    m_ledChooser.addOption("Red", new SetSolidColor(m_lights,255,0,0));
-    m_ledChooser.addOption("Blue", new SetSolidColor(m_lights,0,0,255));
     
     Shuffleboard.getTab("Setup").add(m_chooser);
     Shuffleboard.getTab("Setup").add(m_ledChooser);

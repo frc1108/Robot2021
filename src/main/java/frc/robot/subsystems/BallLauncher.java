@@ -75,7 +75,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     private static final int kTimeoutMs = 30;
     private static final int filterWindowSize = 1;
 
-    private static final double m_launcherRPM = -3000;
+    private static final double m_launcherRPM = -2000;
     private static double kSpinupRadPerSec;
     
     public BallLauncher(){
@@ -87,13 +87,15 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_leftFollow.setNeutralMode(NeutralMode.Coast);
 
         m_rightMain.setInverted(true);
-        m_rightMain.setSensorPhase(false);
         m_leftFollow.setInverted(false);
+        
+        m_rightMain.setSensorPhase(false);
+        
         m_leftFollow.follow(m_rightMain);
 
         m_rightMain.configContinuousCurrentLimit(30);
         
-        m_rightMain.config_kF(0, 0); //0,0.1225
+        m_rightMain.config_kF(0,0); //0,0.1225
         m_rightMain.config_kP(0,0); //0,1
         m_rightMain.config_kI(0,0);
         m_rightMain.config_kD(0,0);
@@ -109,12 +111,9 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         encoderRate = ()
             -> (m_rightMain.getSelectedSensorVelocity(PIDIDX) * encoderConstant * 10/1024);
 
-        // Reset encoders
-        //m_rightMain.setSelectedSensorPosition(0);
-
-        // Default command to stop() 
         m_loop.reset(VecBuilder.fill(Units.rotationsPerMinuteToRadiansPerSecond(60*encoderRate.get())));
-
+        
+        // Default command to stop() 
         this.setDefaultCommand(new RunCommand(() -> stop(), this));
     }
 
@@ -122,11 +121,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_loop.setNextR(VecBuilder.fill(0.0));
         m_rightMain.stopMotor();
     }
-
-    public void stopDC(){
-        m_loop.setNextR(VecBuilder.fill(0.0));
-    }
-
+   
     @Log.Dial(name = "Launcher RPM", tabName = "Match View", max = 3000)
     public double getTachRPM(){
         double tachVel_UnitsPer100ms = m_rightMain.getSelectedSensorVelocity(0);

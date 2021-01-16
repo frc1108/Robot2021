@@ -9,7 +9,6 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.drive.DriveToWall;
-import frc.robot.commands.auto.ShootBallsGroup;
 import frc.robot.commands.hopper.HopperShift;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.BallLauncher;
