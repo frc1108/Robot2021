@@ -105,14 +105,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Reverse feeder motor for time with operator button Y
-    new JoystickButton(m_operatorController, XboxController.Button.kY.value)
+    //new JoystickButton(m_operatorController, XboxController.Button.kY.value)
+    new JoystickButton(m_driverController, XboxController.Button.kY.value)
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowOutFeeder(),
                               ()->m_feeder.stop(),m_feeder)
                               .withTimeout(0.2));
 
    // Run feeder motor for time with operator button B
-    new JoystickButton(m_operatorController, XboxController.Button.kB.value)
+    //new JoystickButton(m_operatorController, XboxController.Button.kB.value)
+    new JoystickButton(m_driverController, XboxController.Button.kB.value)
         .toggleWhenActive(new WaitCommand(0.8)
                               .andThen(new StartEndCommand(
                                            ()->m_feeder.fastInFeeder(),
@@ -121,16 +123,19 @@ public class RobotContainer {
 
    
     // Run feeder motor for time with operator button X
-    new JoystickButton(m_operatorController, XboxController.Button.kX.value)
+    // new JoystickButton(m_operatorController, XboxController.Button.kX.value)
+    new JoystickButton(m_driverController, XboxController.Button.kX.value)
         .toggleWhenActive(new StartEndCommand(
                               ()->m_feeder.slowInFeeder(),
                               ()->m_feeder.stop(),m_feeder)
                               .withTimeout(0.6));
 
-    new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value)
+    //new JoystickButton(m_operatorController, XboxController.Button.kBumperRight.value)
+    new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value)
       .whileHeld(new RunCommand(() -> m_intake.startIntake(), m_intake));
 
-    new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value)
+    //new JoystickButton(m_operatorController, XboxController.Button.kBumperLeft.value)
+    new JoystickButton(m_driverController, XboxController.Button.kBumperLeft.value)
       .whileHeld(new RunCommand(() -> m_intake.slowOutIntake(), m_intake));
     
     new POVButton(m_driverController, 180).or(new POVButton(m_operatorController, 180))  // Xbox down arrow
@@ -150,11 +155,16 @@ public class RobotContainer {
 /*     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
       .whenPressed(new RunCommand(()-> m_launcher.startPIDLauncher(), m_launcher).withTimeout(6)); */
 
-    new JoystickButton(m_operatorController, XboxController.Button.kB.value)
+    //new JoystickButton(m_operatorController, XboxController.Button.kB.value)
+    new JoystickButton(m_driverController, XboxController.Button.kB.value)
       .whenPressed(new RunCommand(()-> m_launcher.start(), m_launcher).withTimeout(6));
 
-      new JoystickButton(m_driverController, XboxController.Button.kB.value)
-      .whenPressed(new FieldOrientedTurn(120,m_robotDrive));
+    // new JoystickButton(m_driverController, XboxController.Button.kB.value)
+    //   .whenPressed(new FieldOrientedTurn(120,m_robotDrive));
+
+    // new JoystickButton(m_driverController, XboxController.Button.kBumperRight.value)
+    //   .whenPressed(() -> m_robotDrive.setSpeedMax(0.9))
+    //   .whenReleased(() -> m_robotDrive.setSpeedMax(0.6));
   }
 
   /**

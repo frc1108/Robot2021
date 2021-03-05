@@ -50,8 +50,8 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   private final PIDController rightPID = new PIDController(DriveConstants.kPDriveVel, 0, 0);
   private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(DriveConstants.ksVolts,DriveConstants.kvVoltSecondsPerMeter,DriveConstants.kaVoltSecondsSquaredPerMeter);
 
-  public double slewSpeed = 4;  // in units/s
-  public double slewTurn = 4;
+  public double slewSpeed = 6;  // in units/s
+  public double slewTurn = 6;
   private final SlewRateLimiter m_speedSlew = new SlewRateLimiter(slewSpeed);
   private final SlewRateLimiter m_turnSlew = new SlewRateLimiter(slewTurn);
 
@@ -184,8 +184,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
    * @param rot the commanded rotation
    */
   public void arcadeDrive(double fwd, double rot) {
-    double speedLimit = 0.9;
-    m_drive.arcadeDrive(speedLimit*m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot));
+    m_drive.arcadeDrive(m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot));
   }
 
    /**
@@ -199,7 +198,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     m_drive.curvatureDrive(m_speedSlew.calculate(-fwd), m_turnSlew.calculate(rot), quickTurn);
   }
   
-  @Config(name="Speed, max", defaultValueNumeric = 0.8)
+  @Config(name="Speed, max", defaultValueNumeric = 0.7)
   public void setSpeedMax(double xSpeed) {
     m_drive.setMaxOutput(xSpeed);
   }
