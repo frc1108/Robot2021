@@ -29,12 +29,12 @@ public class ManualHopper extends CommandBase {
 
   @Override
   public void execute() {
-    m_hopper.HopperMotor(hopper_spd.getAsDouble());
+    m_hopper.set(hopper_spd.getAsDouble());
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_hopper.HopperMotor(0);
+    m_hopper.set(0);
   }
 
   @Override

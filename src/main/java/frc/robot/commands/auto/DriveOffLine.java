@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.drive.DriveTimed;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class SimpleAutoGroup extends SequentialCommandGroup {
+public class DriveOffLine extends SequentialCommandGroup {
   /**
    * Creates a new SimpleAutoGroup. This Auto commmand just drives forward for 3 secodns and stops.
    */
-  public SimpleAutoGroup(DriveSubsystem drive) {
+  public DriveOffLine(DriveSubsystem drive) {
     super(new DriveTimed(drive).withTimeout(1));
   }
 }

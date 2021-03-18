@@ -30,6 +30,7 @@ public class DriveToWall extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_drive.stop();
+
   }
 
   @Override
