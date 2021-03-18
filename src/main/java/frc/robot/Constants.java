@@ -83,6 +83,10 @@ public final class Constants {
     public static final int CAN_ID_Launcher_Intake = 9; // launcher intake
   }
 
+  public static final class ClimberConstants {
+    public static final int CAN_ID_Climber_Motor = 10;
+  }
+
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;

@@ -24,7 +24,8 @@ import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.BallLauncher;
-
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.commands.climber.ManualClimber;
 import frc.robot.commands.hopper.ManualHopper;
 import frc.robot.commands.auto.Center3Ball;
 import frc.robot.commands.auto.DriveOffLine;
@@ -42,6 +43,7 @@ public class RobotContainer {
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   @Log private final HopperSubsystem m_hopper = new HopperSubsystem();
   @Log private final BallLauncher m_launcher = new BallLauncher();
+  @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
   private final FeederSubsystem m_feeder = new FeederSubsystem();
 
@@ -67,11 +69,20 @@ public class RobotContainer {
     m_hopper.setDefaultCommand(
         new ManualHopper(m_hopper, () -> m_operatorController.getY(GenericHID.Hand.kRight)));
 
+    // Winch default 
+    m_climber.setDefaultCommand(
+      new ManualClimber(
+        m_climber,
+        () -> m_operatorController.getY(GenericHID.Hand.kLeft)
+      )
+    );
+
     // Add commands to the autonomous command chooser
     m_autoChooser.setDefaultOption("Drive Off Line", new DriveOffLine(m_robotDrive));
     m_autoChooser.addOption("Center 3 Ball", new Center3Ball(m_robotDrive, m_launcher, m_feeder, m_hopper));
     
     Shuffleboard.getTab("Live").add(m_autoChooser);
+
   }
 
   /**
@@ -130,9 +141,8 @@ public class RobotContainer {
     //new JoystickButton(m_operatorController, XboxController.Button.kB.value)
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
       .whenPressed(new RunCommand(()-> m_launcher.start(), m_launcher).withTimeout(6));
-  }
-
-  /**
+ 
+   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
@@ -140,7 +150,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return m_autoChooser.getSelected();
   }
-      
+ 
   public void reset(){
     m_robotDrive.reset();
   }

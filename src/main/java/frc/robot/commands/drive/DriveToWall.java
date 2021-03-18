@@ -12,7 +12,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class DriveToWall extends CommandBase {
   private final DriveSubsystem m_drive;
-  
+
   public DriveToWall(DriveSubsystem subsystem) {
     m_drive = subsystem;
     addRequirements(m_drive);
@@ -35,6 +35,6 @@ public class DriveToWall extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return (m_drive.getSonarDistanceInches()<7);
+    return (m_drive.getSonarDistanceInches() < 7);
   }
 }
