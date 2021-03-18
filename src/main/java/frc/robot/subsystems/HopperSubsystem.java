@@ -55,13 +55,13 @@ public class HopperSubsystem extends SubsystemBase implements Loggable {
     }
 
     public void up(){
-        if (m_highLimit.get()){
+        if (m_highLimit.get()){  // if high limit not set
             m_hopper.set(0.7);
         }
     }
 
     public void down(){
-        if (m_lowLimit.get()){
+        if (m_lowLimit.get()){  // if low limit not set
             m_hopper.set(-0.5);
         }
     }
