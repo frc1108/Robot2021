@@ -49,7 +49,7 @@ public class FeederSubsystem extends SubsystemBase {
     this.setDefaultCommand(new RunCommand(() -> stop(), this));
   }
  
-  @Log.Dial(name = "Launcher RPM", tabName = "Match View", max = 200)
+  @Log.Dial(name = "Launcher RPM", tabName = "Live", max = 200)
   public double getTachRPM(){
       double tachVel_UnitsPer100ms = m_feeder.getSelectedSensorVelocity(0);
       return -1*tachVel_UnitsPer100ms*600/1024;

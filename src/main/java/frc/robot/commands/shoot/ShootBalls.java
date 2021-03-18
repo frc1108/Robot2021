@@ -29,7 +29,7 @@ public class ShootBalls extends CommandBase {
   @Override
   public void initialize(){
     initTime = RobotController.getFPGATime();
-    m_launcher.startPIDLauncher();   
+    m_launcher.start();   
   }
 
   @Override

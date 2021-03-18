@@ -5,28 +5,23 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.auto;
+package frc.robot.commands.feeder;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.drive.DriveToWall;
-import frc.robot.commands.hopper.HopperShift;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.BallLauncher;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.FeederSubsystem;
-import frc.robot.subsystems.HopperSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class BasicCommandGroup extends SequentialCommandGroup {
+public class WaitThenFeed extends SequentialCommandGroup {
   /**
-   * Creates a new AutoCommandGroup.
+   * Creates a new WaitingFeeder.
    */
-  public BasicCommandGroup(DriveSubsystem drive, BallLauncher ball, FeederSubsystem feeder, HopperSubsystem hopper) {
-    
+  
+  public WaitThenFeed(FeederSubsystem feeder) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new HopperShift(hopper), new DriveToWall(drive), new ShootBallsGroup(ball, feeder));
-
+    super(new WaitCommand(2), new FeederTimed(feeder));
   }
 }

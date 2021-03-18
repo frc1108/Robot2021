@@ -25,16 +25,16 @@ public class HopperShift extends CommandBase {
 
   @Override
   public void execute() {
-    m_hopper.HopperMotor(0.3);
+    m_hopper.down();
   }
 
   @Override
   public void end(boolean interrupted) {
-    m_hopper.HopperMotor(0);
+    m_hopper.stop();
   }
 
   @Override
   public boolean isFinished() {
-    return !m_hopper.isHighSwitchSet();
+    return !m_hopper.getHighSwitch();
   }
 }

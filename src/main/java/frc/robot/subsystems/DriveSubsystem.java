@@ -14,14 +14,23 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.SPI;
+
+import frc.robot.pantherlib.Trajectory6391;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
@@ -31,6 +40,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 
 import static frc.robot.Constants.*;
+
+import java.io.IOException;
+import java.nio.file.Paths;
 
 import io.github.oblarg.oblog.Loggable;
 import io.github.oblarg.oblog.annotations.Config;
@@ -63,10 +75,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   private final DifferentialDriveOdometry m_odometry;
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
-  private final NetworkTableEntry m_xEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
-  private final NetworkTableEntry m_yEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
-  private final NetworkTableEntry m_zEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Z");
- 
   /**
    * Creates a new DriveSubsystem.
    */
@@ -106,7 +114,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
 
     // Set drive deadband and safety 
     m_drive.setDeadband(0.05);
-    m_drive.setSafetyEnabled(true);
+    m_drive.setSafetyEnabled(false);
 
     //m_gyro.reset();
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
@@ -117,12 +125,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     SmartDashboard.putNumber("Left Dist", m_encoderLeft.getPosition());
     SmartDashboard.putNumber("Right Dist", -m_encoderRight.getPosition());
     SmartDashboard.putNumber("Left Vel Factor", m_gyro.getAngle());
-
-    var translation = m_odometry.getPoseMeters().getTranslation();
-    var rotation = m_odometry.getPoseMeters().getRotation();
-    m_xEntry.setNumber(translation.getX());
-    m_yEntry.setNumber(translation.getY());
-    m_zEntry.setNumber(rotation.getDegrees());
   }
 
   public Pose2d getPose() {
@@ -224,5 +226,55 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
   public double getTurnRateCW() {
     // Not negating
     return m_gyro.getRate();
+  }
+
+  /**
+   * Creates a command to follow a Trajectory on the drivetrain.
+   * @param trajectory trajectory to follow
+   * @return command that will run the trajectory
+   */
+  public Command createCommandForTrajectory(Trajectory trajectory, Boolean initPose) {
+    if (initPose) {
+      new InstantCommand(() -> {resetOdometry(trajectory.getInitialPose());});
+    }
+
+    resetEncoders();
+
+    RamseteCommand ramseteCommand =  new RamseteCommand(trajectory, this::getPose,
+    new RamseteController(AutoConstants.kRamseteB, AutoConstants.kRamseteZeta),
+    new SimpleMotorFeedforward(DriveConstants.ksVolts, DriveConstants.kvVoltSecondsPerMeter,
+                    DriveConstants.kaVoltSecondsSquaredPerMeter),
+    DriveConstants.kDriveKinematics, this::getWheelSpeeds,
+    new PIDController(DriveConstants.kPDriveVel, 0, 0),
+    new PIDController(DriveConstants.kPDriveVel, 0, 0), this::tankDriveVolts, this);
+    return ramseteCommand.andThen(() -> this.tankDriveVolts(0, 0));
+  }
+
+  protected static Trajectory loadTrajectory(String trajectoryName) throws IOException {
+    return TrajectoryUtil.fromPathweaverJson(
+        Filesystem.getDeployDirectory().toPath().resolve(Paths.get("paths", trajectoryName + ".wpilib.json")));
+  }
+
+  public Trajectory generateTrajectory(String trajectoryName, TrajectoryConfig config) {
+    try {
+      var filepath = Filesystem.getDeployDirectory().toPath().resolve(Paths.get("waypoints", trajectoryName));
+      return Trajectory6391.fromWaypoints(filepath, config);
+    } catch (IOException e) {
+      DriverStation.reportError("Failed to load auto trajectory: " + trajectoryName, false);
+      return new Trajectory();
+    }
+  }
+  public Trajectory loadTrajectoryFromFile(String filename) {
+    try {
+      return loadTrajectory(filename);
+    } catch (IOException e) {
+      DriverStation.reportError("Failed to load auto trajectory: " + filename, false);
+      return new Trajectory();
+    }
+  }
+
+  public Trajectory generateTrajectoryFromFile(String filename) {
+      var config = new TrajectoryConfig(1, 3);
+      return generateTrajectory(filename, config);
   }
 }
