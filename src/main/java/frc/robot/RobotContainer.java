@@ -81,7 +81,7 @@ public class RobotContainer {
     m_autoChooser.setDefaultOption("Drive Off Line", new DriveOffLine(m_robotDrive));
     m_autoChooser.addOption("Center 3 Ball", new Center3Ball(m_robotDrive, m_launcher, m_feeder, m_hopper));
     
-    Shuffleboard.getTab("Live").add(m_autoChooser);
+    Shuffleboard.getTab("Live").add("Auto Mode",m_autoChooser);
 
   }
 
@@ -141,6 +141,7 @@ public class RobotContainer {
     //new JoystickButton(m_operatorController, XboxController.Button.kB.value)
     new JoystickButton(m_operatorController, XboxController.Button.kB.value)
       .whenPressed(new RunCommand(()-> m_launcher.start(), m_launcher).withTimeout(6));
+  } 
  
    /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

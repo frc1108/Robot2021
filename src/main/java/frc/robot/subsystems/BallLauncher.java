@@ -75,7 +75,6 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     private static final int kTimeoutMs = 30;
     private static final int filterWindowSize = 1;
 
-    private static final double m_launcherRPM = -2000;
     private static double kSpinupRadPerSec;
     
     public BallLauncher(){
@@ -95,10 +94,10 @@ public class BallLauncher extends SubsystemBase implements Loggable {
 
         m_rightMain.configContinuousCurrentLimit(30);
         
-        m_rightMain.config_kF(0,0); //0,0.1225
-        m_rightMain.config_kP(0,0); //0,1
-        m_rightMain.config_kI(0,0);
-        m_rightMain.config_kD(0,0);
+        // m_rightMain.config_kF(0,0); //0,0.1225
+        // m_rightMain.config_kP(0,0); //0,1
+        // m_rightMain.config_kI(0,0);
+        // m_rightMain.config_kD(0,0);
 
         double encoderConstant = (1 / ENCODER_EDGES_PER_REV) * 1;
 
@@ -122,20 +121,21 @@ public class BallLauncher extends SubsystemBase implements Loggable {
         m_rightMain.stopMotor();
     }
    
-    @Log.Dial(name = "Launcher RPM", tabName = "Live", max = 3000)
+    @Log.Dial(name = "Tachomter RPM",
+              tabName = "Live",
+              min = 0,
+              max = 4000)
     public double getTachRPM(){
-        double tachVel_UnitsPer100ms = m_rightMain.getSelectedSensorVelocity(0);
-        return -1*tachVel_UnitsPer100ms*600/1024;
+        return m_rightMain.getSelectedSensorVelocity(0)*600/1024;
     }
 
-    public void startPIDLauncher(){      
-        m_rightMain.set(ControlMode.Velocity,m_launcherRPM*1024/600);
-    }
+    // public void startPIDLauncher(){      
+    //     m_rightMain.set(ControlMode.Velocity,m_launcherRPM*1024/600);
+    // }
 
     public void start(){
         m_loop.setNextR(VecBuilder.fill(kSpinupRadPerSec));
     }
-
 
     @Override
     public void periodic(){
@@ -153,7 +153,12 @@ public class BallLauncher extends SubsystemBase implements Loggable {
     m_rightMain.setVoltage(nextVoltage);
     }
 
-    @Config.NumberSlider(name="SpinupRPM",defaultValue = 3000,min = 0,max=4000,blockIncrement = 100)
+    @Config.NumberSlider(name="SpinupRPM",
+                         tabName = "Live",
+                         defaultValue = 3000,
+                         min = 0,
+                         max=4000,
+                         blockIncrement = 250)
     public void setSpinupRotPerMin(double spinupRotPerMin){
         kSpinupRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(spinupRotPerMin);
     }

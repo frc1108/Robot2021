@@ -24,6 +24,7 @@ public class Center3Ball extends SequentialCommandGroup {
    * Creates a new AutoCommandGroup.
    */
   public Center3Ball(DriveSubsystem drive, BallLauncher ball, FeederSubsystem feeder, HopperSubsystem hopper) {
-    super(new HopperShift(hopper), new DriveToWall(drive), new WaitThenShoot(ball, feeder));
+    super(new DriveToWall(drive), new WaitThenShoot(ball, feeder));
   }
+  // new HopperShift(hopper), 
 }
