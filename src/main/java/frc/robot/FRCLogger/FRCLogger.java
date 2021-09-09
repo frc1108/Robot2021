@@ -1,6 +1,6 @@
 package frc.robot.FRCLogger;
 
-public class FRCLogger extends Filemanger {
+public class FRCLogger extends FileManager {
     public Csv csv;
   
     public FRCLogger(String file, String[] rows) {

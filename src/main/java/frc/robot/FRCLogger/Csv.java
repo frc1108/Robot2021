@@ -1,6 +1,6 @@
 package frc.robot.FRCLogger;
 
-public class Csv extends Filemanger {
+public class Csv extends FileManager {
   private String CompressedRows = "";
   private Boolean InitalWrite = false;
 
