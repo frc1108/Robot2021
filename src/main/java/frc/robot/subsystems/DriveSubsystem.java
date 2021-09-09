@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.SPI;
-
+import frc.robot.FRCLogger.FRCLogger;
 import frc.robot.pantherlib.Trajectory6391;
 
 import com.revrobotics.CANEncoder;
@@ -49,6 +49,17 @@ import io.github.oblarg.oblog.annotations.Config;
 import io.github.oblarg.oblog.annotations.Log;
 
 public class DriveSubsystem extends SubsystemBase implements Loggable {
+
+  String[] speedRows = { "leftDrivePrimary", "rightDrivePrimary"};
+  String[] positionRows = { "leftDrivePrimary", "rightDrivePrimary"};
+  String[] drivetrainRows = { "leftVoltage", "rightVoltage"};
+  String[] gyro_logRows = { "headingDegrees"};
+
+  FRCLogger speeds = new FRCLogger("speeds.csv", speedRows);
+  FRCLogger positions = new FRCLogger("positions.csv", positionRows);
+  FRCLogger drivetrain = new FRCLogger("drivetrain.csv", drivetrainRows);
+  FRCLogger gyro_log = new FRCLogger("gyro.csv", gyro_logRows);
+
   private final CANSparkMax _left1 = new CANSparkMax(DriveConstants.CAN_ID_LEFT_DRIVE,MotorType.kBrushless);
   private final CANSparkMax _right1 = new CANSparkMax(DriveConstants.CAN_ID_RIGHT_DRIVE,MotorType.kBrushless);
   private final CANSparkMax _left2 = new CANSparkMax(DriveConstants.CAN_ID_LEFT_DRIVE_2,MotorType.kBrushless);
@@ -125,6 +136,10 @@ public class DriveSubsystem extends SubsystemBase implements Loggable {
     SmartDashboard.putNumber("Left Dist", m_encoderLeft.getPosition());
     SmartDashboard.putNumber("Right Dist", -m_encoderRight.getPosition());
     SmartDashboard.putNumber("Left Vel Factor", m_gyro.getAngle());
+
+    speeds.csv.LogWithTime(m_encoderLeft.getVelocity() + "," + m_encoderRight.getVelocity());
+    positions.csv.LogWithTime(m_encoderLeft.getPosition() + "," + -m_encoderRight.getPosition());
+    gyro_log.csv.LogWithTime(m_gyro.getAngle());
   }
 
   public Pose2d getPose() {
