@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.drive.DriveToWall;
 import frc.robot.commands.hopper.HopperShift;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.BallLauncher;
+import frc.robot.subsystems.LauncherSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.commands.shoot.WaitThenShoot;
@@ -23,7 +23,7 @@ public class Center3Ball extends SequentialCommandGroup {
   /**
    * Creates a new AutoCommandGroup.
    */
-  public Center3Ball(DriveSubsystem drive, BallLauncher ball, FeederSubsystem feeder, HopperSubsystem hopper) {
+  public Center3Ball(DriveSubsystem drive, LauncherSubsystem ball, FeederSubsystem feeder, HopperSubsystem hopper) {
     super(new DriveToWall(drive), new WaitThenShoot(ball, feeder));
   }
   // new HopperShift(hopper), 

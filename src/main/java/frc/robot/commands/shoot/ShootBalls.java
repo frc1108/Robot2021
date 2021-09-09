@@ -9,19 +9,19 @@ package frc.robot.commands.shoot;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.BallLauncher;
+import frc.robot.subsystems.LauncherSubsystem;
 
 /**
  * Add your docs here.
  */
 public class ShootBalls extends CommandBase {
 
-  private final BallLauncher m_launcher;
+  private final LauncherSubsystem m_launcher;
   private long TimeToRun = 6000000; //microseconds
   private long initTime;
 
 
-  public ShootBalls(BallLauncher launcher){
+  public ShootBalls(LauncherSubsystem launcher){
     m_launcher = launcher;
     addRequirements(m_launcher);
   }

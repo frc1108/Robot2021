@@ -23,7 +23,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.HopperSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.BallLauncher;
+import frc.robot.subsystems.LauncherSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.commands.climber.ManualClimber;
 import frc.robot.commands.hopper.ManualHopper;
@@ -42,7 +42,7 @@ public class RobotContainer {
   // The robot's subsystems
   @Log private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   @Log private final HopperSubsystem m_hopper = new HopperSubsystem();
-  @Log private final BallLauncher m_launcher = new BallLauncher();
+  @Log private final LauncherSubsystem m_launcher = new LauncherSubsystem();
   @Log private final ClimberSubsystem m_climber = new ClimberSubsystem();
   private final IntakeSubsystem m_intake = new IntakeSubsystem();
   private final FeederSubsystem m_feeder = new FeederSubsystem();

@@ -23,7 +23,7 @@ import static frc.robot.Constants.BallLauncherConstants.*;
 
 import java.util.function.Supplier;
 
-public class BallLauncher extends SubsystemBase implements Loggable {
+public class LauncherSubsystem extends SubsystemBase implements Loggable {
     @Log.SpeedController
     private WPI_TalonSRX m_rightMain = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_RIGHT);
     private WPI_TalonSRX m_leftFollow = new WPI_TalonSRX(CAN_ID_BALL_LAUNCH_LEFT);
@@ -77,7 +77,7 @@ public class BallLauncher extends SubsystemBase implements Loggable {
 
     private static double kSpinupRadPerSec;
     
-    public BallLauncher(){
+    public LauncherSubsystem(){
         stop();
         m_rightMain.configFactoryDefault();
         m_leftFollow.configFactoryDefault();
